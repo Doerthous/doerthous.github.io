@@ -1,0 +1,1141 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>CMake笔记 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Doerthous</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-12 14:13" pubdate>
+        2020年10月12日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      62
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">CMake笔记</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="CMake笔记"><a href="#CMake笔记" class="headerlink" title="CMake笔记"></a>CMake笔记</h1><h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><h3 id="变量设置与打印"><a href="#变量设置与打印" class="headerlink" title="变量设置与打印"></a>变量设置与打印</h3><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/set.html">set</a>命令设置变量名及其对应值，通过<code>$&#123;变量名&#125;</code>的方式引用变量。<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/message.html">message</a>可打印信息。</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">set</span>(VAR_A <span class="hljs-number">100</span>)
+
+<span class="hljs-keyword">message</span>(STATUS <span class="hljs-variable">$&#123;VAR_A&#125;</span>)</code></pre>
+
+<p>输出：</p>
+<pre><code class="hljs Bash">...
+
+-- 100
+
+...</code></pre>
+
+<h3 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h3><p>同大多数编程语言一样，<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/if.html">if</a>用于条件控制。需要注意的是，cmake中<code>&lt;condition&gt;</code>的写法会使用<code>EQUAL</code>, <code>LESS</code>, <code>LESS_EQUAL</code>等关键字，判定为TRUE的条件可能有所复杂。</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">if</span>(&lt;condition&gt;)
+    &lt;commands&gt;
+<span class="hljs-keyword">elseif</span>(&lt;condition&gt;)
+    &lt;commands&gt;
+<span class="hljs-keyword">else</span>()
+    &lt;commands&gt;
+<span class="hljs-keyword">endif</span>()</code></pre>
+
+<h3 id="foreach与list"><a href="#foreach与list" class="headerlink" title="foreach与list"></a>foreach与list</h3><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/list.html">list</a>是cmake中一种类似数组的结构（元素可以不同），<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/foreach.html">foreach</a>命令则用于遍历操作。</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">1</span>)
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">2</span>)
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">3</span>)
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">4</span>)
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">5</span>)
+
+<span class="hljs-keyword">message</span>(STATUS <span class="hljs-variable">$&#123;LIST_A&#125;</span>)
+
+<span class="hljs-keyword">foreach</span>(X IN LISTS LIST_A)
+    <span class="hljs-keyword">message</span>(STATUS <span class="hljs-string">&quot;X=$&#123;X&#125;&quot;</span>)
+<span class="hljs-keyword">endforeach</span>()</code></pre>
+
+<p>输出：</p>
+<pre><code class="hljs Bash">...
+
+-- 12345
+-- X=1
+-- X=2
+-- X=3
+-- X=4
+-- X=5
+
+...</code></pre>
+
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/function.html">function</a>指令可定义函数。</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">function</span>(F1 <span class="hljs-keyword">list</span>)
+    <span class="hljs-keyword">foreach</span>(X IN LISTS <span class="hljs-variable">$&#123;list&#125;</span>)
+        <span class="hljs-keyword">message</span>(STATUS <span class="hljs-string">&quot;X=$&#123;X&#125;&quot;</span>)
+    <span class="hljs-keyword">endforeach</span>()
+<span class="hljs-keyword">endfunction</span>()
+
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">1</span>)
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">2</span>)
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">3</span>)
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">4</span>)
+<span class="hljs-keyword">list</span>(APPEND LIST_A <span class="hljs-number">5</span>)
+
+F1(LIST_A)</code></pre>
+
+<p>输出：</p>
+<pre><code class="hljs Bash">-- X=1
+-- X=2
+-- X=3
+-- X=4
+-- X=5</code></pre>
+
+
+<h2 id="E1-1-Hello-World"><a href="#E1-1-Hello-World" class="headerlink" title="E1.1 Hello World"></a>E1.1 Hello World</h2><h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><ul>
+<li>通过CMake编译、构建一个Hello World程序</li>
+</ul>
+<h3 id="例程"><a href="#例程" class="headerlink" title="例程"></a>例程</h3><p>最简单的CMake工程目录如下所示</p>
+<pre><code class="hljs shell">.
+├─ CMakeLists.txt
+└─ main.cpp</code></pre>
+
+<p>CMakeLists.txt内容如下</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">project</span>(CMake_Note)
+
+<span class="hljs-keyword">add_executable</span>(main main.cpp)</code></pre>
+
+<p>main.cpp内容如下</p>
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello world!\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+<p>在工程目录中新建build目录，然后进入build目录下执行<code>cmake ..</code>，再执行<code>cmake --build .</code></p>
+<blockquote>
+<p>Linux下用<code>cmake ..</code>和<code>make</code>指令进行构建</p>
+</blockquote>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><p><code>project(CMake_Note)</code>指定项目名称，具体语法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/project.html">project</a></p>
+</li>
+<li><p><code>add_executable(main main.cpp)</code>添加一个可执行程序Target，将main.cpp编译为可执行程序，具体语法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/add_executable.html">add_executable</a></p>
+</li>
+</ul>
+<h2 id="E1-2-生成动态库与静态库"><a href="#E1-2-生成动态库与静态库" class="headerlink" title="E1.2 生成动态库与静态库"></a>E1.2 生成动态库与静态库</h2><h3 id="目的-1"><a href="#目的-1" class="headerlink" title="目的"></a>目的</h3><ul>
+<li>通过CMake生成构建静态库与动态库</li>
+</ul>
+<h3 id="例程-1"><a href="#例程-1" class="headerlink" title="例程"></a>例程</h3><p>在E1.1基础上新增hello.h及hello.cpp文件，其内容分别如下</p>
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> HELLO_H_</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> HELLO_H_</span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">hello</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *what)</span></span>;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">// HELLO_H_</span></span></code></pre>
+
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;hello.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">hello</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *what)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello %s!\n&quot;</span>, what);
+&#125;</code></pre>
+
+<p>将CMakeLists.txt与main.cpp分别修改为以下内容</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">project</span>(CMake_Note)
+
+<span class="hljs-keyword">add_library</span>(hello hello.cpp)
+
+<span class="hljs-keyword">add_executable</span>(main main.cpp)
+<span class="hljs-keyword">target_link_libraries</span>(main hello)</code></pre>
+
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;hello.h&quot;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"></span>&#123;
+    hello(<span class="hljs-string">&quot;Function&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+<h3 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><p><code>add_library(hello hello.cpp)</code>添加一个库文件Target，将hello.cpp编译为库文件，具体语法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/add_library.html">add_executable</a></p>
+</li>
+<li><p>使用<code>add_library(hello STATIC hello.cpp)</code>可以强制生成静态库，<code>add_library(hello SHARED hello.cpp)</code>同理。具体见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-buildsystem.7.html#binary-library-types">Binary Library Types</a></p>
+</li>
+<li><p><code>target_link_libraries(main hello)</code>表示将hello链接到main中，具体语法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/target_link_libraries.html">target_link_libraries</a>。需要注意的是，<code>target_link_libraries</code>在添加Target之后，在本例子中的体现是该语句在<code>add_executable(main main.cpp)</code>之后。</p>
+</li>
+</ul>
+<h2 id="E1-3-改变输出文件路径"><a href="#E1-3-改变输出文件路径" class="headerlink" title="E1.3 改变输出文件路径"></a>E1.3 改变输出文件路径</h2><h3 id="目的-2"><a href="#目的-2" class="headerlink" title="目的"></a>目的</h3><ul>
+<li>将可执行程序与库文件分别输出到bin与lib文件夹</li>
+</ul>
+<h3 id="例程-2"><a href="#例程-2" class="headerlink" title="例程"></a>例程</h3><p>在E1.2基础上将CMakeLists.txt修改为以下内容</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">project</span>(CMake_Note)
+
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+
+<span class="hljs-keyword">add_library</span>(hello hello.cpp)
+
+<span class="hljs-keyword">add_executable</span>(main main.cpp)
+<span class="hljs-keyword">target_link_libraries</span>(main hello)</code></pre>
+
+<h3 id="说明-2"><a href="#说明-2" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><p>基本上，<code>CMAKE_RUNTIME_OUTPUT_DIRECTORY</code>指定可执行文件的输出路径，<code>CMAKE_LIBRARY_OUTPUT_DIRECTORY</code>指定库文件的输出路径。</p>
+</li>
+<li><p><code>CMAKE_BINARY_DIR</code>表示执行<code>cmake</code>命令时所在的路径，在本例子中为<code>build</code>目录。还有一个<code>CMAKE_SOURCE_DIR</code>表示工程源码路径，在本例子中为<code>CMakeLists.txt</code>所在路径。另外还有两个类似的目录，<code>CMAKE_CURRENT_BINARY_DIR</code>与<code>CMAKE_CURRENT_SOURCE_DIR</code>，当cmake工程发生嵌套时，不带CURRENT的变量指顶层CMake工程，带CURRENT的则指当前CMake工程。具体定义见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/variable/CMAKE_SOURCE_DIR.html#variable:CMAKE_SOURCE_DIR">CMAKE_SOURCE_DIR</a>。</p>
+</li>
+<li><p>不同平台下，输出文件的路径由不同的变量控制可能不同。例如window下与linux下的动态库文件，在window下，动态库输出路径由<code>CMAKE_RUNTIME_OUTPUT_DIRECTORY</code>指定，linux下则由<code>CMAKE_LIBRARY_OUTPUT_DIRECTORY</code>指定，具体解释见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-buildsystem.7.html#output-artifacts">Output Artifacts</a></p>
+</li>
+<li><p>window平台下，cmake可能会根据不同的构建类型（Debug或Release）将输出文件归类到对应类型的文件夹下，为避免该情况，可将上述CMakeLists.txt新增的内容改为</p>
+  <pre><code class="hljs CMake"><span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)</code></pre>
+<p>  参考<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/543203/cmake-runtime-output-directory-on-windows">CMake Runtime Output Directory On Windows</a></p>
+</li>
+</ul>
+<h2 id="E1-4-分离可执行程序与库文件"><a href="#E1-4-分离可执行程序与库文件" class="headerlink" title="E1.4 分离可执行程序与库文件"></a>E1.4 分离可执行程序与库文件</h2><h3 id="目的-3"><a href="#目的-3" class="headerlink" title="目的"></a>目的</h3><ul>
+<li>了解如何使用add_subdirectory直接将库的源码工程导入到应用（APP）工程，了解CMake的Target概念</li>
+</ul>
+<h3 id="例程-3"><a href="#例程-3" class="headerlink" title="例程"></a>例程</h3><p>在E1.3基础上分离可执行程序工程与库工程，工程目录如下</p>
+<pre><code class="hljs shell">.
+├─ CMakeLists.txt
+├─ hello
+│   ├─ CMakeLists.txt
+│   ├─ hello.h
+│   └─ hello.cpp
+└─ main.cpp</code></pre>
+
+<p>CMakeLists.txt内容为</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.18</span>)
+
+<span class="hljs-keyword">project</span>(MAIN)
+
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+
+<span class="hljs-keyword">add_subdirectory</span>(hello)
+
+<span class="hljs-keyword">add_executable</span>(main main.cpp)
+<span class="hljs-keyword">target_link_libraries</span>(main hello)</code></pre>
+
+<p>hello/CMakeLists.txt内容为</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.18</span>)
+
+<span class="hljs-keyword">project</span>(HELLO)
+
+<span class="hljs-keyword">add_library</span>(hello hello.cpp)
+<span class="hljs-keyword">target_include_directories</span>(hello 
+    PUBLIC 
+        $&lt;BUILD_INTERFACE:<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>&gt;
+)</code></pre>
+
+<h3 id="说明-3"><a href="#说明-3" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><p>hello文件夹中本身是一个独立的CMake工程（HELLO工程）</p>
+</li>
+<li><p><code>add_subdirectory(lib)</code>将hello库的CMake源码工程直接导入到当前工程（MAIN工程）中，所以当前工程可以直接引用到<code>hello</code>Target，<code>add_executable</code>，<code>add_library</code>都能产生Target，如HELLO工程中产生了<code>hello</code>Target，MAIN工程中产生了<code>main</code>Target，且<code>main</code>依赖<code>hello</code>。<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/add_subdirectory.html">add_subdirectory</a>是引用外部库的方式之一（通过直接引入库源码的方式）。</p>
+</li>
+<li><p><code>target_include_directories(hello $&#123;CMAKE_CURRENT_SOURCE_DIR&#125;)</code>将指定目录绑定到指定Target中。在HELLO工程中，<code>target_include_directories</code>将hello库的源码目录（即<code>CMAKE_CURRENT_SOURCE_DIR</code>-&gt;hello）绑定到<code>hello</code>Target上，所以当链接<code>hello</code>Target时，<code>main</code>Target也以该目录作为include目录，所以main.cpp中能直接<code>#include &quot;hello.h&quot;</code>。具体见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/target_include_directories.html">target_include_directories</a>。在HELLO工程中，<code>target_include_directories</code>使用了PUBLIC进行修饰，PUBLIC后的目录可以对外传递。当指定为PRIVATE时，目录不会对外传递，所以这种情况下，main.cpp中的<code>#include &quot;hello.h&quot;</code>将报出找不到头文件的错误。除了PUBLIC外，例子中还用了<code>$&lt;BUILD_INTERFACE:$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;&gt;</code>进行修饰，表示只有在构建（Build）时才会传递指定的目录。所以，当MAIN工程不是直接包含HELLO工程源码来引用<code>hello</code>Target时（如hello库已经以二进制的形式安装在本地环境中，此时需要使用<code>$&lt;INSTALL_INTERFACE:...&gt;</code>），该指定目录不会被传递给<code>main</code>Target。具体见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-generator-expressions.7.html#output-related-expressions">Output-Related Expressions</a></p>
+<blockquote>
+<p><strong>Target自身带有某些属性，如该Target包含了哪些include目录，链接了哪些Target。某些Target属性会传递到引用该Target的Target上</strong>。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="E1-5-configure-file用法"><a href="#E1-5-configure-file用法" class="headerlink" title="E1.5 configure_file用法"></a>E1.5 configure_file用法</h2><h3 id="目的-4"><a href="#目的-4" class="headerlink" title="目的"></a>目的</h3><ul>
+<li>熟悉模板配置，实现通过CMake变量控制生成不同的源文件</li>
+</ul>
+<h3 id="例程-4"><a href="#例程-4" class="headerlink" title="例程"></a>例程</h3><p>在E1.4中的hello目录下添加config.h.in文件，工程目录如下</p>
+<pre><code class="hljs shell">.
+├─ CMakeLists.txt
+├─ hello
+│   ├─ CMakeLists.txt
+│   ├─ config.h.in
+│   ├─ hello.h
+│   └─ hello.cpp
+└─ main.cpp</code></pre>
+
+<p>hello/config.h.in</p>
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> _HELLO_CONFIG_H_</span>
+
+<span class="hljs-meta">#cmakedefine HELLO_VERSION <span class="hljs-meta-string">&quot;@HELLO_VERSION@&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">// _HELLO_CONFIG_H_</span></span></code></pre>
+
+<p>修改hello/CMakeLists.txt文件为</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.18</span>)
+
+<span class="hljs-keyword">project</span>(HELLO)
+
+<span class="hljs-keyword">set</span>(HELLO_VERSION_MAJOR <span class="hljs-number">1</span>)
+<span class="hljs-keyword">set</span>(HELLO_VERSION_MINOR <span class="hljs-number">1</span>)
+<span class="hljs-keyword">set</span>(HELLO_VERSION_PATCH <span class="hljs-number">1</span>)
+<span class="hljs-keyword">set</span>(HELLO_VERSION <span class="hljs-variable">$&#123;HELLO_VERSION_MAJOR&#125;</span>.<span class="hljs-variable">$&#123;HELLO_VERSION_MINOR&#125;</span>.<span class="hljs-variable">$&#123;HELLO_VERSION_PATCH&#125;</span>)
+
+<span class="hljs-keyword">configure_file</span>(config.h.in <span class="hljs-string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/config.h&quot;</span> @ONLY)
+
+<span class="hljs-keyword">add_library</span>(hello hello.cpp)
+<span class="hljs-keyword">target_include_directories</span>(hello 
+    PUBLIC 
+        $&lt;BUILD_INTERFACE:<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>&gt;
+    PRIVATE
+        $&lt;BUILD_INTERFACE:<span class="hljs-variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>&gt;
+)</code></pre>
+
+<p>修改hello/hello.cpp文件为</p>
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;hello.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;config.h&quot;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">hello</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *what)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello %s!, version: %s\n&quot;</span>, what, HELLO_VERSION);
+&#125;</code></pre>
+
+<h3 id="说明-4"><a href="#说明-4" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/configure_file.html">configure_file</a>将config.h.in模板文件生成为config.h文件，其内容最终如下所示</p>
+  <pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> _HELLO_CONFIG_H_</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> HELLO_VERSION <span class="hljs-meta-string">&quot;1.1.1&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">// _HELLO_CONFIG_H_</span></span></code></pre>
+</li>
+<li><p>由于config.h生成在<code>CMAKE_CURRENT_BINARY_DIR</code>目录中，故<code>target_include_directories</code>中需新增了一个include目录，并且设置为PRIVATE，防止该include目录传递到其他Target上。</p>
+</li>
+</ul>
+<h2 id="E1-6-直接引用二进制库"><a href="#E1-6-直接引用二进制库" class="headerlink" title="E1.6 直接引用二进制库"></a>E1.6 直接引用二进制库</h2><h3 id="目的-5"><a href="#目的-5" class="headerlink" title="目的"></a>目的</h3><ul>
+<li>了解CMake直接引用二进制库的方法</li>
+</ul>
+<h3 id="例程-5"><a href="#例程-5" class="headerlink" title="例程"></a>例程</h3><p>在E1.5的基础上，新建cmake文件，并将之前生成的二进制库和hello.h拷贝到其中。工程目录如下</p>
+<pre><code class="hljs shell">.
+├─ CMakeLists.txt
+├─ hello # 此目录在本工程中无作用
+├─ cmake
+│   ├─ hello.h
+│   └─ hello.lib # linux下可能会其他类型的文件，如*.so
+└─ main.cpp</code></pre>
+
+<p>修改CMakeLists.txt为</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.18</span>)
+
+<span class="hljs-keyword">project</span>(MAIN)
+
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+
+<span class="hljs-keyword">include_directories</span>(cmake)
+<span class="hljs-keyword">link_directories</span>(cmake)
+
+<span class="hljs-keyword">add_executable</span>(main main.cpp)
+<span class="hljs-keyword">target_link_libraries</span>(main hello)</code></pre>
+
+<h3 id="说明-5"><a href="#说明-5" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><p><code>include_directories(cmake)</code>指定了MAIN工程的include文件夹，使得CMake在构建、编译时，去这些目录下查找相应的头文件。具体用法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/include_directories.html">include_directories</a></p>
+</li>
+<li><p><code>link_directories(cmake)</code>指定MAIN工程所依赖的库的路径，使得CMake在构建、编译时，去这些目录下查找需要的库。具体用法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/include_directories.html">link_directories</a></p>
+</li>
+</ul>
+<h2 id="E1-7-通过Module模式的find-package引用二进制库"><a href="#E1-7-通过Module模式的find-package引用二进制库" class="headerlink" title="E1.7 通过Module模式的find_package引用二进制库"></a>E1.7 通过Module模式的find_package引用二进制库</h2><h3 id="目的-6"><a href="#目的-6" class="headerlink" title="目的"></a>目的</h3><ul>
+<li><p>了解通过Module模式的find_package引用二进制库</p>
+</li>
+<li><p>了解find_package的用法</p>
+</li>
+<li><p>了解find_package的module模式</p>
+</li>
+</ul>
+<h3 id="例程-6"><a href="#例程-6" class="headerlink" title="例程"></a>例程</h3><p>在E1.6的基础上，在cmake文件夹中新增Findhello.cmake文件，工程目录如下</p>
+<pre><code class="hljs shell">.
+├─ CMakeLists.txt
+├─ hello # 此目录在本工程中无作用
+├─ cmake
+│   ├─ Findhello.cmake
+│   ├─ hello.h
+│   └─ hello.lib # linux下可能会其他类型的文件，如*.so
+└─ main.cpp</code></pre>
+
+<p>cmake/Findhello.cmake</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">find_path</span>(HELLO_INCLUDES hello.h <span class="hljs-variable">$&#123;CMAKE_CURRENT_LIST_DIR&#125;</span>)
+<span class="hljs-keyword">find_library</span>(HELLO_LIBRARIES hello.lib <span class="hljs-variable">$&#123;CMAKE_CURRENT_LIST_DIR&#125;</span>)
+<span class="hljs-keyword">if</span>(HELLO_INCLUDES)
+    <span class="hljs-keyword">set</span>(hello_FOUND <span class="hljs-number">1</span>)
+<span class="hljs-keyword">endif</span>()</code></pre>
+
+<p>修改CMakeLists.txt为</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.18</span>)
+
+<span class="hljs-keyword">project</span>(main)
+
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+
+<span class="hljs-keyword">list</span>(APPEND CMAKE_MODULE_PATH <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/cmake)
+
+<span class="hljs-keyword">find_package</span>(hello)
+
+<span class="hljs-keyword">add_executable</span>(main main.cpp)
+<span class="hljs-keyword">target_link_libraries</span>(main <span class="hljs-variable">$&#123;HELLO_LIBRARIES&#125;</span>)
+<span class="hljs-keyword">target_include_directories</span>(main PRIVATE <span class="hljs-variable">$&#123;HELLO_INCLUDES&#125;</span>)</code></pre>
+
+<h3 id="说明-6"><a href="#说明-6" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><p><code>find_package(hello)</code>根据<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/variable/CMAKE_MODULE_PATH.html">CMAKE_MODULE_PATH</a>中指定的路径找到<code>Findhello.cmake</code>文件，并从该文件中获取hello库相关的构建信息。具体用法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-packages.7.html#find-module-packages">find-module-packages</a>。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/variable/CMAKE_CURRENT_LIST_DIR.html">CMAKE_CURRENT_LIST_DIR</a>指当前被处理的cmake文件所在目录。</p>
+</li>
+<li><p><code>find_path(HELLO_INCLUDES hello.h $&#123;CMAKE_CURRENT_LIST_DIR&#125;)</code>在给定目录下查找某个文件，如果找到便将该目录赋值给指定变量，在本例子中指在<code>$&#123;CMAKE_CURRENT_LIST_DIR&#125;</code>指定的目录下查找<code>hello.h</code>文件，如果找到则赋值给<code>HELLO_INCLUDES</code>变量。具体用法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/find_path.html">find_path</a></p>
+</li>
+<li><p><code>find_library(HELLO_LIBRARIES hello.lib $&#123;CMAKE_CURRENT_LIST_DIR&#125;)</code>的用法和<code>find_path</code>的类似，只是被赋值的变量中包含的是库文件本身，而非库文件所在的目录。具体用法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/find_library.html">find_library</a></p>
+</li>
+<li><p>CMake Module本身是一系列FindXXX.cmake文件，这些文件包含了库的信息（如include目录，library所在目录等），通过这些FindXXX.cmake文件和find_package命令，可以解耦引用了库的cmake工程（即应用工程中不显式存在库的目录信息）。当库稳定后，库的维护者甚至可以向cmake添加自己制作的库的FindXXX.cmake文件，如此随cmake部署时自动部署。一些随cmake安装时附带的见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-modules.7.html">Moudles</a>。</p>
+</li>
+</ul>
+<h2 id="E1-8-创建Config-file-Package"><a href="#E1-8-创建Config-file-Package" class="headerlink" title="E1.8 创建Config-file Package"></a>E1.8 创建Config-file Package</h2><h3 id="目的-7"><a href="#目的-7" class="headerlink" title="目的"></a>目的</h3><ul>
+<li><p>了解CMake的<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-packages.7.html#config-file-packages">Config-file Package</a></p>
+</li>
+<li><p>了解通过Config模式的find_package引用二进制库</p>
+</li>
+</ul>
+<h3 id="例程-7"><a href="#例程-7" class="headerlink" title="例程"></a>例程</h3><p>工程目录</p>
+<pre><code class="hljs shell">. # main 工程
+├─ CMakeLists.txt
+├─ hello # hello 工程
+│   ├─ CMakeLists.txt
+│   ├─ cmake
+│   │   ├─ config.h.in
+│   │   ├─ hello-config-version.cmake.in
+│   │   └─ hello-config.cmake.in
+│   ├─ hello.h
+│   └─ hello.cpp
+├─ install
+└─ main.cpp</code></pre>
+
+<p>hello/CMakeLists.txt</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.18</span>)
+
+<span class="hljs-keyword">project</span>(HELLO)
+
+<span class="hljs-keyword">set</span>(HELLO_VERSION_MAJOR <span class="hljs-number">1</span>)
+<span class="hljs-keyword">set</span>(HELLO_VERSION_MINOR <span class="hljs-number">1</span>)
+<span class="hljs-keyword">set</span>(HELLO_VERSION_PATCH <span class="hljs-number">1</span>)
+<span class="hljs-keyword">set</span>(HELLO_VERSION <span class="hljs-variable">$&#123;HELLO_VERSION_MAJOR&#125;</span>.<span class="hljs-variable">$&#123;HELLO_VERSION_MINOR&#125;</span>.<span class="hljs-variable">$&#123;HELLO_VERSION_PATCH&#125;</span>)
+
+<span class="hljs-keyword">configure_file</span>(cmake/config.h.in <span class="hljs-string">&quot;$&#123;PROJECT_BINARY_DIR&#125;/config.h&quot;</span> @ONLY)
+<span class="hljs-keyword">configure_file</span>(cmake/hello-config-version.cmake.in <span class="hljs-string">&quot;$&#123;PROJECT_BINARY_DIR&#125;/hello-config-version.cmake&quot;</span> @ONLY)
+<span class="hljs-keyword">configure_file</span>(cmake/hello-config.cmake.in <span class="hljs-string">&quot;$&#123;PROJECT_BINARY_DIR&#125;/hello-config.cmake&quot;</span> @ONLY)
+
+<span class="hljs-keyword">add_library</span>(hello hello.cpp)
+<span class="hljs-keyword">target_include_directories</span>(hello 
+    PUBLIC 
+        $&lt;BUILD_INTERFACE:<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>&gt;
+        $&lt;INSTALL_INTERFACE:<span class="hljs-keyword">include</span>/hello-<span class="hljs-variable">$&#123;HELLO_VERSION&#125;</span>&gt;
+    PRIVATE
+        $&lt;BUILD_INTERFACE:<span class="hljs-variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>&gt;
+)
+
+<span class="hljs-keyword">install</span>(TARGETS hello 
+    <span class="hljs-keyword">EXPORT</span> hello
+    DESTINATION lib/hello-<span class="hljs-variable">$&#123;HELLO_VERSION&#125;</span>)
+<span class="hljs-keyword">install</span>(FILES hello.h DESTINATION <span class="hljs-keyword">include</span>/hello-<span class="hljs-variable">$&#123;HELLO_VERSION&#125;</span>/<span class="hljs-variable">$&#123;HELLO_INCLUDE_PREFIX&#125;</span>)
+<span class="hljs-keyword">install</span>(FILES <span class="hljs-string">&quot;$&#123;PROJECT_BINARY_DIR&#125;/hello-config.cmake&quot;</span> DESTINATION lib/hello-<span class="hljs-variable">$&#123;HELLO_VERSION&#125;</span>)
+<span class="hljs-keyword">install</span>(FILES <span class="hljs-string">&quot;$&#123;PROJECT_BINARY_DIR&#125;/hello-config-version.cmake&quot;</span> DESTINATION lib/hello-<span class="hljs-variable">$&#123;HELLO_VERSION&#125;</span>)
+<span class="hljs-keyword">install</span>(<span class="hljs-keyword">EXPORT</span> hello DESTINATION lib/hello-<span class="hljs-variable">$&#123;HELLO_VERSION&#125;</span>)
+
+<span class="hljs-comment"># 需要安装NSIS</span>
+<span class="hljs-comment"># cpack -C Debug</span>
+<span class="hljs-keyword">set</span>(CPACK_GENERATOR NSIS)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_NAME <span class="hljs-string">&quot;hello&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_VENDOR <span class="hljs-string">&quot;No vendor&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_DESCRIPTION_SUMMARY <span class="hljs-string">&quot;No description&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_VERSION <span class="hljs-variable">$&#123;HELLO_VERSION&#125;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_INSTALL_DIRECTORY <span class="hljs-string">&quot;/usr/local&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_NSIS_MODIFY_PATH <span class="hljs-keyword">ON</span>)
+<span class="hljs-keyword">include</span>(CPack)</code></pre>
+
+<p>hello/cmake/hello-config.cmake.in</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">list</span>(APPEND CMAKE_MODULE_PATH <span class="hljs-variable">$&#123;CMAKE_CURRENT_LIST_DIR&#125;</span>)
+<span class="hljs-keyword">include</span>(<span class="hljs-variable">$&#123;CMAKE_CURRENT_LIST_DIR&#125;</span>/hello.cmake)
+
+<span class="hljs-keyword">set</span>(hello_FOUND <span class="hljs-number">1</span>)
+<span class="hljs-keyword">set</span>(HELLO_LIBRARIES hello)</code></pre>
+
+<p>hello/cmake/hello-config-version.cmake.in，其中被@@包围的部分为模板变量，最后会被configure_file替换为实际值。</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">set</span>(PACKAGE_VERSION @HELLO_VERSION@)
+
+<span class="hljs-keyword">if</span>(<span class="hljs-string">&quot;$&#123;PACKAGE_FIND_VERSION_MAJOR&#125;&quot;</span> <span class="hljs-keyword">EQUAL</span> <span class="hljs-string">&quot;@HELLO_VERSION_MAJOR@&quot;</span>)
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;$&#123;PACKAGE_FIND_VERSION_MINOR&#125;&quot;</span> <span class="hljs-keyword">EQUAL</span> <span class="hljs-string">&quot;@HELLO_VERSION_MINOR@&quot;</span>)
+        <span class="hljs-keyword">set</span>(PACKAGE_VERSION_EXACT <span class="hljs-keyword">TRUE</span>)
+    <span class="hljs-keyword">elseif</span>(<span class="hljs-string">&quot;$&#123;PACKAGE_FIND_VERSION_MINOR&#125;&quot;</span> <span class="hljs-keyword">LESS</span> <span class="hljs-string">&quot;@HELLO_VERSION_MINOR@&quot;</span>)
+        <span class="hljs-keyword">set</span>(PACKAGE_VERSION_COMPATIBLE <span class="hljs-keyword">TRUE</span>)
+    <span class="hljs-keyword">else</span>()
+        <span class="hljs-keyword">set</span>(PACKAGE_VERSION_UNSUITABLE <span class="hljs-keyword">TRUE</span>)
+    <span class="hljs-keyword">endif</span>()
+<span class="hljs-keyword">elseif</span>(<span class="hljs-string">&quot;$&#123;PACKAGE_FIND_VERSION&#125;&quot;</span> <span class="hljs-keyword">STREQUAL</span> <span class="hljs-string">&quot;&quot;</span>)
+    <span class="hljs-keyword">message</span>(STATUS <span class="hljs-string">&quot;Using hello @HELLO_VERSION@&quot;</span>)
+    <span class="hljs-keyword">set</span>(PACKAGE_VERSION_COMPATIBLE <span class="hljs-keyword">TRUE</span>)
+<span class="hljs-keyword">else</span>()
+    <span class="hljs-keyword">set</span>(PACKAGE_VERSION_UNSUITABLE <span class="hljs-keyword">TRUE</span>)
+<span class="hljs-keyword">endif</span>()</code></pre>
+
+<p>进入hello目录下，新建build目录并进入，依次执行<code>cmake ..</code>，<code>cmake --build .</code>,<code>cpack -C Debug</code>，双击生成的<code>hello-1.1.1-win32.exe</code>安装包，将其安装到install目录下。安装完毕后会有如下目录</p>
+<pre><code class="hljs shell">.
+...  
+├─ install
+│   ├─ include
+│   │   └─ hello-1.1.1
+│   │       └─ hello.h
+│   └─ lib
+│       └─ hello-1.1.1
+│           ├─ hello.lib
+│           ├─ hello.cmake # 自动生成的Target导出数据
+│           ├─ hello-config.cmake
+│           └─ hello-config-version.cmake
+...</code></pre>
+
+<p>CMakeLists.txt</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.18</span>)
+
+<span class="hljs-keyword">project</span>(CMake_Note)
+
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/bin&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+<span class="hljs-keyword">set</span>(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE <span class="hljs-string">&quot;$&#123;CMAKE_BINARY_DIR&#125;/lib&quot;</span>)
+
+<span class="hljs-keyword">list</span>(APPEND CMAKE_PREFIX_PATH <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/<span class="hljs-keyword">install</span>)
+
+<span class="hljs-keyword">find_package</span>(hello)
+
+<span class="hljs-keyword">add_executable</span>(main main.cpp)
+<span class="hljs-keyword">target_link_libraries</span>(main <span class="hljs-variable">$&#123;HELLO_LIBRARIES&#125;</span>)</code></pre>
+
+<p>返回main工程，用CMake构建</p>
+<h3 id="说明-7"><a href="#说明-7" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/command/install.html">install</a>用于安装、导出cmake Target。<code>install(TARGETS hello EXPORT hello DESTINATION lib/hello-$&#123;HELLO_VERSION&#125;)</code>创建了hello工程中需要导出的cmake Target，这些Target记录在自动生成的hello.cmake文件中（hello.cmake的hello来源于EXPORT后头的hello，TARGETS后的hello指向的是add_library时产生的hello）。<code>install(EXPORT hello DESTINATION lib/hello-$&#123;HELLO_VERSION&#125;)</code>则实际和<code>install(FILES ...)</code>一样，将指定的文件拷贝到对应的目录中。</p>
+</li>
+<li><p>cpack为cmake提供的跨平台打包工具，其间接调用各个平台下的工具对软件库进行打包（如本例子中使用window下的NSIS）。具体用法见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cpack.1.html">cpack</a>。</p>
+<blockquote>
+<p>可使用下面的片段生成deb包</p>
+  <pre><code class="hljs CMake"><span class="hljs-keyword">set</span>(CPACK_GENERATOR <span class="hljs-string">&quot;DEB&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_NAME <span class="hljs-string">&quot;hello&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_VENDOR <span class="hljs-string">&quot;No vendor&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_DESCRIPTION_SUMMARY <span class="hljs-string">&quot;No description&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_VERSION <span class="hljs-variable">$&#123;HELLO_VERSION&#125;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_INSTALL_DIRECTORY <span class="hljs-string">&quot;/usr/local&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_RPM_PACKAGE_GROUP <span class="hljs-string">&quot;group name&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_RPM_PACKAGE_LICENSE <span class="hljs-string">&quot;license&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_PACKAGE_CONTACT <span class="hljs-string">&quot;email or phone number&quot;</span>)
+<span class="hljs-keyword">set</span>(CPACK_DEBIAN_PACKAGE_MAINTAINER <span class="hljs-string">&quot;maintainer name&quot;</span>)
+<span class="hljs-keyword">include</span>(CPack)</code></pre>
+</blockquote>
+</li>
+<li><p>build interface 与 install interface。Target的两种接口，Target具有某些属性，如include目录。在本例程中main Target依赖于hello Target。hello Target的公开的include属性中分别指定了build时的include目录和install后的include目录，两个include目录是不同的。当main工程通过<strong>直接包含hello工程源码来引用hello Target</strong>时，hello Target的include属性中具有<code>$&lt;BUILD_INTERFACE:$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;&gt;</code>指定的include目录。当main工程通过<strong>find_package的方式引用已经安装好的hello Target</strong>时，hello Target的include属性中具有<code>$&lt;INSTALL_INTERFACE:include/hello-$&#123;HELLO_VERSION&#125;&gt;</code>指定的include目录。</p>
+<blockquote>
+<p>重点区别这两种interface，体会不同interface的作用</p>
+</blockquote>
+</li>
+<li><p>Target的通过install命令导出，将cmake编译过程记录在某个文件中，跟随库一起发布。其他某个A工程使用find_package引用该库时，库的编译过程数据将作为输入，传递到A工程的构建过程。</p>
+</li>
+<li><p>hello-config-version.cmake.in文件是cmake的包版本文件（<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-packages.7.html#package-version-file">Package Version File</a>），其命名形式一般为foo-config-version.cmake或FooConfigVersion.cmake（其中Foo为包名）。该文件一般随着包一起部署（安装），在该文件中可以通过<code>PACKAGE_FIND_VERSION</code>、<code>PACKAGE_FIND_VERSION_MAJOR</code>、<code>PACKAGE_FIND_VERSION_MINOR</code>、<code>PACKAGE_VERSION_COMPATIBLE</code>等变量来对包进行版本管理。一般在某个工程中find_package(Foo 1.1.1)后，<code>PACKAGE_FIND_VERSION</code>、<code>PACKAGE_FIND_VERSION_MAJOR</code>、<code>PACKAGE_FIND_VERSION_MINOR</code>等变量会被赋值为对应值，在判定兼容性后，设置<code>PACKAGE_VERSION_COMPATIBLE</code>为TRUE或FALSE来控制包是否可用。</p>
+</li>
+<li><p>hello-config.cmake.in文件是cmake的包配置文件，一般通过<code>install(EXPORT)</code>命令导出Target后会自动生成一个包配置文件，然后用hello-config.cmake.in直接包含该文件即可。本例中自动生成的文件为hello.cmake。更具体的描述见<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-packages.7.html#creating-a-package-configuration-file">Creating a Package Configuration File</a></p>
+</li>
+</ul>
+<h2 id="一些需求"><a href="#一些需求" class="headerlink" title="一些需求"></a>一些需求</h2><h3 id="仅头文件库"><a href="#仅头文件库" class="headerlink" title="仅头文件库"></a>仅头文件库</h3><h4 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h4><p>创建一个仅包含头文件的库</p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><pre><code class="hljs CMake"><span class="hljs-keyword">add_library</span>(library_a INTERFACE)
+<span class="hljs-keyword">target_include_directories</span>(library_a 
+    INTERFACE
+        $&lt;BUILD_INTERFACE:<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>&gt;
+        $&lt;INSTALL_INTERFACE:<span class="hljs-keyword">include</span>/library_a-<span class="hljs-variable">$&#123;LIBRARY_A_VERSION&#125;</span>&gt;
+)</code></pre>
+
+<h3 id="拷贝库的DLL到可执行目标目录"><a href="#拷贝库的DLL到可执行目标目录" class="headerlink" title="拷贝库的DLL到可执行目标目录"></a>拷贝库的DLL到可执行目标目录</h3><h4 id="需求-1"><a href="#需求-1" class="headerlink" title="需求"></a>需求</h4><p>window平台下，应用工程引用某个动态库后，希望能够通过某种方式自动将DLL拷贝到可执行文件所在的目录下</p>
+<h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><p>在库的xxx-config.cmake.in中定义以下函数，供外部工程调用</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">function</span>(XXX_COPY_DLL <span class="hljs-keyword">target</span>)
+    <span class="hljs-keyword">set</span>(XXX_DLL_FILE  <span class="hljs-variable">$&#123;CMAKE_CURRENT_LIST_DIR&#125;</span>/xxx.dll CACHE INTERNAL <span class="hljs-string">&quot;XXX_DLL_FILE&quot;</span>)
+    <span class="hljs-keyword">add_custom_command</span>(<span class="hljs-keyword">TARGET</span> <span class="hljs-variable">$&#123;target&#125;</span> POST_BUILD
+        <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">$&#123;CMAKE_COMMAND&#125;</span> -E echo copy <span class="hljs-variable">$&#123;XXX_DLL_FILE&#125;</span> to $&lt;TARGET_FILE_DIR:<span class="hljs-variable">$&#123;target&#125;</span>&gt;
+        <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">$&#123;CMAKE_COMMAND&#125;</span> -E copy <span class="hljs-variable">$&#123;XXX_DLL_FILE&#125;</span> $&lt;TARGET_FILE_DIR:<span class="hljs-variable">$&#123;target&#125;</span>&gt;
+    )
+<span class="hljs-keyword">endfunction</span>()</code></pre>
+
+<p>在应用工程CMakeLists.txt调用XXX_COPY_DLL</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">add_executable</span>(app ...)
+<span class="hljs-keyword">target_link_libraries</span>(app xxx)
+XXX_COPY_DLL(app)</code></pre>
+
+<h3 id="为已发布的库文件创建Target"><a href="#为已发布的库文件创建Target" class="headerlink" title="为已发布的库文件创建Target"></a>为已发布的库文件创建Target</h3><h4 id="需求-2"><a href="#需求-2" class="headerlink" title="需求"></a>需求</h4><p>在没有库源码的情况下针对库创建一个cmake Target</p>
+<h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><p>创建一个fake.cpp文件，实现空接口。构建完成之后用实际的库文件替换生成的库文件。</p>
+<pre><code class="hljs CMake"><span class="hljs-keyword">add_library</span>(real SHARED fake.cpp)
+
+<span class="hljs-keyword">if</span>(UNIX)
+    <span class="hljs-keyword">add_custom_target</span>(cheat ALL
+        <span class="hljs-keyword">COMMAND</span> cp <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/<span class="hljs-variable">$&#123;ARCH&#125;</span>/real.so <span class="hljs-variable">$&#123;PROJECT_BINARY_DIR&#125;</span>/real.so
+        <span class="hljs-comment">#</span>
+        <span class="hljs-comment"># 这里不能简单的用c. copy之后, ldd查看测试程序的依赖时显示real路径有问题</span>
+        <span class="hljs-comment"># 不知道为什么copy之后, rpath就变了</span>
+        <span class="hljs-comment">#</span>
+        <span class="hljs-keyword">COMMAND</span> <span class="hljs-keyword">install</span> <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/<span class="hljs-variable">$&#123;ARCH&#125;</span>/real.so <span class="hljs-variable">$&#123;CMAKE_LIBRARY_OUTPUT_DIRECTORY&#125;</span>/real.so
+        <span class="hljs-keyword">COMMAND</span> rm <span class="hljs-variable">$&#123;CMAKE_LIBRARY_OUTPUT_DIRECTORY&#125;</span>/real.so
+        <span class="hljs-keyword">COMMAND</span> ln <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/<span class="hljs-variable">$&#123;ARCH&#125;</span>/real.so <span class="hljs-variable">$&#123;CMAKE_LIBRARY_OUTPUT_DIRECTORY&#125;</span>/real.so
+        DEPENDS real <span class="hljs-comment"># POST BUILD作用</span>
+    )         
+<span class="hljs-keyword">elseif</span>(WIN32)
+    <span class="hljs-keyword">add_custom_command</span>(<span class="hljs-keyword">TARGET</span> controlcan POST_BUILD
+        <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">$&#123;CMAKE_COMMAND&#125;</span> -E 
+            copy_if_different <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/<span class="hljs-variable">$&#123;ARCH&#125;</span>/real.dll <span class="hljs-variable">$&#123;CMAKE_RUNTIME_OUTPUT_DIRECTORY&#125;</span>/real.dll
+        <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">$&#123;CMAKE_COMMAND&#125;</span> -E 
+            copy_if_different <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/<span class="hljs-variable">$&#123;ARCH&#125;</span>/real.lib <span class="hljs-variable">$&#123;CMAKE_ARCHIVE_OUTPUT_DIRECTORY&#125;</span>/real.lib
+    )
+<span class="hljs-keyword">endif</span>()</code></pre>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/index.html#reference-manuals">CMake Reference Manual</a><br><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-packages.7.html">CMake Package</a><br><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-variables.7.html">CMake Variables</a><br><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-buildsystem.7.html">CMake Build System</a><br><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-modules.7.html">CMake Modules</a><br><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cmake-commands.7.html">CMake Command</a><br><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.18/manual/cpack.1.html">CPack</a><br><a target="_blank" rel="noopener" href="https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/">It’s Time To Do CMake Right</a></p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10/14/%E5%B7%B2%E7%9F%A5%E5%89%8D%EF%BC%88%E5%90%8E%EF%BC%89%E5%BA%8F%E5%8F%8A%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%8C%E6%B1%82%E5%90%8E%EF%BC%88%E5%89%8D%EF%BC%89%E5%BA%8F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">已知前（后）序及中序遍历，求（后）前序</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/11/HEXO%E5%85%A5%E9%97%A8/">
+                        <span class="hidden-mobile">HEXO入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "6q9eFigSE9Szj6EB2AYQbBEw-gzGzoHsz",
+          app_key: "hdofqAbDXsCzzLI6Tu0fNjyo",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    }
+    waitElementVisible('vcomments', loadValine);
+  </script>
+  <noscript>Please enable JavaScript to view the <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "CMake笔记&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d59b3d8dd18fa79fc7e9701ceaaf7f5c";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+</body>
+</html>
