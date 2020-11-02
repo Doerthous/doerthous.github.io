@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>已知前（后）序及中序遍历，求后（前）序 - Doerthous</title>
+  <title>Python ArgParse笔记 - Doerthous</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,8 +165,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-10-14 21:33" pubdate>
-        2020年10月14日 晚上
+      <time datetime="2020-11-02 22:42" pubdate>
+        2020年11月2日 晚上
       </time>
     </span>
   
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      798 字
+      342 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12
+      5
        分钟
     </span>
   
@@ -225,185 +225,98 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">已知前（后）序及中序遍历，求后（前）序</h1>
+            <h1 style="display: none">Python ArgParse笔记</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="算法题"><a href="#算法题" class="headerlink" title="算法题"></a>算法题</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>已知二叉树的前/后序及中序遍历，求后/前序遍历。</p>
-<p>典型题目：已知二叉树中序遍历为ADEFGHMZ，后序遍历为AEFDHZMG，求前序遍历。</p>
-<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>前中后序列遍历的基本概念 =&gt; 前中后序遍历的规律 =&gt; 算法思路</p>
-<h3 id="前中后序遍历的基本概念"><a href="#前中后序遍历的基本概念" class="headerlink" title="前中后序遍历的基本概念"></a>前中后序遍历的基本概念</h3><pre><code class="hljs C">  P
- / \
-L   R</code></pre>
-
-<p>前序（pre-order）: PLR<br>中序（in-order）: LPR<br>后序（post-order）: LRP</p>
-<p>序指的是根节点在左右子树中的位置：根左右、左根右、左右根。</p>
-<h3 id="前中后序列遍历的规律"><a href="#前中后序列遍历的规律" class="headerlink" title="前中后序列遍历的规律"></a>前中后序列遍历的规律</h3><ul>
-<li>前序遍历：如果在同一颗树内，最前边的节点是根节点。</li>
-<li>中序遍历：如果在同一颗树内，根左边的是左子树，根右边的是右子树。</li>
-<li>后序遍历：如果在同一颗树内，最后边的节点是根节点。</li>
-</ul>
-<h3 id="算法思路"><a href="#算法思路" class="headerlink" title="算法思路"></a>算法思路</h3><ol>
-<li>通过前序（后序）遍历，找到树的根节点。</li>
-<li>通过根节点及中序遍历，划分左右子树。</li>
-<li>对左右子树递归进行步骤1、2，直到子树划分完毕。</li>
+              <h2 id="可选参数和位置参数"><a href="#可选参数和位置参数" class="headerlink" title="可选参数和位置参数"></a>可选参数和位置参数</h2><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><h3 id="两种执行模式"><a href="#两种执行模式" class="headerlink" title="两种执行模式"></a>两种执行模式</h3><ol>
+<li><code>python p.py</code>执行一种操作</li>
+<li><code>python p.py -s</code>执行另一种操作</li>
 </ol>
-<p>总结：找根节点、划分左右子树。</p>
-<h4 id="人型电脑实验"><a href="#人型电脑实验" class="headerlink" title="人型电脑实验"></a>人型电脑实验</h4><p>已知二叉树中序遍历为ADEFGHMZ，后序遍历为AEFDHZMG，求前序遍历。</p>
-<h5 id="解"><a href="#解" class="headerlink" title="解"></a>解</h5><p>1th，看后序得知根节点为G，看中序划分左子树ADEF和右子树HMZ</p>
-<pre><code class="hljs latex">    G
-  /   <span class="hljs-tag">\</span>
-ADEF  HMZ</code></pre>
+<p>实现</p>
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> argparse
 
-<p>2th</p>
-<pre><code class="hljs dns">  D
- / \
-<span class="hljs-keyword">A</span>  EF</code></pre>
+parser = argparse.ArgumentParser()
+parser.add_argument(<span class="hljs-string">&#x27;-s&#x27;</span>, action=<span class="hljs-string">&#x27;store_true&#x27;</span>)
+args = parser.parse_args()
 
-<p>3th</p>
-<pre><code class="hljs mathematica">  F
- /
-<span class="hljs-keyword">E</span></code></pre>
+<span class="hljs-keyword">if</span> args.s:
+    print(<span class="hljs-string">&#x27;python p.py -s&#x27;</span>)
+<span class="hljs-keyword">else</span>:
+    print(<span class="hljs-string">&#x27;python p.py&#x27;</span>)</code></pre>
 
-<p>4th</p>
-<pre><code class="hljs latex">  M
- / <span class="hljs-tag">\</span>
-H   Z</code></pre>
+<h3 id="互斥的多模式"><a href="#互斥的多模式" class="headerlink" title="互斥的多模式"></a>互斥的多模式</h3><ol>
+<li><code>python p.py</code>执行一种操作</li>
+<li><code>python p.py s</code>执行另一种操作</li>
+<li><code>python p.py r</code>执行另一种操作</li>
+<li>1,2,3互斥</li>
+</ol>
+<p>实现</p>
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> argparse
 
-<p>tree</p>
-<pre><code class="hljs latex">     G
-   /   <span class="hljs-tag">\</span>
-  D     M
- / <span class="hljs-tag">\<span class="hljs-name"> </span></span>  / <span class="hljs-tag">\</span>
-A   F H   Z
-   /
-  E</code></pre>
 
-<p>故前序遍历为：GDAFEMHZ</p>
-<h2 id="解-1"><a href="#解-1" class="headerlink" title="解"></a>解</h2><h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><pre><code class="hljs matlab">v bt_preorder(t, op)
-v bt_inorder(t, op)
-v bt_postorder(t, op)
-t bt_solve_from_inpostorder(in, in_len post, post_len)
-&#123;
-    r = post[post_len<span class="hljs-number">-1</span>]
-    <span class="hljs-built_in">find</span> in[<span class="hljs-built_in">i</span>] == r
-    r-&gt;left = bt_solve_from_inpostorder(in, <span class="hljs-built_in">i</span>, post, <span class="hljs-built_in">i</span>)
-    r-&gt;right = bt_solve_from_inpostorder(in+<span class="hljs-built_in">i</span>+<span class="hljs-number">1</span>, in_len-<span class="hljs-built_in">i</span><span class="hljs-number">-1</span>, 
-        post+<span class="hljs-built_in">i</span>, post_len-<span class="hljs-built_in">i</span><span class="hljs-number">-1</span>)
-    <span class="hljs-keyword">return</span> r;
-&#125;
-t bt_solve_from_inpreorder(in, in_len pre, pre_len)
-&#123;
-    r = pre[<span class="hljs-number">0</span>]
-    <span class="hljs-built_in">find</span> in[<span class="hljs-built_in">i</span>] == r
-    r-&gt;left = bt_solve_from_inpreorder(in, <span class="hljs-built_in">i</span>, pre+<span class="hljs-number">1</span>, <span class="hljs-built_in">i</span>)
-    r-&gt;right = bt_solve_from_inpreorder(in+<span class="hljs-built_in">i</span>+<span class="hljs-number">1</span>, in_len-<span class="hljs-built_in">i</span><span class="hljs-number">-1</span>, 
-        pre+<span class="hljs-number">1</span>+<span class="hljs-built_in">i</span>, pre_len-<span class="hljs-built_in">i</span><span class="hljs-number">-1</span>)
-    <span class="hljs-keyword">return</span> r;
-&#125;</code></pre>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span>(<span class="hljs-params">args</span>):</span>
+    print(<span class="hljs-string">&#x27;python p.py&#x27;</span>)
 
-<h3 id="C"><a href="#C" class="headerlink" title="C"></a>C</h3><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;assert.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func_r</span>(<span class="hljs-params">args</span>):</span>
+    print(<span class="hljs-string">&#x27;python p.py r&#x27;</span>)
 
-<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">bt</span></span>
-<span class="hljs-class">&#123;</span>
-    <span class="hljs-keyword">char</span> key;
-    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">bt</span> *<span class="hljs-title">left</span>;</span>
-    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">bt</span> *<span class="hljs-title">right</span>;</span>
-&#125; <span class="hljs-keyword">bt_t</span>;
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func_s</span>(<span class="hljs-params">args</span>):</span>
+    print(<span class="hljs-string">&#x27;python p.py s&#x27;</span>)
 
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bt_preorder</span><span class="hljs-params">(<span class="hljs-keyword">bt_t</span> *bt, <span class="hljs-keyword">void</span> (*op)(<span class="hljs-keyword">bt_t</span> *))</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-keyword">if</span> (bt) &#123;
-        op(bt);
-        bt_preorder(bt-&gt;left, op);
-        bt_preorder(bt-&gt;right, op);
-    &#125;
-&#125;
 
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bt_inorder</span><span class="hljs-params">(<span class="hljs-keyword">bt_t</span> *bt, <span class="hljs-keyword">void</span> (*op)(<span class="hljs-keyword">bt_t</span> *))</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-keyword">if</span> (bt) &#123;
-        bt_inorder(bt-&gt;left, op);
-        op(bt);
-        bt_inorder(bt-&gt;right, op);
-    &#125;
-&#125;
+parser = argparse.ArgumentParser()
+subparsers = parser.add_subparsers()
 
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bt_postorder</span><span class="hljs-params">(<span class="hljs-keyword">bt_t</span> *bt, <span class="hljs-keyword">void</span> (*op)(<span class="hljs-keyword">bt_t</span> *))</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-keyword">if</span> (bt) &#123;
-        bt_postorder(bt-&gt;left, op);
-        bt_postorder(bt-&gt;right, op);
-        op(bt);
-    &#125;
-&#125;
+parser_s = subparsers.add_parser(<span class="hljs-string">&#x27;s&#x27;</span>)
+parser_s.set_defaults(func=func_s)
 
-<span class="hljs-keyword">bt_t</span> *
-bt_solve_from_inpostorder(
-    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *in, <span class="hljs-keyword">int</span> in_len, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *post, <span class="hljs-keyword">int</span> post_len
-)
-&#123;
-    <span class="hljs-keyword">if</span> (post_len &gt; <span class="hljs-number">0</span>) &#123;
-        <span class="hljs-keyword">int</span> i;
-        <span class="hljs-keyword">bt_t</span> *r = (<span class="hljs-keyword">bt_t</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(bt));
-        assert(r);
+parser_r = subparsers.add_parser(<span class="hljs-string">&#x27;r&#x27;</span>)
+parser_r.set_defaults(func=func_r)
 
-        r-&gt;key = post[post_len<span class="hljs-number">-1</span>];
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; in_len &amp;&amp; in[i] != r-&gt;key; ++i);
-        r-&gt;left = bt_solve_from_inpostorder(in, i, post, i);
-        r-&gt;right = bt_solve_from_inpostorder(in+i+<span class="hljs-number">1</span>, in_len-i<span class="hljs-number">-1</span>, 
-            post+i, post_len-i<span class="hljs-number">-1</span>);
-        <span class="hljs-keyword">return</span> r;
-    &#125;
+args = parser.parse_args()
 
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
-&#125;
+<span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> hasattr(args, <span class="hljs-string">&#x27;func&#x27;</span>):
+    args.func = func
 
-<span class="hljs-keyword">bt_t</span> *
-bt_solve_from_inpreorder(
-    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *in, <span class="hljs-keyword">int</span> in_len, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *pre, <span class="hljs-keyword">int</span> pre_len
-)
-&#123;
-    <span class="hljs-keyword">if</span> (pre_len &gt; <span class="hljs-number">0</span>) &#123;
-        <span class="hljs-keyword">int</span> i;
-        <span class="hljs-keyword">bt_t</span> *r = (<span class="hljs-keyword">bt_t</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(bt));
-        assert(r);
+args.func(args)</code></pre>
 
-        r-&gt;key = pre[<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; in_len &amp;&amp; in[i] != r-&gt;key; ++i);
-        r-&gt;left = bt_solve_from_inpreorder(in, i, pre+<span class="hljs-number">1</span>, i);
-        r-&gt;right = bt_solve_from_inpreorder(in+i+<span class="hljs-number">1</span>, in_len-i<span class="hljs-number">-1</span>, 
-            pre+<span class="hljs-number">1</span>+i, pre_len-i<span class="hljs-number">-1</span>);
-        <span class="hljs-keyword">return</span> r;
-    &#125;
+<h3 id="带参命令"><a href="#带参命令" class="headerlink" title="带参命令"></a>带参命令</h3><ol>
+<li><code>python p.py</code>执行一种操作</li>
+<li><code>python p.py s</code>执行另一种操作</li>
+<li><code>python p.py r</code>执行另一种操作</li>
+<li>1,2,3互斥</li>
+<li><code>python p.py r [-t title]</code>提供可选参数<code>title</code>, 默认为<code>&#39;&#39;</code></li>
+</ol>
+<p>实现</p>
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> argparse
 
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
-&#125;
 
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bt_node_print</span><span class="hljs-params">(<span class="hljs-keyword">bt_t</span> *bt)</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%c&quot;</span>, bt-&gt;key);
-&#125;
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span>(<span class="hljs-params">args</span>):</span>
+    print(<span class="hljs-string">&#x27;python p.py&#x27;</span>)
 
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *in = <span class="hljs-string">&quot;ADEFGHMZ&quot;</span>;
-    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *post = <span class="hljs-string">&quot;AEFDHZMG&quot;</span>;
-    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *pre = <span class="hljs-string">&quot;GDAFEMHZ&quot;</span>;
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func_r</span>(<span class="hljs-params">args</span>):</span>
+    print(<span class="hljs-string">&#x27;python p.py r title:%s&#x27;</span> % args.title)
 
-    <span class="hljs-keyword">bt_t</span> *bt = bt_solve_from_inpostorder(in, <span class="hljs-number">8</span>, post, <span class="hljs-number">8</span>);
-    bt_preorder(bt, bt_node_print);
-    bt_postorder(bt, (<span class="hljs-keyword">void</span> (*)(<span class="hljs-keyword">bt_t</span> *))<span class="hljs-built_in">free</span>);
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func_s</span>(<span class="hljs-params">args</span>):</span>
+    print(<span class="hljs-string">&#x27;python p.py s&#x27;</span>)
 
-    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
-    
-    bt = bt_solve_from_inpreorder(in, <span class="hljs-number">8</span>, pre, <span class="hljs-number">8</span>);
-    bt_postorder(bt, bt_node_print);
-    bt_postorder(bt, (<span class="hljs-keyword">void</span> (*)(<span class="hljs-keyword">bt_t</span> *))<span class="hljs-built_in">free</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+parser = argparse.ArgumentParser()
+subparsers = parser.add_subparsers()
+
+parser_s = subparsers.add_parser(<span class="hljs-string">&#x27;s&#x27;</span>)
+parser_s.set_defaults(func=func_s)
+
+parser_r = subparsers.add_parser(<span class="hljs-string">&#x27;r&#x27;</span>)
+parser_r.set_defaults(func=func_r)
+parser_r.add_argument(<span class="hljs-string">&#x27;-t&#x27;</span>, <span class="hljs-string">&#x27;--title&#x27;</span>, type=str, default=<span class="hljs-string">&#x27;&#x27;</span>, required=<span class="hljs-literal">False</span>)
+
+args = parser.parse_args()
+
+<span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> hasattr(args, <span class="hljs-string">&#x27;func&#x27;</span>):
+    args.func = func
+
+args.func(args)</code></pre>
             </div>
             <hr>
             <div>
@@ -419,18 +332,12 @@ bt_solve_from_inpreorder(
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/11/02/Python-ArgParse%E7%AC%94%E8%AE%B0/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Python ArgParse笔记</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/10/12/CMake%E7%AC%94%E8%AE%B0/">
-                        <span class="hidden-mobile">CMake笔记</span>
+                      <a href="/2020/10/14/%E5%B7%B2%E7%9F%A5%E5%89%8D%EF%BC%88%E5%90%8E%EF%BC%89%E5%BA%8F%E5%8F%8A%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%8C%E6%B1%82%E5%90%8E%EF%BC%88%E5%89%8D%EF%BC%89%E5%BA%8F/">
+                        <span class="hidden-mobile">已知前（后）序及中序遍历，求后（前）序</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -626,7 +533,7 @@ bt_solve_from_inpreorder(
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "已知前（后）序及中序遍历，求后（前）序&nbsp;",
+        "Python ArgParse笔记&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
