@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.5k 字
+      3.2k 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      29
+      37
        分钟
     </span>
   
@@ -236,7 +236,7 @@
 
 <p>此外，出于其他需要，可能还需实现一些管理、配置用的接口，不过我们暂时不关注这些。有了上述这些基本接口后，上层软件就可以将封装成以太网数据帧的数据发送到线缆上。关于以太网数据帧的说明在本文后续有简单地涉及，现在我们先把它当成黑盒子，划清驱动的范围，重点考虑如何实现这些接口。</p>
 <h2 id="解剖ENC28J60"><a href="#解剖ENC28J60" class="headerlink" title="解剖ENC28J60"></a>解剖ENC28J60</h2><p>在考虑实现基本接口前，我们需要先熟悉一下ENC28J60。</p>
-<p>通过查阅其手册可知，ENC28J60身提供了一个SPI接口和一个中断信号（其他暂不考虑）作为和外部设备通信的接口，其内部包含有用于各类特殊用途的<strong>寄存器</strong>和用于存放数据帧的硬件缓冲区（<strong>以太网缓冲</strong>），通过SPI接口，我们可以直接或间接地访问这些内存。</p>
+<p>通过查阅其手册可知，ENC28J60身提供了一个SPI接口和一个中断信号INT（其他暂不考虑）作为和外部设备通信的接口，其内部包含有用于各类特殊用途的<strong>寄存器</strong>和用于存放数据帧的硬件缓冲区（<strong>以太网缓冲</strong>），通过SPI接口，我们可以直接或间接地访问这些内存。</p>
 <pre><code class="hljs gherkin">                                 ENC28J60    
                       +-----------------------------+
                       |<span class="hljs-string">  +-------+  +------------+  </span>|
@@ -321,6 +321,7 @@
 <td>11111b</td>
 </tr>
 </tbody></table>
+<p>具体时序见ENC28J60的数据手册。需要注意的是BFS和BFC指令只能用于ETH寄存器。另外，除了RBM和WBM指令，其他指令貌似均不能连续操作寄存器。</p>
 <pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> CMD_RCR(addr)   (0x1F &amp; (addr))</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> CMD_RBM         ((0x01 &lt;&lt; 5)|(0x1A))</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> CMD_WCR(addr)   ((0x02 &lt;&lt; 5)|(0x1F &amp; (addr)))</span>
@@ -333,7 +334,8 @@
 <p>ENC28J60的寄存器集合又被分到了四个区域（Bank），每个Bank有32个寄存器，所以每个Bank中的寄存器都可以通过一个5bit长的地址进行寻址，结合前边的SPI命令可知，每个SPI都可以寻址到任意一个Bank中的所有寄存器。</p>
 <p>另外，每个Bank最后的5个寄存器（<code>EIE</code>、<code>EIR</code>、<code>ESTAT</code>、<code>ECON2</code>、<code>ECON1</code>）都相同，即无论在哪个Bank中，<code>EIE</code>（或其他四个）都是同一个，这样一来，访问这些寄存器就无需频繁地切换Bank。</p>
 <p>Bank由<code>ECON1</code>中的两个比特<code>ECON1.BSEL</code>指定。所以，要想访问寄存器，一般要先选择Bank，在选择Bank中的寄存器。</p>
-<pre><code class="hljs gherkin">     +----------+ +----------+ +----------+ +----------+
+<pre><code class="hljs gherkin">      Bank0        Bank1        Bank2        Bank3
+     +----------+ +----------+ +----------+ +----------+
 0x00 |<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|
      +----------+ +----------+ +----------+ +----------+
      |<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|
@@ -357,42 +359,93 @@
 <h3 id="以太网缓冲区"><a href="#以太网缓冲区" class="headerlink" title="以太网缓冲区"></a>以太网缓冲区</h3><p>ENC28J60有一个8K的以太网缓冲，主要用来存储以太网数据帧数据。</p>
 <p>该缓冲可通过两个寄存器<code>ERDPT</code>与<code>EWRPT</code>进行访问。<code>EWRPT</code>指向的位置是将要写入的位置，<code>ERDPT</code>则是将要读取的位置，结合这两个寄存器，主控可以通过<code>Read Buffer Memory</code>和<code>Read Buffer Memory</code>SPI指令来读写整个缓冲区。</p>
 <p>通过将<code>ECON2</code>寄存器的<code>AUTOINC</code>位设置为1（<code>ECON2.AUTOINC</code>的复位值为1），还可以使这两个指针自动递增。</p>
-<pre><code class="hljs c">            +-------------------+
-            |                   |  <span class="hljs-number">0x0000</span>
-            +-------------------+
-ERDPT +---&gt; |                   |  <span class="hljs-number">0x0001</span>
-            +-------------------+
-            |                   |
-            |        ...        |
-            |                   |
-            +-------------------+
-EWRPT +---&gt; |                   |  <span class="hljs-number">0x1FFE</span>
-            +-------------------+
-            |                   |  <span class="hljs-number">0x1FFF</span>
-            +-------------------+</code></pre>
+<pre><code class="hljs c">            +-----------+
+            |           |  <span class="hljs-number">0x0000</span>
+            +-----------+
+ERDPT +---&gt; |           |  <span class="hljs-number">0x0001</span>
+            +-----------+
+            |           |
+            |    ...    |
+            |           |
+            +-----------+
+EWRPT +---&gt; |           |  <span class="hljs-number">0x1FFE</span>
+            +-----------+
+            |           |  <span class="hljs-number">0x1FFF</span>
+            +-----------+</code></pre>
 
 <p>整个8K缓冲又被分为RX与TX两部分，通过设置寄存器<code>ERXSTPT</code>与<code>ERXNDPT</code>来划分RX缓冲，其余皆为TX缓冲。根据[1]中的Issue#5的描述，<code>ERXSTPT</code>必须设置为0x0000，所以整个缓冲的结构和下图类似。</p>
 <p>在ENC28J60内部存在一个主控无法访问的指向RX区域的寄存器<code>ERXWRPT</code>。该寄存器的作用和<code>EWRPT</code>类似，作为ENC28J60接收数据时的写指针，即当收到以太网数据时，ENC28J60会将数据拷贝到<code>ERXWRPT</code>指向的以太网缓冲内存，并自动移动该指针。另外，还有个<code>ERXRDPT</code>寄存器，该寄存器用来作为RX队列的哨兵节点，标识RX队列的头部。</p>
-<pre><code class="hljs c">              +----------------+  --+-----
-ERXSTPT +---&gt; |                |    ^
-              +----------------+    |
-              |                |    |
-              |      ...       |    |RX区域
-              |                |    |
-              +----------------+    |
-ERXNDPT +---&gt; |                |    v
-              +----------------+  --------
-              |                |    ^
-              |      ...       |    |
-              |                |    |TX区域
-              +----------------+    |
-              |                |    v
-              +----------------+  --+-----</code></pre>
+<pre><code class="hljs c">              +-----------+  --+-----
+ERXSTPT +---&gt; |           |    ^
+              +-----------+    |
+              |           |    |
+              |    ...    |    |RX区域
+              |           |    |
+              +-----------+    |
+ERXNDPT +---&gt; |           |    v
+              +-----------+  --------
+              |           |    ^
+              |    ...    |    |
+              |           |    |TX区域
+              +-----------+    |
+              |           |    v
+              +-----------+  --+-----</code></pre>
 
 <blockquote>
 <p>注：ST（Start），ND（End）</p>
 </blockquote>
-<h4 id="RX缓冲写入算法"><a href="#RX缓冲写入算法" class="headerlink" title="RX缓冲写入算法"></a>RX缓冲写入算法</h4><p>ENC28J60接收电缆上的数据的伪代码大致如下，需要注意的是<code>erxwrpt == erxrdpt</code>的情况，该情况下，ENC28J60将判定缓冲区无多余空间存储新数据，之后将不再接收新数据，直到有空余的空间出现。</p>
+<h4 id="TX缓冲指针"><a href="#TX缓冲指针" class="headerlink" title="TX缓冲指针"></a>TX缓冲指针</h4><p>前边说过<code>ERXSTPT</code>和<code>ERXNDPT</code>确定了RX缓冲的范围，而在ENC28J60提供的寄存器中，还存在<code>ETXSTPT</code>和<code>ETXNDPT</code>两个寄存器。但是这两个寄存器的作用并非用于确定TX缓冲的范围（RX缓冲范围确定后，剩余的都是TX缓冲），而是用来确定当前要发送的数据的范围。当把<code>ECON1.TXRTS</code>置1以启动发送后，ENC28J60会把从<code>ETXSTPT</code>到<code>ETXNDPT</code>的地方判定为当前需要发送的数据，接着把数据发送到线缆上。</p>
+<pre><code class="hljs gherkin">    TX FIFO
++--------------+
+|<span class="hljs-string"> +----------+ &lt;---ETXSTPT</span>
+|<span class="hljs-string"> </span>|<span class="hljs-string">ctrl byte </span>|<span class="hljs-string"> </span>|
+|<span class="hljs-string"> +----------+ </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string"> packet1  </span>|<span class="hljs-string"> </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|
+|<span class="hljs-string"> +----------+ &lt;---ETSNDPT</span>
+|<span class="hljs-string">      ...     </span>|
+|<span class="hljs-string"> +----------+ </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">ctrl byte </span>|<span class="hljs-string"> </span>|
+|<span class="hljs-string"> +----------+ </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string"> packet2  </span>|<span class="hljs-string"> </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|
+|<span class="hljs-string"> +----------+ </span>|
+|<span class="hljs-string">      ...     </span>|
++--------------+</code></pre>
+
+<h4 id="RX队列"><a href="#RX队列" class="headerlink" title="RX队列"></a>RX队列</h4><p>ENC28J60的数据接收采用队列的形式，它在接收到的数据包前边添加了下一个数据包的指针（Next Packet Pointer），在RX缓冲中，其呈现了下述的形式。</p>
+<p>我们通过<code>Read Buffer Memory</code>命令读取RX缓冲中的数据时，需要先设置<code>ERXRDPT</code>来确定读取的起始位置。在读取RX数据后，需要把Next Packet Pointer保存下来，以便读取下一个数据包时用于设置<code>ERXRDPT</code>。需要注意，<code>ERXRDPT</code>必须设置成奇数地址，而Next Packet Pointer总是偶数地址。</p>
+<pre><code class="hljs gherkin">    RX FIFO
++--------------+
+|<span class="hljs-string"> +----------+ </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string"> next ptr </span>|<span class="hljs-string">-+---+</span>
+|<span class="hljs-string"> +----------+ </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">  packet  </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> +----------+ </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string">              </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> +----------&lt;-+---+</span>
+|<span class="hljs-string"> </span>|<span class="hljs-string"> next ptr </span>|<span class="hljs-string">-+---+</span>
+|<span class="hljs-string"> +----------+ </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">  packet  </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> +----------+ </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string">              </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> +----------&lt;-+---+</span>
+|<span class="hljs-string"> </span>|<span class="hljs-string"> next ptr </span>|<span class="hljs-string">-+---+</span>
+|<span class="hljs-string"> +----------+ </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">  packet  </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> </span>|<span class="hljs-string">          </span>|<span class="hljs-string"> </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string"> +----------+ </span>|<span class="hljs-string">   </span>|
+|<span class="hljs-string">      ...   &lt;-+---+</span>
+<span class="hljs-string">+--------------+</span></code></pre>
+
+<h4 id="RX缓冲写入细节"><a href="#RX缓冲写入细节" class="headerlink" title="RX缓冲写入细节"></a>RX缓冲写入细节</h4><p>ENC28J60接收线缆上的数据的伪代码大致如下，需要注意的是<code>erxwrpt == erxrdpt</code>的情况，该情况下，ENC28J60将判定缓冲区无多余空间存储新数据，之后将不再接收新数据，直到有空余的空间出现。</p>
 <pre><code class="hljs properties"><span class="hljs-attr">struct</span> <span class="hljs-string">&#123;</span>
     <span class="hljs-attr">u8</span> <span class="hljs-string">*erxstpt;</span>
     <span class="hljs-attr">u8</span> <span class="hljs-string">*erxndpt;</span>
@@ -407,6 +460,7 @@ ERXNDPT +---&gt; |                |    v
         <span class="hljs-meta">*erxwrpt</span> = <span class="hljs-string">data[i]</span>
         <span class="hljs-attr">increase</span> <span class="hljs-string">erxwrpt (make sure erxwrpt between erxstpt and erxndpt)</span></code></pre>
 
+<p>ENC28J60把帧数据写到缓冲后会将<code>PKTCNT</code>加一，主控可通过查询<code>PKTCNT</code>判断当前缓冲中是否有数据帧，当主控从缓冲中读取一帧数据后，还需通过将<code>ECON2.PKTDEC</code>置1来递减<code>PKTCNT</code>，否则，一旦<code>PKTCNT</code>递增到255后，ENC28J60将不再接收线缆上的新数据帧。</p>
 <h4 id="通过以太网缓冲与ENC28J60交互"><a href="#通过以太网缓冲与ENC28J60交互" class="headerlink" title="通过以太网缓冲与ENC28J60交互"></a>通过以太网缓冲与ENC28J60交互</h4><p>以太网缓冲区除了用来存放以太网数据帧外，还会放一些状态和控制数据。包括接收状态向量、发送状态向量以及发送控制字节。</p>
 <p>主控在发送数据前，要先往发送缓冲区中写入一个控制字节，然后才将以太网帧数据写入到发送缓冲区。发送完一包数据后，ENC28J60会在包的尾部写入七个字节的发送状态向量，用于指示该包的发送状态。同样，收数据时，ENC28J60在往接收缓冲区中写入以太网帧数据前会先写入六个字节的接收状态向量。</p>
 <h5 id="发送数据"><a href="#发送数据" class="headerlink" title="发送数据"></a>发送数据</h5><p>发送数据的过程如下所示，首先1)主控向缓冲区写入一个<strong>控制字节</strong>，然后2)写入以太网数据帧，启动发送并且发送完毕后，ENC28J60会3)在包尾部添加七个字节的<strong>发送状态向量</strong>，用于指示发送的状态及结果。</p>
@@ -474,22 +528,39 @@ Controller      RX Buffer        ENC28J60
 <li>保存Next Packet Pointer</li>
 <li>递减PKTCNT寄存器</li>
 </ol>
-<h2 id="ENC28J60的功能点"><a href="#ENC28J60的功能点" class="headerlink" title="ENC28J60的功能点"></a>ENC28J60的功能点</h2><h3 id="以太网数据帧"><a href="#以太网数据帧" class="headerlink" title="以太网数据帧"></a>以太网数据帧</h3><ol>
+<h2 id="ENC28J60的功能点"><a href="#ENC28J60的功能点" class="headerlink" title="ENC28J60的功能点"></a>ENC28J60的功能点</h2><h3 id="以太网数据帧"><a href="#以太网数据帧" class="headerlink" title="以太网数据帧"></a>以太网数据帧</h3><ul>
 <li>发送时可通过控制<code>MACON3.PADCFG</code>使其自动添加CRC以及Padding。</li>
 <li>接收时通过设置<code>ERXFCON.CRCEN</code>对收到的帧进行CRC校验。</li>
-</ol>
-<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>TODO</p>
-<h3 id="流控"><a href="#流控" class="headerlink" title="流控"></a>流控</h3><ol>
+</ul>
+<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>ENC28J60有多个中断源和一个总中断开关，中断配置主要涉及了<code>EIE</code>，<code>EIR</code>以及<code>ESTAT</code>寄存器。本文只关注TXIE、PKTIE、TXERIE、RXERIE这四个中断，以及INTE总中断开关。</p>
+<p>ENC28J60数据手册中有一张清晰表示了其中断逻辑的逻辑门图，此处简要用代码表述了其原理，更多信息请参考ENC28J60的数据手册。</p>
+<pre><code class="hljs gradle"><span class="hljs-keyword">if</span> (TXIE and TXIF) <span class="hljs-comment">// 发送结束中断开关 及 发送结束中断标志</span>
+    <span class="hljs-keyword">INT</span> = <span class="hljs-keyword">true</span>
+<span class="hljs-keyword">if</span> (PKTIE and PKTIF) <span class="hljs-comment">// 收到PKT中断开关 及 其标志</span>
+    <span class="hljs-keyword">INT</span> = <span class="hljs-keyword">true</span>
+<span class="hljs-keyword">if</span> (TXERTIE and TXERIF) <span class="hljs-comment">// 发送异常中断开关 及 其标志</span>
+    <span class="hljs-keyword">INT</span> = <span class="hljs-keyword">true</span>
+<span class="hljs-keyword">if</span> (RXERTIE and RXERIF) <span class="hljs-comment">// 接收异常中断开关 及 其标志</span>
+    <span class="hljs-keyword">INT</span> = <span class="hljs-keyword">true</span>
+
+... <span class="hljs-comment">// 其他中断信号</span>
+
+<span class="hljs-keyword">if</span> (INTIE &amp;&amp; <span class="hljs-keyword">INT</span>) <span class="hljs-comment">// 总中断开关 及 其标志</span>
+    拉低<span class="hljs-keyword">INT</span>信号线</code></pre>
+
+<h3 id="流控"><a href="#流控" class="headerlink" title="流控"></a>流控</h3><ul>
 <li>半双工模式下，可以通过控制<code>EFLOCON.FCEN0</code>来一直发送前导码，以占用信道，类似在说，我在用。设置<code>ECON1.TXRTS</code>后（启动发送），有一个间隔，间隔结束后开始发送packet。</li>
-</ol>
+</ul>
 <h2 id="容易掉坑的地方"><a href="#容易掉坑的地方" class="headerlink" title="容易掉坑的地方"></a>容易掉坑的地方</h2><ul>
 <li><p>RX缓冲必须从0x0000地址起始，即<code>ERXSTPT</code>必须设置为0x0000。</p>
+</li>
+<li><p><code>ERXRDPT</code>必须设置成奇数地址。</p>
 </li>
 <li><p>SPI时序不匹配或时钟频率过低、dummy byte没有处理、bank不正确、晶振不稳定可能导致寄存器读写不正常。</p>
 </li>
 <li><p>复位后要等待晶振稳定（通过<code>ESTAT.CLKRDY</code>判断）才能收发数据或访问MAC、MII、PHY寄存器。</p>
 </li>
-<li><p><code>Bit Field Set</code>、<code>Bit Field Clear</code>指令中，别多传Data，有些Data会跑到下一个地址，导致程序逻辑错误。比如，往ECON2.PKTDEC写1时，多写一次会写到下一个地址相同位的地方，即ECON1.RXRST，导致接收异常。</p>
+<li><p><code>Bit Field Set</code>、<code>Bit Field Clear</code>指令中，别多传Data，有些Data会跑到下一个地址，导致程序逻辑错误。比如，往<code>ECON2.PKTDEC</code>写1时，多写一次会写到下一个地址相同位的地方，即ECON1.RXRST，导致接收异常。</p>
 </li>
 <li><p><code>Bit Field Set</code>、<code>Bit Field Clear</code>指令只能用于ETH寄存器。</p>
 </li>
@@ -504,12 +575,14 @@ Controller      RX Buffer        ENC28J60
 <p>目标MAC地址、源MAC地址、类型/长度、有些载荷、填充数据、CRC校验。</p>
 <p>CRC校验的内容包括目标MAC地址、源MAC地址、类型/长度、有些载荷、填充数据。一般和IEEE 802.3标准相兼容的帧的长度在64和1518个字节之间，所以当有效载荷小于46（46+6+6+2+4）个字节时需要填充数据。</p>
 <p>另外，除了在发送以太网帧之前，PHY还会发送前导码和帧分隔。</p>
-<h3 id="Linux下收发以太网帧"><a href="#Linux下收发以太网帧" class="headerlink" title="Linux下收发以太网帧"></a>Linux下收发以太网帧</h3><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24355597/linux-when-sending-ethernet-frames-the-ethertype-is-being-re-written">测试</a></p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>全双工：<br>暂停控制帧802.3</p>
+<h3 id="Linux下收发以太网帧"><a href="#Linux下收发以太网帧" class="headerlink" title="Linux下收发以太网帧"></a>Linux下收发以太网帧</h3><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24355597/linux-when-sending-ethernet-frames-the-ethertype-is-being-re-written">源码见本问题回答</a></p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>全双工模式中的暂停控制帧（IEEE 802.3）</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><p>[1] <a target="_blank" rel="noopener" href="http://ww1.microchip.com/downloads/en/DeviceDoc/80349c.pdf">ENC28J60 Silicon Errata and Data Sheet Clarification</a></p>
 </li>
-<li><p>[2] <a href="">ENC28J60 Data Sheet</a></p>
+<li><p>[2] <a target="_blank" rel="noopener" href="https://pdf1.alldatasheet.com/datasheet-pdf/view/515823/MICROCHIP/ENC28J60.html">ENC28J60 Data Sheet</a></p>
+</li>
+<li><p>[3] <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24355597/linux-when-sending-ethernet-frames-the-ethertype-is-being-re-written">Linux: When sending Ethernet frames the ethertype is being re-written</a></p>
 </li>
 </ul>
 
