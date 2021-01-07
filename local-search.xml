@@ -12,6 +12,14 @@
     
     
     
+    <tags>
+      
+      <tag>驱动</tag>
+      
+      <tag>网络</tag>
+      
+    </tags>
+    
   </entry>
   
   
@@ -24,6 +32,12 @@
     <content type="html"><![CDATA[<h2 id="可选参数和位置参数"><a href="#可选参数和位置参数" class="headerlink" title="可选参数和位置参数"></a>可选参数和位置参数</h2><p>可选参数由类似<code>add_argument(&#39;-f&#39;,&#39;--foo&#39;)</code>的语句创建，<code>add_argument(&#39;foo&#39;)</code>创建位置参数。当调用<code>parse_args()</code>时，带<code>-</code>前缀的将被识别为可选参数，剩余的被识别为位置参数。</p><h2 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h2><p>通过调用<a href="https://docs.python.org/3/library/argparse.html#the-add-argument-method">add_argument</a>可设置参数的一些属性，如默认值、参数类型等。</p><h2 id="子命令"><a href="#子命令" class="headerlink" title="子命令"></a>子命令</h2><p>子命令通过<a href="https://docs.python.org/3/library/argparse.html#sub-commands">add_subparsers</a>创建，</p><pre><code class="hljs python">parser = argparse.ArgumentParser()subparsers = parser.add_subparsers()parser_a = subparsers.add_parser(<span class="hljs-string">&#x27;cmd1&#x27;</span>)<span class="hljs-comment"># parser_a.add_argument ...</span>parser_b = subparsers.add_parser(<span class="hljs-string">&#x27;cmd2&#x27;</span>)<span class="hljs-comment"># parser_b.add_argument ...</span></code></pre><p>用法上，除了在调用时需指定子命令外（如<code>python p.py cmd1 ...</code>），其余基本相同。</p><h2 id="一些需求"><a href="#一些需求" class="headerlink" title="一些需求"></a>一些需求</h2><h3 id="两种执行模式"><a href="#两种执行模式" class="headerlink" title="两种执行模式"></a>两种执行模式</h3><ol><li><code>python p.py</code>执行一种操作</li><li><code>python p.py -s</code>执行另一种操作</li></ol><p>实现</p><pre><code class="hljs python"><span class="hljs-keyword">import</span> argparseparser = argparse.ArgumentParser()parser.add_argument(<span class="hljs-string">&#x27;-s&#x27;</span>, action=<span class="hljs-string">&#x27;store_true&#x27;</span>)args = parser.parse_args()<span class="hljs-keyword">if</span> args.s:    print(<span class="hljs-string">&#x27;python p.py -s&#x27;</span>)<span class="hljs-keyword">else</span>:    print(<span class="hljs-string">&#x27;python p.py&#x27;</span>)</code></pre><h3 id="互斥的多模式"><a href="#互斥的多模式" class="headerlink" title="互斥的多模式"></a>互斥的多模式</h3><ol><li><code>python p.py</code>执行一种操作</li><li><code>python p.py s</code>执行另一种操作</li><li><code>python p.py r</code>执行另一种操作</li><li>1,2,3互斥</li></ol><p>实现</p><pre><code class="hljs python"><span class="hljs-keyword">import</span> argparse<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span>(<span class="hljs-params">args</span>):</span>    print(<span class="hljs-string">&#x27;python p.py&#x27;</span>)<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func_r</span>(<span class="hljs-params">args</span>):</span>    print(<span class="hljs-string">&#x27;python p.py r&#x27;</span>)<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func_s</span>(<span class="hljs-params">args</span>):</span>    print(<span class="hljs-string">&#x27;python p.py s&#x27;</span>)parser = argparse.ArgumentParser()subparsers = parser.add_subparsers()parser_s = subparsers.add_parser(<span class="hljs-string">&#x27;s&#x27;</span>)parser_s.set_defaults(func=func_s)parser_r = subparsers.add_parser(<span class="hljs-string">&#x27;r&#x27;</span>)parser_r.set_defaults(func=func_r)args = parser.parse_args()<span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> hasattr(args, <span class="hljs-string">&#x27;func&#x27;</span>):    args.func = funcargs.func(args)</code></pre><h3 id="带参命令"><a href="#带参命令" class="headerlink" title="带参命令"></a>带参命令</h3><ol><li><code>python p.py</code>执行一种操作</li><li><code>python p.py s</code>执行另一种操作</li><li><code>python p.py r</code>执行另一种操作</li><li>1,2,3互斥</li><li><code>python p.py r [-t title]</code>提供可选参数<code>title</code>, 默认为<code>&#39;&#39;</code></li></ol><p>实现</p><pre><code class="hljs python"><span class="hljs-keyword">import</span> argparse<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span>(<span class="hljs-params">args</span>):</span>    print(<span class="hljs-string">&#x27;python p.py&#x27;</span>)<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func_r</span>(<span class="hljs-params">args</span>):</span>    print(<span class="hljs-string">&#x27;python p.py r title:%s&#x27;</span> % args.title)<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func_s</span>(<span class="hljs-params">args</span>):</span>    print(<span class="hljs-string">&#x27;python p.py s&#x27;</span>)parser = argparse.ArgumentParser()subparsers = parser.add_subparsers()parser_s = subparsers.add_parser(<span class="hljs-string">&#x27;s&#x27;</span>)parser_s.set_defaults(func=func_s)parser_r = subparsers.add_parser(<span class="hljs-string">&#x27;r&#x27;</span>)parser_r.set_defaults(func=func_r)parser_r.add_argument(<span class="hljs-string">&#x27;-t&#x27;</span>, <span class="hljs-string">&#x27;--title&#x27;</span>, type=str, default=<span class="hljs-string">&#x27;&#x27;</span>, required=<span class="hljs-literal">False</span>)args = parser.parse_args()<span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> hasattr(args, <span class="hljs-string">&#x27;func&#x27;</span>):    args.func = funcargs.func(args)</code></pre>]]></content>
     
     
+    
+    <tags>
+      
+      <tag>使用记录</tag>
+      
+    </tags>
     
   </entry>
   
@@ -38,6 +52,16 @@
     
     
     
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>树</tag>
+      
+      <tag>数据结构</tag>
+      
+    </tags>
+    
   </entry>
   
   
@@ -51,31 +75,34 @@
     
     
     
+    <tags>
+      
+      <tag>CMake</tag>
+      
+      <tag>编译构建工具</tag>
+      
+    </tags>
+    
   </entry>
   
   
   
   <entry>
     <title>HEXO入门</title>
-    <link href="/2020/10/11/HEXO%E5%85%A5%E9%97%A8/"/>
-    <url>/2020/10/11/HEXO%E5%85%A5%E9%97%A8/</url>
+    <link href="/2020/10/11/HEXO%E7%AC%94%E8%AE%B0/"/>
+    <url>/2020/10/11/HEXO%E7%AC%94%E8%AE%B0/</url>
     
-    <content type="html"><![CDATA[<h1 id="HEXO笔记"><a href="#HEXO笔记" class="headerlink" title="HEXO笔记"></a>HEXO笔记</h1><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>部署文件会生成到public目录下，注释掉.gitignore中public/，使其一同被push到仓库中。</p><h2 id="主题：hexo-theme-fluid"><a href="#主题：hexo-theme-fluid" class="headerlink" title="主题：hexo-theme-fluid"></a>主题：hexo-theme-fluid</h2><p><a href="https://hexo.fluid-dev.com/">HEXO Theme Fluid</a><br><a href="https://github.com/fluid-dev/hexo-theme-fluid">HEXO Theme Fluid Github</a></p><h3 id="创建简历页"><a href="#创建简历页" class="headerlink" title="创建简历页"></a>创建简历页</h3><ol><li><p>在<code>themes/hexo-theme-fluid/_config.yml</code>中</p><ol><li><p>搜索<code>nav</code>，在about上头添加一行</p> <pre><code class="hljs yaml"><span class="hljs-bullet">-</span> &#123; <span class="hljs-attr">key:</span> <span class="hljs-string">&#x27;resume&#x27;</span>, <span class="hljs-attr">link:</span> <span class="hljs-string">&#x27;/resume/&#x27;</span>, <span class="hljs-attr">icon:</span> <span class="hljs-string">&#x27;iconfont icon-user-fill&#x27;</span> &#125;</code></pre></li><li><p>添加如下内容</p><pre><code class="hljs yaml"><span class="hljs-comment">#---------------------------</span><span class="hljs-comment"># 简历页</span><span class="hljs-comment"># Resume Page</span><span class="hljs-comment">#---------------------------</span><span class="hljs-attr">resume:</span>    <span class="hljs-attr">banner_img:</span> <span class="hljs-string">/img/default.png</span>    <span class="hljs-attr">banner_img_height:</span> <span class="hljs-number">80</span>  <span class="hljs-comment"># available: 0 - 100</span>    <span class="hljs-attr">banner_mask_alpha:</span> <span class="hljs-number">0.3</span>  <span class="hljs-comment"># available: 0 - 1.0</span>    <span class="hljs-attr">subtitle:</span>  <span class="hljs-comment"># 打字机内容</span></code></pre></li></ol></li><li><p>在<code>themes/hexo-theme-fluid/languages/zh-CN.yml</code>中搜索添加</p> <pre><code class="hljs yaml"><span class="hljs-attr">resume:</span>  <span class="hljs-attr">title:</span> <span class="hljs-string">简历</span>  <span class="hljs-attr">subtitle:</span> <span class="hljs-string">简历</span></code></pre></li><li><p>在<a href="https://hexo.fluid-dev.com/docs/icon/#%E5%86%85%E7%BD%AE%E7%A4%BE%E4%BA%A4%E5%9B%BE%E6%A0%87">内置社交图标</a>中<br> 查找合适的图标，此处选<code>icon-addrcard</code></p></li><li><p>添加resume页</p><ol><li><p>执行<code>hexo new page resume</code>创建页</p></li><li><p>复制<code>themes/hexo-theme-fluid/layout/about.ejs</code>并改名为<code>resume.ejs</code>创建resume页的layout</p></li><li><p>修改<code>resume.ejs</code>为以下内容</p> <pre><code class="hljs ejs">&lt;%page.layout &#x3D; &quot;resume&quot;page.title &#x3D; theme.resume.title || __(&#39;resume.title&#39;)page.subtitle &#x3D; theme.resume.subtitle || __(&#39;resume.subtitle&#39;)page.banner_img &#x3D; theme.resume.banner_imgpage.banner_img_height &#x3D; theme.resume.banner_img_heightpage.banner_mask_alpha &#x3D; theme.resume.banner_mask_alpha%&gt;&lt;div class&#x3D;&quot;mt-5 markdown-body&quot;&gt;    &lt;%- page.content %&gt;&lt;&#x2F;div&gt;</code></pre></li><li><p>在<code>source/resume/index.md</code>中引用新添加的 <strong>resume</strong> layout</p> <pre><code class="hljs html">---title: resumedate: 2020-10-12 10:06:24layout: resume---</code></pre></li><li><p>在<code>source/resume/index.md</code>编辑简历，实验如下</p> <pre><code class="hljs vala"><span class="hljs-meta"># 简历</span></code></pre></li></ol></li></ol><h3 id="网站统计"><a href="#网站统计" class="headerlink" title="网站统计"></a>网站统计</h3><p>以站长身份注册一个<a href="https://tongji.baidu.com/">百度统计</a>账户，登陆后进入管理页面，新增站点。新增完毕后，在百度生成的安装代码中找到对应的key（hs?之后的字符串），将该key放到主题_config.yml中的<a href="https://hexo.fluid-dev.com/docs/guide/#%E7%BD%91%E9%A1%B5%E7%BB%9F%E8%AE%A1">web_analytics</a>部分，在<a href="https://hexo.fluid-dev.com/docs/guide/#%E5%B1%95%E7%A4%BA-pv-%E4%B8%8E-uv-%E7%BB%9F%E8%AE%A1">footer</a>中启用显示访问量的工具，在<a href="https://hexo.fluid-dev.com/docs/guide/#%E6%97%A5%E6%9C%9F-%E5%AD%97%E6%95%B0-%E9%98%85%E8%AF%BB%E6%97%B6%E9%95%BF-%E9%98%85%E8%AF%BB%E6%95%B0">post</a>启用每篇文章的阅读量显示。</p><h3 id="添加Valine评论"><a href="#添加Valine评论" class="headerlink" title="添加Valine评论"></a>添加Valine评论</h3><ol><li><p><a href="https://valine.js.org/quickstart.html">注册LeanCloud</a>。</p><blockquote><p>需实名认证</p></blockquote></li><li><p>创建应用并获取<code>App ID</code>和<code>App Key</code></p></li><li><p>在主题_config.yml的<a href="https://hexo.fluid-dev.com/docs/guide/#%E8%AF%84%E8%AE%BA">post comment</a>中启用评论，并设置<code>type</code>为<code>valine</code>，在<code>valine</code>项目中配置步骤3中获取的<code>App ID</code>和<code>App Key</code>。</p></li></ol><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul><li><p><a href="https://hexo.fluid-dev.com/docs/guide/">配置指南</a></p></li><li><p><a href="https://hexo.fluid-dev.com/docs/example/">操作示例</a></p></li><li><p><a href="https://hexo.fluid-dev.com/docs/icon/">图标用法</a></p></li></ul>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="/2020/10/11/hello-world/"/>
-    <url>/2020/10/11/hello-world/</url>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="hljs bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="hljs bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="hljs bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="HEXO笔记"><a href="#HEXO笔记" class="headerlink" title="HEXO笔记"></a>HEXO笔记</h1><p><a href="https://hexo.io/zh-cn/">HEXO</a><br><a href="https://hexo.io/zh-cn/docs/">HEXO docs</a></p><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>部署文件会生成到public目录下，注释掉.gitignore中public/，使其一同被push到仓库中。</p><h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>创建文章时，文章最上方最上方以<code>---</code>分隔的区域被称为Front-matter，Front-matter用来指定个别文件的变量。举例来说：</p><pre><code class="hljs yaml"><span class="hljs-meta">---</span><span class="hljs-attr">title:</span> <span class="hljs-string">Hello</span> <span class="hljs-string">World</span><span class="hljs-attr">date:</span> <span class="hljs-number">2013</span><span class="hljs-string">/7/13</span> <span class="hljs-number">20</span><span class="hljs-string">:46:25</span><span class="hljs-meta">---</span></code></pre><h2 id="为文章添加标签"><a href="#为文章添加标签" class="headerlink" title="为文章添加标签"></a>为文章添加标签</h2><p>在Front-matter的tags下添加，样例：</p><pre><code class="hljs subunit"><span class="hljs-keyword">tags:</span>- PS3- Games</code></pre><h2 id="主题：hexo-theme-fluid"><a href="#主题：hexo-theme-fluid" class="headerlink" title="主题：hexo-theme-fluid"></a>主题：hexo-theme-fluid</h2><p><a href="https://hexo.fluid-dev.com/">HEXO Theme Fluid</a><br><a href="https://github.com/fluid-dev/hexo-theme-fluid">HEXO Theme Fluid Github</a></p><h3 id="创建简历页"><a href="#创建简历页" class="headerlink" title="创建简历页"></a>创建简历页</h3><ol><li><p>在<code>themes/hexo-theme-fluid/_config.yml</code>中</p><ol><li><p>搜索<code>nav</code>，在about上头添加一行</p> <pre><code class="hljs yaml"><span class="hljs-bullet">-</span> &#123; <span class="hljs-attr">key:</span> <span class="hljs-string">&#x27;resume&#x27;</span>, <span class="hljs-attr">link:</span> <span class="hljs-string">&#x27;/resume/&#x27;</span>, <span class="hljs-attr">icon:</span> <span class="hljs-string">&#x27;iconfont icon-user-fill&#x27;</span> &#125;</code></pre></li><li><p>添加如下内容</p><pre><code class="hljs yaml"><span class="hljs-comment">#---------------------------</span><span class="hljs-comment"># 简历页</span><span class="hljs-comment"># Resume Page</span><span class="hljs-comment">#---------------------------</span><span class="hljs-attr">resume:</span>    <span class="hljs-attr">banner_img:</span> <span class="hljs-string">/img/default.png</span>    <span class="hljs-attr">banner_img_height:</span> <span class="hljs-number">80</span>  <span class="hljs-comment"># available: 0 - 100</span>    <span class="hljs-attr">banner_mask_alpha:</span> <span class="hljs-number">0.3</span>  <span class="hljs-comment"># available: 0 - 1.0</span>    <span class="hljs-attr">subtitle:</span>  <span class="hljs-comment"># 打字机内容</span></code></pre></li></ol></li><li><p>在<code>themes/hexo-theme-fluid/languages/zh-CN.yml</code>中搜索添加</p> <pre><code class="hljs yaml"><span class="hljs-attr">resume:</span>  <span class="hljs-attr">title:</span> <span class="hljs-string">简历</span>  <span class="hljs-attr">subtitle:</span> <span class="hljs-string">简历</span></code></pre></li><li><p>在<a href="https://hexo.fluid-dev.com/docs/icon/#%E5%86%85%E7%BD%AE%E7%A4%BE%E4%BA%A4%E5%9B%BE%E6%A0%87">内置社交图标</a>中<br> 查找合适的图标，此处选<code>icon-addrcard</code></p></li><li><p>添加resume页</p><ol><li><p>执行<code>hexo new page resume</code>创建页</p></li><li><p>复制<code>themes/hexo-theme-fluid/layout/about.ejs</code>并改名为<code>resume.ejs</code>创建resume页的layout</p></li><li><p>修改<code>resume.ejs</code>为以下内容</p> <pre><code class="hljs ejs">&lt;%page.layout &#x3D; &quot;resume&quot;page.title &#x3D; theme.resume.title || __(&#39;resume.title&#39;)page.subtitle &#x3D; theme.resume.subtitle || __(&#39;resume.subtitle&#39;)page.banner_img &#x3D; theme.resume.banner_imgpage.banner_img_height &#x3D; theme.resume.banner_img_heightpage.banner_mask_alpha &#x3D; theme.resume.banner_mask_alpha%&gt;&lt;div class&#x3D;&quot;mt-5 markdown-body&quot;&gt;    &lt;%- page.content %&gt;&lt;&#x2F;div&gt;</code></pre></li><li><p>在<code>source/resume/index.md</code>中引用新添加的 <strong>resume</strong> layout</p> <pre><code class="hljs html">---title: resumedate: 2020-10-12 10:06:24layout: resume---</code></pre></li><li><p>在<code>source/resume/index.md</code>编辑简历，实验如下</p> <pre><code class="hljs vala"><span class="hljs-meta"># 简历</span></code></pre></li></ol></li></ol><h3 id="网站统计"><a href="#网站统计" class="headerlink" title="网站统计"></a>网站统计</h3><p>以站长身份注册一个<a href="https://tongji.baidu.com/">百度统计</a>账户，登陆后进入管理页面，新增站点。新增完毕后，在百度生成的安装代码中找到对应的key（hs?之后的字符串），将该key放到主题_config.yml中的<a href="https://hexo.fluid-dev.com/docs/guide/#%E7%BD%91%E9%A1%B5%E7%BB%9F%E8%AE%A1">web_analytics</a>部分，在<a href="https://hexo.fluid-dev.com/docs/guide/#%E5%B1%95%E7%A4%BA-pv-%E4%B8%8E-uv-%E7%BB%9F%E8%AE%A1">footer</a>中启用显示访问量的工具，在<a href="https://hexo.fluid-dev.com/docs/guide/#%E6%97%A5%E6%9C%9F-%E5%AD%97%E6%95%B0-%E9%98%85%E8%AF%BB%E6%97%B6%E9%95%BF-%E9%98%85%E8%AF%BB%E6%95%B0">post</a>启用每篇文章的阅读量显示。</p><h3 id="添加Valine评论"><a href="#添加Valine评论" class="headerlink" title="添加Valine评论"></a>添加Valine评论</h3><ol><li><p><a href="https://valine.js.org/quickstart.html">注册LeanCloud</a>。</p><blockquote><p>需实名认证</p></blockquote></li><li><p>创建应用并获取<code>App ID</code>和<code>App Key</code></p></li><li><p>在主题_config.yml的<a href="https://hexo.fluid-dev.com/docs/guide/#%E8%AF%84%E8%AE%BA">post comment</a>中启用评论，并设置<code>type</code>为<code>valine</code>，在<code>valine</code>项目中配置步骤3中获取的<code>App ID</code>和<code>App Key</code>。</p></li></ol><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul><li><p><a href="https://hexo.fluid-dev.com/docs/guide/">配置指南</a></p></li><li><p><a href="https://hexo.fluid-dev.com/docs/example/">操作示例</a></p></li><li><p><a href="https://hexo.fluid-dev.com/docs/icon/">图标用法</a></p></li></ul>]]></content>
     
     
+    
+    <tags>
+      
+      <tag>HEXO</tag>
+      
+      <tag>博客</tag>
+      
+    </tags>
     
   </entry>
   
