@@ -243,8 +243,8 @@
               <h1 id="ENC28J60笔记"><a href="#ENC28J60笔记" class="headerlink" title="ENC28J60笔记"></a>ENC28J60笔记</h1><p>本文记录了开发驱动过程中的大致实施思路以及踩过的一些坑，方便后续回顾。本文尚未完善，但已有基本思路，如后续有需要再进行细化。具体的细节还需参考芯片的数据手册。实现见<a target="_blank" rel="noopener" href="https://github.com/Doerthous/dts_driver">dts_driver</a>中enc28j60*。</p>
 <h2 id="供给协议栈的接口"><a href="#供给协议栈的接口" class="headerlink" title="供给协议栈的接口"></a>供给协议栈的接口</h2><p>和其他通讯硬件类似，ENC28J60提供给上层软件的接口基本上包括初始化接口和收发接口，其可能的形式如下（如无特殊说明，下文中提到的<strong>基本接口</strong>均指此处提到的软件接口）。</p>
 <pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">enc28j60_init</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60)</span></span>;
-<span class="hljs-function"><span class="hljs-keyword">uint32_t</span> <span class="hljs-title">enc28j60_send</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">uint32_t</span> size)</span></span>;
-<span class="hljs-function"><span class="hljs-keyword">uint32_t</span> <span class="hljs-title">enc28j60_recv</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">uint32_t</span> size)</span></span>;</code></pre>
+<span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">enc28j60_send</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">enc28j60_recv</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size)</span></span>;</code></pre>
 
 <p>此外，出于其他需要，可能还需实现一些管理、配置用的接口，不过我们暂时不关注这些。有了上述这些基本接口后，上层软件就可以将封装成以太网数据帧的数据发送到线缆上。关于以太网数据帧的说明在本文后续有简单地涉及，现在我们先把它当成黑盒子，划清驱动的范围，重点考虑如何实现这些接口。</p>
 <h2 id="解剖ENC28J60"><a href="#解剖ENC28J60" class="headerlink" title="解剖ENC28J60"></a>解剖ENC28J60</h2><p>在考虑实现基本接口前，我们需要先熟悉一下ENC28J60。</p>
@@ -622,9 +622,9 @@ Controller      RX Buffer        ENC28J60
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/01/07/STM32F10x-RTThread-MDK%E7%A7%BB%E6%A4%8D/">
+                      <a href="/2020/11/07/ARP%E5%8D%8F%E8%AE%AE/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">STM32F10x+RTThread+MDK移植</span>
+                        <span class="hidden-mobile">ARP协议</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

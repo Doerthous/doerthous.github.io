@@ -188,6 +188,104 @@
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
+        <a href="/2021/01/12/Ethernet%E5%B8%A7%E5%8F%8A%E5%85%B6%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97%E5%AE%9E%E7%8E%B0/">Ethernet帧及其软件模块实现</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/01/12/Ethernet%E5%B8%A7%E5%8F%8A%E5%85%B6%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97%E5%AE%9E%E7%8E%B0/">
+          
+          
+            
+          
+          Ethernet帧及其软件模块实现1 Ethernet帧+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       target address (6)                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-01-12 12:29" pubdate>
+              2021-01-12
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
+            
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+            
+              <a href="/tags/Ethernet/">Ethernet</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2021/01/12/BOOTP%E5%8D%8F%E8%AE%AE/">BOOTP协议</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/01/12/BOOTP%E5%8D%8F%E8%AE%AE/">
+          
+          
+            
+          
+          BOOTP协议1 目的为无盘系统确定IP地址及服务器地址及镜像文件位置，使得系统可以自举。
+2 两个阶段
+IP地址确定及镜像文件定位（RFC951主要内容）。
+
+文件传输（通常为TFTP协议）。
+
+
+阶段一交互逻辑客户端请求，服务端响应（响应数据可能含分配给客户端的IP地址及BOOT文件位置）。
+3 包格式 0                   1                   2    
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-01-12 10:22" pubdate>
+              2021-01-12
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
+            
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+            
+              <a href="/tags/BOOTP/">BOOTP</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
         <a href="/2021/01/10/FatFS%E7%A7%BB%E6%A4%8D/">FatFS移植</a>
       </h1>
 
@@ -197,7 +295,7 @@
           
             
           
-          此项目代码见stm32f10x-mdk-none_fatfs。
+          FatFS移植此项目代码见stm32f10x-mdk-none_fatfs。
 环境硬件：
 
 STM32F103ZE 
@@ -214,8 +312,7 @@ STM32F10x StdPeriph Lib 3.5.0
 embedded
 ├─bsp
 ├─hal
-├─fs
-|  └
+├─
         </a>
       </p>
 
@@ -297,6 +394,53 @@ embedd
               <a href="/tags/MDK/">MDK</a>
             
               <a href="/tags/RTThread/">RTThread</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/11/07/ARP%E5%8D%8F%E8%AE%AE/">ARP协议</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/11/07/ARP%E5%8D%8F%E8%AE%AE/">
+          
+          
+            
+          
+          ARP协议1 目的解决已知目标网络地址但未知其硬件地址时，如何获取目标硬件地址的问题。
+2 交互过程一子网中有A（192.168.1.101）、B（192.168.1.1）、X（X知道B的MAC地址）。A要发送数据给B，但不知道B的MAC地址：
+A广播：谁有192.168.1.1的MAC地址，请告诉我（192.168.1.101）
+X单播到A：192.168.1.1的MAC地址是AA:BB:CC:
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-11-07 20:37" pubdate>
+              2020-11-07
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
+            
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+            
+              <a href="/tags/ARP/">ARP</a>
             
           </div>
         

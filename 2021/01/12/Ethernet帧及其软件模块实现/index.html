@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>STM32F10x+RTThread+MDK移植 - Doerthous</title>
+  <title>Ethernet帧及其软件模块实现 - Doerthous</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -177,8 +177,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-01-07 15:28" pubdate>
-        2021年1月7日 下午
+      <time datetime="2021-01-12 12:29" pubdate>
+        2021年1月12日 中午
       </time>
     </span>
   
@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      935 字
+      444 字
     </span>
   
 
@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      13
+      6
        分钟
     </span>
   
@@ -237,166 +237,116 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">STM32F10x+RTThread+MDK移植</h1>
+            <h1 style="display: none">Ethernet帧及其软件模块实现</h1>
             
             <div class="markdown-body" id="post-body">
-              <h2 id="STM32F10x-RTThread-MDK移植"><a href="#STM32F10x-RTThread-MDK移植" class="headerlink" title="STM32F10x+RTThread+MDK移植"></a>STM32F10x+RTThread+MDK移植</h2><p>此项目代码见<a target="_blank" rel="noopener" href="https://github.com/Doerthous/dts.embedded">stm32f10x-mdk-rtthread_empty</a>。</p>
-<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>硬件：</p>
+              <h2 id="Ethernet帧及其软件模块实现"><a href="#Ethernet帧及其软件模块实现" class="headerlink" title="Ethernet帧及其软件模块实现"></a>Ethernet帧及其软件模块实现</h2><h3 id="1-Ethernet帧"><a href="#1-Ethernet帧" class="headerlink" title="1 Ethernet帧"></a>1 Ethernet帧</h3><pre><code class="hljs asciidoc"><span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|                       target address (6)                      |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|                       source address (6)                      |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|                         type/length (2)                       |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|                           payload (n)                         | 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|                            crc (4)                            | 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+
+字段             字节数     说明
+<span class="hljs-bullet">----             </span>----      ----
+target address   6         目标地址。
+source address   6         源地址。
+type/length      2         类型/长度。
+payload          n         载荷。
+crc              4         校验。</code></pre>
+
+<p>一般和IEEE 802.3标准相兼容的帧的长度在64和1518（0x5EE）个字节之间。当type/length的值超过最大长度时，该字段含义为type（例如0x800表示IP协议），反之为length。另外，当有效载荷小于46（46+6+6+2+4）个字节时需对载荷进行填充，使帧达到最小长度。</p>
+<h3 id="2-实现考虑"><a href="#2-实现考虑" class="headerlink" title="2 实现考虑"></a>2 实现考虑</h3><p>Ether模块功能：</p>
 <ul>
-<li>STM32F103ZE </li>
-</ul>
-<p>软件：</p>
-<ul>
-<li>MDK 5.26.2.0</li>
-<li>RTThread 4.0.0</li>
-<li>STM32F10x StdPeriph Lib 3.5.0 </li>
-</ul>
-<p>目录结构：</p>
-<p>以下是移植过程中的项目目录结构。此处的目录结构非必须，可根据个人代码管理喜好进行。</p>
-<pre><code class="hljs lua">embedded
-├─bsp
-├─<span class="hljs-built_in">os</span>
-└─project
-   └─stm32f10x-mdk-rtthread_empty
-      ├─bsp
-      ├─<span class="hljs-built_in">os</span>
-      └─mdk</code></pre>
+<li><p>提供接口给上下层</p>
+  <pre><code class="hljs C"><span class="hljs-comment">/*</span>
+<span class="hljs-comment"> +----------------+</span>
+<span class="hljs-comment"> |   high level   |</span>
+<span class="hljs-comment"> +----------------+</span>
+<span class="hljs-comment">  |</span>
+<span class="hljs-comment">  v ether_hl_send</span>
+<span class="hljs-comment"> +----------------+</span>
+<span class="hljs-comment"> |     ether      |</span>
+<span class="hljs-comment"> +----------------+</span>
+<span class="hljs-comment">  ^ ether_ll_recv</span>
+<span class="hljs-comment">  | </span>
+<span class="hljs-comment"> +----------------+</span>
+<span class="hljs-comment"> |   low level    |</span>
+<span class="hljs-comment"> +----------------+</span>
+<span class="hljs-comment">*/</span>
 
-<h3 id="1-获取源码"><a href="#1-获取源码" class="headerlink" title="1. 获取源码"></a>1. 获取源码</h3><h4 id="获取BSP源码"><a href="#获取BSP源码" class="headerlink" title="获取BSP源码"></a>获取BSP源码</h4><p>下载STM32F10x对应的<a target="_blank" rel="noopener" href="https://www.st.com/content/st_com/en/products/embedded-software/mcu-mpu-embedded-software/stm32-embedded-software/stm32-standard-peripheral-libraries/stsw-stm32054.html">bsp源码</a>，拷贝到<code>embedded/bsp</code>目录中。</p>
-<pre><code class="hljs erlang">embedded
-├─bsp
-│  ├─CMSIS
-│  └─STM32F10x_StdPeriph_Driver
-├─os
-|  ...
-└─project
-   ...</code></pre>
+<span class="hljs-comment">// 底层调用此函数通知Ether模块接收帧数据</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_ll_recv</span><span class="hljs-params">(<span class="hljs-keyword">ether_t</span>* ether, <span class="hljs-keyword">ether_frame_t</span> *frame)</span></span>;
 
-<h4 id="获取OS源码"><a href="#获取OS源码" class="headerlink" title="获取OS源码"></a>获取OS源码</h4><p>获取RTThread源码可通过下面两种方式进行，本教程使用第二种方式。</p>
-<ul>
-<li><p>直接下载某个版本的源码</p>
+<span class="hljs-comment">// 高层调用此函数发送帧数据</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_hl_send</span><span class="hljs-params">(<span class="hljs-keyword">ether_t</span>* ether, <span class="hljs-keyword">ether_frame_t</span> *frame)</span></span>;</code></pre>
 </li>
-<li><p>使用<code>git submodule</code>将源码仓库拉到本地，并切换到指定版本</p>
+<li><p>拆帧组帧</p>
+  <pre><code class="hljs C"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span>
+<span class="hljs-class">&#123;</span>
+    <span class="hljs-keyword">uint8_t</span> *dest_mac_addr;
+    <span class="hljs-keyword">uint8_t</span> *src_mac_addr;
+    <span class="hljs-keyword">dblk_t</span> *payload;
+    <span class="hljs-keyword">uint16_t</span> type;
+    <span class="hljs-keyword">uint32_t</span> crc;
+    <span class="hljs-comment">//</span>
+    <span class="hljs-keyword">uint8_t</span> *data;
+    <span class="hljs-keyword">size_t</span> data_size;
+&#125; <span class="hljs-keyword">ether_frame_t</span>;
+
+<span class="hljs-comment">// 拆帧</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_unpack</span><span class="hljs-params">(<span class="hljs-keyword">ether_frame_t</span> *frame)</span></span>;
+
+<span class="hljs-comment">// 组帧</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_pack</span><span class="hljs-params">(<span class="hljs-keyword">ether_frame_t</span> *frame)</span></span>;</code></pre>
 </li>
-</ul>
-<p>进入<code>embedded/os</code>目录，执行<code>git submodule add https://github.com/RT-Thread/rt-thread.git</code>，待拉取结束后，<code>embedded/os</code>目录下将新增<code>rt-thread</code>目录，即为RTThread源码。</p>
-<pre><code class="hljs 1c">embedded
-├─bsp
-<span class="hljs-string">|  ...</span>
-├─os
-<span class="hljs-string">|  └─rt-thread</span>
-└─project
-   ...</code></pre>
+<li><p>硬件抽象</p>
+  <pre><code class="hljs C"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span>
+<span class="hljs-class">&#123;</span>
+    <span class="hljs-comment">// 驱动抽象</span>
+    <span class="hljs-keyword">size_t</span> (*send)(<span class="hljs-keyword">void</span> *interface, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size);
+    <span class="hljs-keyword">size_t</span> (*recv)(<span class="hljs-keyword">void</span> *interface, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size);
+    <span class="hljs-keyword">void</span> *interface;
+    <span class="hljs-comment">// ...</span>
+&#125; <span class="hljs-keyword">ether_t</span>;
 
-<p>进入<code>rt-thread</code>目录，执行<code>git checkout v4.0.0</code>切换到4.0.0版本的RTThread。</p>
-<h3 id="2-拷贝项目相关源码"><a href="#2-拷贝项目相关源码" class="headerlink" title="2. 拷贝项目相关源码"></a>2. 拷贝项目相关源码</h3><ul>
-<li>将和本项目直接相关的源码拷贝到<code>embedded/project/stm32f10x-mdk-rtthread_empty</code>（本节及其小节内简记为<code>stm32f10x-mdk-rtthread_empty</code>）及其子目录下。</li>
-</ul>
-<h4 id="拷贝BSP相关源码"><a href="#拷贝BSP相关源码" class="headerlink" title="拷贝BSP相关源码"></a>拷贝BSP相关源码</h4><ul>
-<li>将<code>stm32f10x_conf.h</code>（可在STM32F10x StdPeriph Lib 3.5.0中找到）拷贝到<code>stm32f10x-mdk-rtthread_empty/bsp</code>目录下。</li>
-</ul>
-<h4 id="移植或从OS源码中拷贝相关源码"><a href="#移植或从OS源码中拷贝相关源码" class="headerlink" title="移植或从OS源码中拷贝相关源码"></a>移植或从OS源码中拷贝相关源码</h4><p>由于RTThread已经有了STM32F10X芯片的例程，所以本教程直接拷贝其源码。</p>
-<ul>
-<li><p>将<code>embedded/os/rt-thread/bsp/stm32f10x/drivers</code>下的<code>board.c</code>及<code>board.h</code>拷贝到<code>stm32f10x-mdk-rtthread_empty/bsp</code>目录下。</p>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_hl_send</span><span class="hljs-params">(<span class="hljs-keyword">ether_t</span>* ether, <span class="hljs-keyword">ether_frame_t</span> *frame)</span> </span>&#123;
+    frame-&gt;src_mac_addr = ether-&gt;mac_address,
+    ether_pack(frame); <span class="hljs-comment">// 组帧</span>
+    <span class="hljs-keyword">return</span> ether-&gt;send(ether-&gt;interface, frame-&gt;data, frame-&gt;data_size); <span class="hljs-comment">// 发送</span>
+&#125;</code></pre>
 </li>
-<li><p>将<code>embedded/os/rt-thread/bsp/stm32f10x/rtconfig.h</code>拷贝到<code>stm32f10x-mdk-rtthread_empty/os</code>目录下。</p>
-</li>
-<li><p>将<code>embedded/os/rt-thread/bsp/stm32f10x/applications/startup.c</code>拷贝到<code>stm32f10x-mdk-rtthread_empty/app</code>目录下。</p>
-</li>
-</ul>
-<h3 id="3-新建项目"><a href="#3-新建项目" class="headerlink" title="3. 新建项目"></a>3. 新建项目</h3><p>新建keil项目，并将项目文件(.uvprojx等文件)保存到<code>embedded/project/stm32f10x-mdk-rtthread_empty/mdk</code>中。</p>
-<h3 id="4-将源码导入项目"><a href="#4-将源码导入项目" class="headerlink" title="4. 将源码导入项目"></a>4. 将源码导入项目</h3><h4 id="导入BSP源码"><a href="#导入BSP源码" class="headerlink" title="导入BSP源码"></a>导入BSP源码</h4><p>将下述文件导入到项目的bsp目录中</p>
-<p><code>embedded/project/stm32f10x-mdk-rtthread_empty/bsp/board.c</code></p>
-<p><code>embedded/bsp/CMSIS/CM3/CoreSupport/core_cm3.c</code><br><code>embedded/bsp/CMSIS/CM3/DeviceSupport/ST/STM32F10x/system_stm32f10x.c</code><br><code>embedded/bsp/CMSIS/CM3/DeviceSupport/ST/STM32F10x/startup/startup_stm32f10x_hd.s</code></p>
-<p><code>embedded/bsp/STM32F10x_StdPeriph_Driver/src/misc.c</code></p>
-<h4 id="导入OS源码"><a href="#导入OS源码" class="headerlink" title="导入OS源码"></a>导入OS源码</h4><p>将下述文件导入到项目的os目录中，</p>
-<p><code>embedded/os/rt-thread/libcpu/arm/cortex-m3/cpuport.c</code><br><code>embedded/os/rt-thread/libcpu/arm/cortex-m3/context_rvds.S</code><br><code>embedded/os/rt-thread/src</code>下所有.c文件</p>
-<h4 id="导入启动代码"><a href="#导入启动代码" class="headerlink" title="导入启动代码"></a>导入启动代码</h4><p>将下述文件导入到项目的app目录中，</p>
-<p><code>embedded/project/stm32f10x-mdk-rtthread_empty/bsp/startup.c</code></p>
-<h4 id=""><a href="#" class="headerlink" title=""></a></h4><p>最终结果如下图，</p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/93e69f86f18025a3.png" srcset="/img/loading.gif" alt="p1"></p>
-<h3 id="5-配置"><a href="#5-配置" class="headerlink" title="5. 配置"></a>5. 配置</h3><h4 id="配置项目include路径"><a href="#配置项目include路径" class="headerlink" title="配置项目include路径"></a>配置项目include路径</h4><p>将以下目录设置为include目录，</p>
-<p><code>embedded/bsp/CMSIS/CM3/CoreSupport</code><br><code>embedded/bsp/CMSIS/CM3/DeviceSupport/ST/STM32F10x</code></p>
-<p><code>embedded/bsp/STM32F10x_StdPeriph_Driver/inc</code></p>
-<p><code>embedded/os/rt-thread/include</code></p>
-<p><code>embedded/project/stm32f10x-mdk-rtthread_empty/bsp</code><br><code>embedded/project/stm32f10x-mdk-rtthread_empty/os</code></p>
-<h4 id="配置BSP"><a href="#配置BSP" class="headerlink" title="配置BSP"></a>配置BSP</h4><h5 id="配置ST外设库"><a href="#配置ST外设库" class="headerlink" title="配置ST外设库"></a>配置ST外设库</h5><p>在keil中添加宏定义<code>USE_STDPERIPH_DRIVER</code>和<code>STM32F10X_HD</code>，修改<code>stm32f10x-mdk-rtthread_empty/bsp/stm32f10x_conf.h</code>配置，注释掉暂不使用的功能（非<code>misc.h</code>的头文件）。</p>
-<pre><code class="hljs C"><span class="hljs-comment">//#include &quot;stm32f10x_adc.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_bkp.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_can.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_cec.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_crc.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_dac.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_dbgmcu.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_dma.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_exti.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_flash.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_fsmc.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_gpio.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_i2c.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_iwdg.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_pwr.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_rcc.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_rtc.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_sdio.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_spi.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_tim.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_usart.h&quot;</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_wwdg.h&quot;</span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;misc.h&quot;</span> <span class="hljs-comment">/* High level functions for NVIC and SysTick (add-on to CMSIS functions) */</span></span></code></pre>
-
-<h4 id="配置OS"><a href="#配置OS" class="headerlink" title="配置OS"></a>配置OS</h4><p>修改<code>stm32f10x-mdk-rtthread_empty/os/rtconfig.h</code>配置。</p>
-<pre><code class="hljs C">...
-<span class="hljs-comment">// 注释掉暂不使用的功能</span>
-<span class="hljs-comment">//#define RT_USING_POSIX</span>
-<span class="hljs-comment">//#define RT_USING_DEVICE</span>
-<span class="hljs-comment">//#define RT_USING_FINSH</span>
-<span class="hljs-comment">//#define RT_USING_DFS</span>
-
-<span class="hljs-comment">// 每秒1000次tick</span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> RT_TICK_PER_SECOND 1000</span>
-...</code></pre>
-
-<p><code>startup.c</code>:</p>
-<pre><code class="hljs C">...
-<span class="hljs-comment">// 添加测试程序</span>
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">rt_init_thread_entry</span><span class="hljs-params">(<span class="hljs-keyword">void</span>* parameter)</span></span>
-<span class="hljs-function"></span>&#123;
-	<span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;
-		rt_thread_delay(<span class="hljs-number">1000</span>);
-	&#125;
-&#125;
-
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">rt_application_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-keyword">rt_thread_t</span> init_thread;
-
-    init_thread = rt_thread_create(<span class="hljs-string">&quot;init&quot;</span>,
-                                   rt_init_thread_entry, RT_NULL,
-                                   <span class="hljs-number">2048</span>, <span class="hljs-number">8</span>, <span class="hljs-number">20</span>);
-
-    <span class="hljs-keyword">if</span> (init_thread != RT_NULL)
-        rt_thread_startup(init_thread);
-
+<li><p>帧分发</p>
+<p>  ether收到数据且拆包正常后，根据type/length字段将载荷分发到高层模块。</p>
+  <pre><code class="hljs C"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_ll_recv</span><span class="hljs-params">(<span class="hljs-keyword">ehter_t</span> *e, <span class="hljs-keyword">ether_frame_t</span> *f)</span> </span>&#123;
+    f-&gt;data_size = e-&gt;recv(e-&gt;interface, f-&gt;data, f-&gt;data_size); <span class="hljs-comment">// 接收</span>
+    <span class="hljs-keyword">if</span> (f-&gt;data_size &gt; <span class="hljs-number">0</span> &amp;&amp; ether_unpack(f)) &#123; <span class="hljs-comment">// 拆帧</span>
+        <span class="hljs-keyword">switch</span> (f-&gt;type) &#123;
+            <span class="hljs-keyword">case</span> HIGH_LEVEL_1_TYPE: &#123;
+                <span class="hljs-comment">//...</span>
+                hl1_ll_recv(frame-&gt;payload)
+            &#125; <span class="hljs-keyword">break</span>;
+            <span class="hljs-comment">//...</span>
+        &#125;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    &#125;
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;
-...</code></pre>
+&#125;</code></pre>
 
-<p><code>board.c</code>:</p>
-<pre><code class="hljs C">...
-<span class="hljs-comment">// 注释掉无效内容</span>
-<span class="hljs-comment">//#include &quot;stm32f10x_fsmc.h&quot;</span>
-<span class="hljs-comment">//#include &quot;usart.h&quot;</span>
-<span class="hljs-comment">//rt_hw_usart_init();</span>
-<span class="hljs-comment">//rt_console_set_device(RT_CONSOLE_DEVICE_NAME);</span>
-...</code></pre>
-
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
-<li><p><a target="_blank" rel="noopener" href="https://www.st.com/content/st_com/en/products/embedded-software/mcu-mpu-embedded-software/stm32-embedded-software/stm32-standard-peripheral-libraries/stsw-stm32054.html">STM32F10x StdPeriph Lib 3.5.0</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://www.rt-thread.org/">RTThread</a></p>
 </li>
 </ul>
+<p>此代码见<a target="_blank" rel="noopener" href="https://github.com/Doerthous/dts.net">dts.net</a>中的<code>ether</code>模块。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<li><p><a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc894">A Standard for the Transmission of IP Datagrams over Ethernet Networks</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://decnet.ipv7.net/docs/dundas/aa-k759a-tk.pdf">The Ethernet - A Local Area Network, Version 1.0, Digital Equipment Corporation, Intel Corporation, Xerox Corporation, September 1980</a></p>
+</li>
+</ol>
 
             </div>
             <hr>
@@ -407,13 +357,11 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a>
+                      <a class="hover-with-bg" href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
                     
-                      <a class="hover-with-bg" href="/tags/RTOS%E7%A7%BB%E6%A4%8D/">RTOS移植</a>
+                      <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
                     
-                      <a class="hover-with-bg" href="/tags/MDK/">MDK</a>
-                    
-                      <a class="hover-with-bg" href="/tags/RTThread/">RTThread</a>
+                      <a class="hover-with-bg" href="/tags/Ethernet/">Ethernet</a>
                     
                   </div>
                 
@@ -426,18 +374,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/01/10/FatFS%E7%A7%BB%E6%A4%8D/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">FatFS移植</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/11/07/ARP%E5%8D%8F%E8%AE%AE/">
-                        <span class="hidden-mobile">ARP协议</span>
+                      <a href="/2021/01/12/BOOTP%E5%8D%8F%E8%AE%AE/">
+                        <span class="hidden-mobile">BOOTP协议</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -633,7 +575,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "STM32F10x+RTThread+MDK移植&nbsp;",
+        "Ethernet帧及其软件模块实现&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
