@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>Ethernet帧及其软件模块实现 - Doerthous</title>
+  <title>UDP协议 - Doerthous</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -177,8 +177,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-01-12 12:29" pubdate>
-        2021年1月12日 中午
+      <time datetime="2021-01-13 10:35" pubdate>
+        2021年1月13日 上午
       </time>
     </span>
   
@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      444 字
+      330 字
     </span>
   
 
@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      4
        分钟
     </span>
   
@@ -237,116 +237,69 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">Ethernet帧及其软件模块实现</h1>
+            <h1 style="display: none">UDP协议</h1>
             
             <div class="markdown-body" id="post-body">
-              <h2 id="Ethernet帧及其软件模块实现"><a href="#Ethernet帧及其软件模块实现" class="headerlink" title="Ethernet帧及其软件模块实现"></a>Ethernet帧及其软件模块实现</h2><h3 id="1-Ethernet帧"><a href="#1-Ethernet帧" class="headerlink" title="1 Ethernet帧"></a>1 Ethernet帧</h3><pre><code class="hljs asciidoc"><span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                       target address (6)                      |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                       source address (6)                      |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                         type/length (2)                       |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                           payload (n)                         | 
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                            crc (4)                            | 
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+              <h2 id="UDP-协议"><a href="#UDP-协议" class="headerlink" title="UDP 协议"></a>UDP 协议</h2><p>UDP基于IP协议，为上层提供一个协议机制最少的通信协议。</p>
+<h3 id="1-UDP报文格式"><a href="#1-UDP报文格式" class="headerlink" title="1 UDP报文格式"></a>1 UDP报文格式</h3><pre><code class="hljs asciidoc"><span class="hljs-code"> 0      7 8     15 16    23 24    31</span>
+<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+
+|     Source      |   Destination   |
+|      Port       |      Port       |
+<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+
+|     Length      |    Checksum     |
+<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+
+|               Data                |
+|                ...                |
+<span class="hljs-code">+-----------------------------------+</span>
 
-字段             字节数     说明
+字段             大小       说明
 <span class="hljs-bullet">----             </span>----      ----
-target address   6         目标地址。
-source address   6         源地址。
-type/length      2         类型/长度。
-payload          n         载荷。
-crc              4         校验。</code></pre>
+Source Port      2B        源端口。
+Destination Port 2B        目标端口。
+Length           2B        长度（从Source Port到Data结束）。
+Checksum         2B        校验和（包括伪头部及UDP完整报文）。
+Data             n         数据。</code></pre>
 
-<p>一般和IEEE 802.3标准相兼容的帧的长度在64和1518（0x5EE）个字节之间。当type/length的值超过最大长度时，该字段含义为type（例如0x800表示IP协议），反之为length。另外，当有效载荷小于46（46+6+6+2+4）个字节时需对载荷进行填充，使帧达到最小长度。</p>
-<h3 id="2-实现考虑"><a href="#2-实现考虑" class="headerlink" title="2 实现考虑"></a>2 实现考虑</h3><p>Ether模块功能：</p>
-<ul>
-<li><p>提供接口给上下层</p>
-  <pre><code class="hljs C"><span class="hljs-comment">/*</span>
-<span class="hljs-comment"> +----------------+</span>
-<span class="hljs-comment"> |   high level   |</span>
-<span class="hljs-comment"> +----------------+</span>
-<span class="hljs-comment">  |</span>
-<span class="hljs-comment">  v ether_hl_send</span>
-<span class="hljs-comment"> +----------------+</span>
-<span class="hljs-comment"> |     ether      |</span>
-<span class="hljs-comment"> +----------------+</span>
-<span class="hljs-comment">  ^ ether_ll_recv</span>
-<span class="hljs-comment">  | </span>
-<span class="hljs-comment"> +----------------+</span>
-<span class="hljs-comment"> |   low level    |</span>
-<span class="hljs-comment"> +----------------+</span>
-<span class="hljs-comment">*/</span>
+<h3 id="2-伪头部"><a href="#2-伪头部" class="headerlink" title="2 伪头部"></a>2 伪头部</h3><p>在网络数据传递中，伪头部并不存在，其仅为了计算校验和而产生。</p>
+<pre><code class="hljs asciidoc"><span class="hljs-code"> 0      7 8     15 16    23 24    31</span>
+<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+
+|              source               |
+<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+
+|            destination            |
+<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+
+|  zero  |protocol|   UDP length    |
+<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+
 
-<span class="hljs-comment">// 底层调用此函数通知Ether模块接收帧数据</span>
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_ll_recv</span><span class="hljs-params">(<span class="hljs-keyword">ether_t</span>* ether, <span class="hljs-keyword">ether_frame_t</span> *frame)</span></span>;
+字段         大小       说明
+<span class="hljs-bullet">----         </span>----      ----
+source       4B        IP源地址
+destination  4B        IP目的地址
+zero         1B        0。
+protocol     1B        IP报文头部的protocol字段。
+UDP length   n         UDP报文长度（从Source Port到Data结束，其值和UDP报文中的
+<span class="hljs-code">                       length相等）。</span></code></pre>
 
-<span class="hljs-comment">// 高层调用此函数发送帧数据</span>
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_hl_send</span><span class="hljs-params">(<span class="hljs-keyword">ether_t</span>* ether, <span class="hljs-keyword">ether_frame_t</span> *frame)</span></span>;</code></pre>
+<h3 id="3-实现考虑"><a href="#3-实现考虑" class="headerlink" title="3 实现考虑"></a>3 实现考虑</h3><h4 id="检验和计算"><a href="#检验和计算" class="headerlink" title="检验和计算"></a>检验和计算</h4><ul>
+<li>伪头部模块</li>
+</ul>
+<h4 id="提供给高层的接口"><a href="#提供给高层的接口" class="headerlink" title="提供给高层的接口"></a>提供给高层的接口</h4><ul>
+<li><p>创建新的接收端口。</p>
 </li>
-<li><p>拆帧组帧</p>
-  <pre><code class="hljs C"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span>
-<span class="hljs-class">&#123;</span>
-    <span class="hljs-keyword">uint8_t</span> *dest_mac_addr;
-    <span class="hljs-keyword">uint8_t</span> *src_mac_addr;
-    <span class="hljs-keyword">dblk_t</span> *payload;
-    <span class="hljs-keyword">uint16_t</span> type;
-    <span class="hljs-keyword">uint32_t</span> crc;
-    <span class="hljs-comment">//</span>
-    <span class="hljs-keyword">uint8_t</span> *data;
-    <span class="hljs-keyword">size_t</span> data_size;
-&#125; <span class="hljs-keyword">ether_frame_t</span>;
-
-<span class="hljs-comment">// 拆帧</span>
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_unpack</span><span class="hljs-params">(<span class="hljs-keyword">ether_frame_t</span> *frame)</span></span>;
-
-<span class="hljs-comment">// 组帧</span>
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_pack</span><span class="hljs-params">(<span class="hljs-keyword">ether_frame_t</span> *frame)</span></span>;</code></pre>
+<li><p>接收操作，接收报文后向高层传递UDP Data、Source Port、Source Address（IP）。</p>
+<p>  <code>udp_recv_callback(data, size, src_ip, src_port)</code></p>
 </li>
-<li><p>硬件抽象</p>
-  <pre><code class="hljs C"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span>
-<span class="hljs-class">&#123;</span>
-    <span class="hljs-comment">// 驱动抽象</span>
-    <span class="hljs-keyword">size_t</span> (*send)(<span class="hljs-keyword">void</span> *interface, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size);
-    <span class="hljs-keyword">size_t</span> (*recv)(<span class="hljs-keyword">void</span> *interface, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size);
-    <span class="hljs-keyword">void</span> *interface;
-    <span class="hljs-comment">// ...</span>
-&#125; <span class="hljs-keyword">ether_t</span>;
-
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_hl_send</span><span class="hljs-params">(<span class="hljs-keyword">ether_t</span>* ether, <span class="hljs-keyword">ether_frame_t</span> *frame)</span> </span>&#123;
-    frame-&gt;src_mac_addr = ether-&gt;mac_address,
-    ether_pack(frame); <span class="hljs-comment">// 组帧</span>
-    <span class="hljs-keyword">return</span> ether-&gt;send(ether-&gt;interface, frame-&gt;data, frame-&gt;data_size); <span class="hljs-comment">// 发送</span>
-&#125;</code></pre>
-</li>
-<li><p>帧分发</p>
-<p>  ether收到数据且拆包正常后，根据type/length字段将载荷分发到高层模块。</p>
-  <pre><code class="hljs C"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ether_ll_recv</span><span class="hljs-params">(<span class="hljs-keyword">ehter_t</span> *e, <span class="hljs-keyword">ether_frame_t</span> *f)</span> </span>&#123;
-    f-&gt;data_size = e-&gt;recv(e-&gt;interface, f-&gt;data, f-&gt;data_size); <span class="hljs-comment">// 接收</span>
-    <span class="hljs-keyword">if</span> (f-&gt;data_size &gt; <span class="hljs-number">0</span> &amp;&amp; ether_unpack(f)) &#123; <span class="hljs-comment">// 拆帧</span>
-        <span class="hljs-keyword">switch</span> (f-&gt;type) &#123;
-            <span class="hljs-keyword">case</span> HIGH_LEVEL_1_TYPE: &#123;
-                <span class="hljs-comment">//...</span>
-                hl1_ll_recv(frame-&gt;payload)
-            &#125; <span class="hljs-keyword">break</span>;
-            <span class="hljs-comment">//...</span>
-        &#125;
-        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
-    &#125;
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
-
+<li><p>发送操作，允许高层指定数据、源及目的的端口和IP地址。</p>
+<p>  <code>udp_send(ip_src, src_port, ip_dest, dest_port, data, size)</code></p>
 </li>
 </ul>
-<p>此代码见<a target="_blank" rel="noopener" href="https://github.com/Doerthous/dts.net">dts.net</a>中的<code>ether</code>模块。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
-<li><p><a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc894">A Standard for the Transmission of IP Datagrams over Ethernet Networks</a></p>
+<h4 id="对IP层的依赖"><a href="#对IP层的依赖" class="headerlink" title="对IP层的依赖"></a>对IP层的依赖</h4><ul>
+<li><p>UDP要求IP模块提供至少能够确定IP头部中的source address、destination address以及protocol字段的接口。</p>
+<p>  <code>udp_recv_from_ip(data, size, ip_src, ip_dest, ip_protocol)</code></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="http://decnet.ipv7.net/docs/dundas/aa-k759a-tk.pdf">The Ethernet - A Local Area Network, Version 1.0, Digital Equipment Corporation, Intel Corporation, Xerox Corporation, September 1980</a></p>
-</li>
-</ol>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li>[1] <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc768">User Datagram Protocol</a></li>
+</ul>
 
             </div>
             <hr>
@@ -361,7 +314,7 @@ crc              4         校验。</code></pre>
                     
                       <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
                     
-                      <a class="hover-with-bg" href="/tags/Ethernet/">Ethernet</a>
+                      <a class="hover-with-bg" href="/tags/UDP/">UDP</a>
                     
                   </div>
                 
@@ -374,18 +327,12 @@ crc              4         校验。</code></pre>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/01/13/UDP%E5%8D%8F%E8%AE%AE/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">UDP协议</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/01/12/BOOTP%E5%8D%8F%E8%AE%AE/">
-                        <span class="hidden-mobile">BOOTP协议</span>
+                      <a href="/2021/01/12/Ethernet%E5%B8%A7%E5%8F%8A%E5%85%B6%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97%E5%AE%9E%E7%8E%B0/">
+                        <span class="hidden-mobile">Ethernet帧及其软件模块实现</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -581,7 +528,7 @@ crc              4         校验。</code></pre>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Ethernet帧及其软件模块实现&nbsp;",
+        "UDP协议&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

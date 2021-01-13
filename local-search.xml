@@ -4,6 +4,29 @@
   
   
   <entry>
+    <title>UDP协议</title>
+    <link href="/2021/01/13/UDP%E5%8D%8F%E8%AE%AE/"/>
+    <url>/2021/01/13/UDP%E5%8D%8F%E8%AE%AE/</url>
+    
+    <content type="html"><![CDATA[<h2 id="UDP-协议"><a href="#UDP-协议" class="headerlink" title="UDP 协议"></a>UDP 协议</h2><p>UDP基于IP协议，为上层提供一个协议机制最少的通信协议。</p><h3 id="1-UDP报文格式"><a href="#1-UDP报文格式" class="headerlink" title="1 UDP报文格式"></a>1 UDP报文格式</h3><pre><code class="hljs asciidoc"><span class="hljs-code"> 0      7 8     15 16    23 24    31</span><span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+|     Source      |   Destination   ||      Port       |      Port       |<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+|     Length      |    Checksum     |<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+|               Data                ||                ...                |<span class="hljs-code">+-----------------------------------+</span>字段             大小       说明<span class="hljs-bullet">----             </span>----      ----Source Port      2B        源端口。Destination Port 2B        目标端口。Length           2B        长度（从Source Port到Data结束）。Checksum         2B        校验和（包括伪头部及UDP完整报文）。Data             n         数据。</code></pre><h3 id="2-伪头部"><a href="#2-伪头部" class="headerlink" title="2 伪头部"></a>2 伪头部</h3><p>在网络数据传递中，伪头部并不存在，其仅为了计算校验和而产生。</p><pre><code class="hljs asciidoc"><span class="hljs-code"> 0      7 8     15 16    23 24    31</span><span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+|              source               |<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+|            destination            |<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+|  zero  |protocol|   UDP length    |<span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+字段         大小       说明<span class="hljs-bullet">----         </span>----      ----source       4B        IP源地址destination  4B        IP目的地址zero         1B        0。protocol     1B        IP报文头部的protocol字段。UDP length   n         UDP报文长度（从Source Port到Data结束，其值和UDP报文中的<span class="hljs-code">                       length相等）。</span></code></pre><h3 id="3-实现考虑"><a href="#3-实现考虑" class="headerlink" title="3 实现考虑"></a>3 实现考虑</h3><h4 id="检验和计算"><a href="#检验和计算" class="headerlink" title="检验和计算"></a>检验和计算</h4><ul><li>伪头部模块</li></ul><h4 id="提供给高层的接口"><a href="#提供给高层的接口" class="headerlink" title="提供给高层的接口"></a>提供给高层的接口</h4><ul><li><p>创建新的接收端口。</p></li><li><p>接收操作，接收报文后向高层传递UDP Data、Source Port、Source Address（IP）。</p><p>  <code>udp_recv_callback(data, size, src_ip, src_port)</code></p></li><li><p>发送操作，允许高层指定数据、源及目的的端口和IP地址。</p><p>  <code>udp_send(ip_src, src_port, ip_dest, dest_port, data, size)</code></p></li></ul><h4 id="对IP层的依赖"><a href="#对IP层的依赖" class="headerlink" title="对IP层的依赖"></a>对IP层的依赖</h4><ul><li><p>UDP要求IP模块提供至少能够确定IP头部中的source address、destination address以及protocol字段的接口。</p><p>  <code>udp_recv_from_ip(data, size, ip_src, ip_dest, ip_protocol)</code></p></li></ul><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul><li>[1] <a href="https://tools.ietf.org/html/rfc768">User Datagram Protocol</a></li></ul>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>协议栈</tag>
+      
+      <tag>网络协议</tag>
+      
+      <tag>UDP</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Ethernet帧及其软件模块实现</title>
     <link href="/2021/01/12/Ethernet%E5%B8%A7%E5%8F%8A%E5%85%B6%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97%E5%AE%9E%E7%8E%B0/"/>
     <url>/2021/01/12/Ethernet%E5%B8%A7%E5%8F%8A%E5%85%B6%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97%E5%AE%9E%E7%8E%B0/</url>
