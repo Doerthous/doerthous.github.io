@@ -1,0 +1,881 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>一种灵活的内存块数据结构设计 - Doerthous</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Doerthous</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/resume/">
+                <i class="iconfont icon-addrcard"></i>
+                简历
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/bg/hexo.fluid-dev.com/4xvpqo.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-13 13:34" pubdate>
+        2021年1月13日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">一种灵活的内存块数据结构设计</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h2 id="一种灵活的内存块数据结构设计"><a href="#一种灵活的内存块数据结构设计" class="headerlink" title="一种灵活的内存块数据结构设计"></a>一种灵活的内存块数据结构设计</h2><p>初衷：在dts.net中提供一个数据块结构，用于在网络各层模块中传递数据的同时，尽可能的将动态内存分配推迟到用户层。</p>
+<p>完整代码及其实现见<a target="_blank" rel="noopener" href="https://github.com/Doerthous/dts.net">dts.net.dblk</a>。</p>
+<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><p>Node：节点<br>Block：逻辑数据块</p>
+<h3 id="1-UDP到IP时的数据变化"><a href="#1-UDP到IP时的数据变化" class="headerlink" title="1 UDP到IP时的数据变化"></a>1 UDP到IP时的数据变化</h3><p>假设UDP数据为A，到IP层后，IP层需要在上层的数据的头部新增一个IP头部B，其结构形如链表：B-&gt;A。</p>
+<p>故此，我们设计一个如下链表进行处理：</p>
+<pre><code class="hljs arduino"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dblk</span> &#123;</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dblk</span> *<span class="hljs-title">next</span>;</span>
+    <span class="hljs-keyword">uint8_t</span> *data; <span class="hljs-comment">// 实际数据</span>
+    <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>; <span class="hljs-comment">// data大小</span>
+&#125; <span class="hljs-keyword">dblk_t</span>;
+
+<span class="hljs-keyword">dblk_t</span> *udp;
+<span class="hljs-keyword">dblk_t</span> *ip = ip_pack(udp) &#123; <span class="hljs-comment">// IP模块组包接口</span>
+    dblk *ip_header;
+    <span class="hljs-comment">// ...</span>
+    ip_header-&gt;next = udp;
+    <span class="hljs-keyword">return</span> ip_header; 
+&#125;</code></pre>
+
+<h3 id="2-链表数据管理"><a href="#2-链表数据管理" class="headerlink" title="2 链表数据管理"></a>2 链表数据管理</h3><p>按照1中的分析，假设当前有一个三层网络，每层都会添加头部，那么，加上原始载荷，有：</p>
+<p>C-&gt;B-&gt;A-&gt;P。</p>
+<p>其中P表示原始载荷，A表示最高层协议，B表示中间层协议，C表示最底层协议。随着层次逐渐降低，链表中的节点逐渐增加。</p>
+<pre><code class="hljs clean"><span class="hljs-number">0</span>层          P
+A层          A-&gt;P
+B层          B-&gt;A-&gt;P
+C层          C-&gt;B-&gt;A-&gt;P</code></pre>
+
+<p>如此，可遍历C、B、A、P节点中的数据完成一个完整协议栈数据的发送或解析操作。</p>
+<pre><code class="hljs arduino"><span class="hljs-comment">// 将dblk数据拷贝到指定内存</span>
+<span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">dblk_copy_to</span><span class="hljs-params">(<span class="hljs-keyword">dblk_t</span> *dblk, <span class="hljs-keyword">void</span> *mem, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span> </span>&#123;
+    <span class="hljs-keyword">size_t</span> do_size;
+    <span class="hljs-keyword">size_t</span> done_size = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (dblk) &#123;
+        do_size = <span class="hljs-built_in">size</span> &lt; dblk-&gt;<span class="hljs-built_in">size</span> ? <span class="hljs-built_in">size</span> : dblk-&gt;<span class="hljs-built_in">size</span>;
+        <span class="hljs-built_in">memcpy</span>(mem, dblk-&gt;data, do_size);
+        done_size += do_size;
+        mem += do_size;
+        <span class="hljs-keyword">if</span> (done_size == <span class="hljs-built_in">size</span>) &#123;
+            <span class="hljs-keyword">break</span>;
+        &#125;
+        dblk = dblk-&gt;next;
+    &#125;
+    <span class="hljs-keyword">return</span> done_size;
+&#125;
+
+send(dblk) &#123;
+    <span class="hljs-keyword">uint8_t</span> buff[SOME_SIZE];
+    <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span> = dblk_copy_to(dblk, buff, SOME_SIZE);
+    low_level_send(buff, <span class="hljs-built_in">size</span>);
+&#125;</code></pre>
+
+<h3 id="3-2-中存在的问题"><a href="#3-2-中存在的问题" class="headerlink" title="3 [2]中存在的问题"></a>3 [2]中存在的问题</h3><p>考虑到底层可能由于硬件原因，无法及时发送数据，导致多个完整协议栈数据被缓存。为管理这些数据，可添加用于表示后续节点是否属于当前<strong>逻辑数据块</strong>的more标志，区分不同的逻辑数据块，具体解释如下图：</p>
+<pre><code class="hljs apache"><span class="hljs-attribute">C1</span> -&gt; B<span class="hljs-number">1</span> -&gt; A<span class="hljs-number">1</span> -&gt; P<span class="hljs-number">1</span> -&gt; C<span class="hljs-number">2</span> -&gt; B<span class="hljs-number">2</span> -&gt; A<span class="hljs-number">2</span> -&gt; P<span class="hljs-number">2</span> -&gt; ...
+<span class="hljs-attribute">m</span>:<span class="hljs-number">1</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">0</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">0</span>   ...</code></pre>
+
+<p>上述链表虽有8个节点（C1 ~ P2），但是只有两个逻辑数据块，其中（C1 ~ P1）是一个，（C2 ~ P2）是另一个（m：more）。在处理一个节点的数据时，需要判断more标志，如果more标志为1则表示后续节点仍属于当前逻辑数据块，否者则表示当前节点为当前逻辑数据块的最后一个节点。类似IP报文中的More Fragment标志。</p>
+<p>如此，在处理时可按照逻辑数据块进行区分：</p>
+<pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">dblk_copy_to</span><span class="hljs-params">(<span class="hljs-keyword">dblk_t</span> *dblk, <span class="hljs-keyword">void</span> *mem, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span> </span>&#123;
+    <span class="hljs-keyword">size_t</span> do_size;
+    <span class="hljs-keyword">size_t</span> done_size = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (dblk) &#123;
+        do_size = <span class="hljs-built_in">size</span> &lt; dblk-&gt;<span class="hljs-built_in">size</span> ? <span class="hljs-built_in">size</span> : dblk-&gt;<span class="hljs-built_in">size</span>;
+        <span class="hljs-built_in">memcpy</span>(mem, dblk-&gt;data, do_size);
+        done_size += do_size;
+        mem += do_size;
+        <span class="hljs-keyword">if</span> (done_size == <span class="hljs-built_in">size</span> || !dblk-&gt;more) &#123; <span class="hljs-comment">// 按逻辑数据块进行处理</span>
+            <span class="hljs-keyword">break</span>;
+        &#125;
+        dblk = dblk-&gt;next;
+    &#125;
+    <span class="hljs-keyword">return</span> done_size;
+&#125;</code></pre>
+
+<p>除上述方法外，也可引入另一个指针来连接不同的逻辑数据块。</p>
+<pre><code class="hljs coq">C1 -&gt; B1 -&gt; A1 -&gt; P1
+ |<span class="hljs-type"></span>
+<span class="hljs-type"> v</span>
+C2 -&gt; B2 -&gt; A2 -&gt; P2</code></pre>
+
+<h3 id="4-分片及内存对齐问题"><a href="#4-分片及内存对齐问题" class="headerlink" title="4 分片及内存对齐问题"></a>4 分片及内存对齐问题</h3><p>假设某个双层应用层协议需通过UDP传输，最终形成如下内存：</p>
+<pre><code class="hljs brainfuck"><span class="hljs-comment">U</span>  <span class="hljs-literal">-</span>&gt;  <span class="hljs-comment">L1</span>    <span class="hljs-literal">-</span>&gt;    <span class="hljs-comment">L2</span>
+<span class="hljs-comment">\</span>       <span class="hljs-comment">\</span>           <span class="hljs-comment">\</span>
+<span class="hljs-comment"></span><span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>   <span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>   <span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>
+<span class="hljs-comment">|</span>  <span class="hljs-comment">U</span>  <span class="hljs-comment">|</span>   <span class="hljs-comment">|</span>  <span class="hljs-comment">L1</span>  <span class="hljs-comment">|</span>   <span class="hljs-comment">|</span>  <span class="hljs-comment">L2</span>  <span class="hljs-comment">|</span>
+<span class="hljs-comment"></span><span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>   <span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>   <span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span></code></pre>
+
+<p>在逻辑上，我们可以将上述内存想象成一大块连续分配的虚拟内存：</p>
+<pre><code class="hljs asciidoc"><span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span>
+|  U  |  L1  |  L2  |
+<span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span></code></pre>
+
+<p>到IP层时，由于逻辑数据块长度太大，IP模块需要进行分片，为了最大化节省空间，我们可让IP层节点指向上述虚拟内存。例如，假设经计算上述内存需被分为4个IP分片报文：</p>
+<pre><code class="hljs asciidoc">F1   F2   F3   F4
+|    |    |    |
+<span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span>
+|  U  |  L1  |  L2  |
+<span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span>
+
+IP1 -&gt; F1
+IP2 -&gt; F2
+IP3 -&gt; F3
+IP4 -&gt; F4</code></pre>
+
+<p>每个IPx节点的内存中包含了IP Header的数据，而Fx节点包含了传给IP层的上层数据分片。按照上述虚拟的连续内存思路，我们可以实现利用<strong>原数据</strong>而<strong>无需重新拷贝</strong>而得到分片的操作。然而，由于IP层在分片时对载荷有对齐要求（8B对齐），如果U、L1、L2内存本身没有满足8B对齐，那么就会出现上图中类似F2与F3的情况：一个dblk节点的所代表的内存块在实际物理内存上并不连续！</p>
+<p>为此，我们引入一个vsize和类型为dblk_t *的vmem指针，用vsize表示当前节点虚拟内存的大小，当当前节点的data的大小无法满足vsize时，我们继续从vmem中取内存，直到其大小为vsize为止。</p>
+<p>在保持原有链表不动的情况下，假设U、L1、L2的data指针分别为u、l1、l2，大小分别为us、l1s、l2s，如下所示，</p>
+<pre><code class="hljs apache"><span class="hljs-attribute">U</span>  -&gt;  L<span class="hljs-number">1</span>  -&gt;  L<span class="hljs-number">2</span>
+<span class="hljs-attribute">d</span>:u    d:l<span class="hljs-number">1</span>    d:l<span class="hljs-number">2</span>
+<span class="hljs-attribute">s</span>:us   s:l<span class="hljs-number">1</span>s   s:l<span class="hljs-number">2</span>s</code></pre>
+
+<p>再设分片后，每个分片报文大小为x，则，F1 ~ F4的data指针及其内容如下：</p>
+<pre><code class="hljs sas">F1   -&gt;   F2   -&gt;   F3  -&gt;                 F4
+d:u       d:u+<span class="hljs-meta">x</span>     d:l1+(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))        d:l2+(<span class="hljs-meta">x</span>-(l1s-(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))))
+s:us      s:us-<span class="hljs-meta">x</span>    s:l1s-(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))       s:l2s-(<span class="hljs-meta">x</span>-(l1s-(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))))
+vs:<span class="hljs-meta">x</span>      vs:<span class="hljs-meta">x</span>      vs:<span class="hljs-meta">x</span>                   vs:l2s-(<span class="hljs-meta">x</span>-(l1s-(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))))
+vm:<span class="hljs-meta">NULL</span>   vm:L1     vm:L2                  vm:<span class="hljs-meta">NULL</span></code></pre>
+
+<p>推导：</p>
+<ol>
+<li><p>F1节点，d指向u；s为d的大小us；vs=x；由于us&gt;x，故F1无需再取内存，故vm为NULL。</p>
+</li>
+<li><p>F2节点，由于F1没能占完u，故F2的d指向u加上F1占用u后剩下的内存，F1占了x，所以F2的d指向u+x；s为d的大小(us-x)；vs=x；从图中可看出，仅仅u无法满足F2的vs大小，F2后续还占用了l1，故vm=L1。</p>
+</li>
+<li><p>F3，F4思路类似。</p>
+</li>
+</ol>
+<p>需要注意的是F4作为尾节点，可能没有vmem使用，故其vs可能不一定等于x。此外一个vmem-节点可能占用原来链表的多个节点内存，如下图，Fa占用了三块原节点内存。</p>
+<pre><code class="hljs asciidoc">Fa             Fb
+|              |
+<span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span>
+|  U  |  L1  |  L2  |
+<span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span></code></pre>
+
+<p>在此过程中，size字段的含义不变，仍旧表示data的大小。只是当未启用vmem时，节点的内存大小正好等于data的大小。而vmem启用时，节点的内存大小未必等于data的大小。按照上述思路，可以设计一个如下接口，实现将dblk内存分割成按任意字节对齐的片段。需要注意，此处的dblk参数必须是未启用vmem模式的节点。</p>
+<p><code>dblk_t *dblk_fragments(dblk_t *dblk, size_t frag_size);</code></p>
+<p>至此，当上层数据超长需要分片时，仅需调用<code>dblk_fragments</code>进行处理即可。可以引入一个将vmem节点还原回正常节点的操作，如此便可无限制地使用分片接口。</p>
+<h3 id="5-接口"><a href="#5-接口" class="headerlink" title="5 接口"></a>5 接口</h3><h4 id="Node结构及接口"><a href="#Node结构及接口" class="headerlink" title="Node结构及接口"></a>Node结构及接口</h4><pre><code class="hljs arduino"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dblk</span></span>
+<span class="hljs-class">&#123;</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dblk</span> *<span class="hljs-title">next</span>;</span>
+    <span class="hljs-keyword">uint8_t</span> *data;
+    <span class="hljs-keyword">uint16_t</span> <span class="hljs-built_in">size</span>;
+    <span class="hljs-keyword">uint16_t</span> data_malloc:<span class="hljs-number">1</span>; <span class="hljs-comment">// 指示data字段是否来自malloc</span>
+    <span class="hljs-keyword">uint16_t</span> node_malloc:<span class="hljs-number">1</span>; <span class="hljs-comment">// 指示此Node是否来自malloc。</span>
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * @brief 指示后续Node与当前Node同属一个Block。</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     *  假设有如下dblk链表:</span>
+<span class="hljs-comment">     *   Nodes:</span>
+<span class="hljs-comment">     *   n1    -&gt;    n2    -&gt;   n3    -&gt;    n4    -&gt;    n5    -&gt;  n6</span>
+<span class="hljs-comment">     *   more:1      more:1     more:0      more:1      more:1    more:0</span>
+<span class="hljs-comment">     *   -----------------------------      ----------------------------</span>
+<span class="hljs-comment">     *   Block1                             Block2</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">uint16_t</span> more:<span class="hljs-number">1</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * @brief vmem模式.</span>
+<span class="hljs-comment">     * </span>
+<span class="hljs-comment">     *  当vsize != 0的Node属于vmem-Node，反之为rmem-Node。vsize表示当前vmem-Node所</span>
+<span class="hljs-comment">     *  带内存大小，而size表示data的大小。</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">uint16_t</span> vsize;
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dblk</span> *<span class="hljs-title">vmem</span>;</span>
+&#125; <span class="hljs-keyword">dblk_t</span>;</code></pre>
+
+<pre><code class="hljs reasonml"><span class="hljs-comment">// 将两个Node按序纳入同一个Block</span>
+void dblk<span class="hljs-constructor">_node_concat(<span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk1</span>, <span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk2</span>)</span>;
+
+<span class="hljs-comment">// 初始化Node参数</span>
+dblk_t *dblk<span class="hljs-constructor">_node_init(<span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk</span>, <span class="hljs-params">uint8_t</span> <span class="hljs-operator">*</span><span class="hljs-params">data</span>, <span class="hljs-params">size_t</span> <span class="hljs-params">size</span>)</span>;
+
+<span class="hljs-comment">// 分配一个Node并设置其内存</span>
+dblk_t *dblk<span class="hljs-constructor">_node_new(<span class="hljs-params">uint8_t</span> <span class="hljs-operator">*</span><span class="hljs-params">data</span>, <span class="hljs-params">size_t</span> <span class="hljs-params">size</span>)</span>;
+
+<span class="hljs-comment">// 从栈上分配一个Node并设置其内存</span>
+void dblk<span class="hljs-constructor">_node_new_from_stack(<span class="hljs-operator">**</span><span class="hljs-params">ppdblk</span>, <span class="hljs-params">uint8_t</span> <span class="hljs-operator">*</span><span class="hljs-params">data</span>, <span class="hljs-params">size_t</span> <span class="hljs-params">size</span>)</span>;
+
+<span class="hljs-comment">// 分配一个Node及其内存</span>
+dblk_t *dblk<span class="hljs-constructor">_node_new_with_buff(<span class="hljs-params">size_t</span> <span class="hljs-params">size</span>)</span>;
+
+...</code></pre>
+
+<h4 id="List接口"><a href="#List接口" class="headerlink" title="List接口"></a>List接口</h4><pre><code class="hljs cpp"><span class="hljs-comment">// 释放所有Node</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dblk_list_delete</span><span class="hljs-params">(<span class="hljs-keyword">dblk_t</span> * dblk)</span></span>;
+
+...</code></pre>
+
+<h4 id="Block接口"><a href="#Block接口" class="headerlink" title="Block接口"></a>Block接口</h4><pre><code class="hljs reasonml"><span class="hljs-comment">// 删除第一个Block，并返回后一个块</span>
+dblk_t *dblk<span class="hljs-constructor">_delete(<span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span> <span class="hljs-params">dblk</span>)</span>;
+
+<span class="hljs-comment">// 获取第一个Block大小</span>
+size_t dblk<span class="hljs-constructor">_size(<span class="hljs-params">const</span> <span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk</span>)</span>;
+
+<span class="hljs-comment">// 获取下一个Block</span>
+dblk_t *dblk<span class="hljs-constructor">_next(<span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span> <span class="hljs-params">dblk</span>)</span>;
+
+<span class="hljs-comment">// 将第一个Block的数据拷贝到指定内存，并返回拷贝数量</span>
+size_t dblk<span class="hljs-constructor">_copy_to(<span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk</span>, <span class="hljs-params">void</span> <span class="hljs-operator">*</span><span class="hljs-params">mem</span>, <span class="hljs-params">size_t</span> <span class="hljs-params">size</span>)</span>;
+
+<span class="hljs-comment">// 将指定内存中的数据拷贝到第一个Block，并返回拷贝数量</span>
+<span class="hljs-comment">// 不支持 vmem Node</span>
+size_t dblk<span class="hljs-constructor">_copy_from(<span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk</span>, <span class="hljs-params">void</span> <span class="hljs-operator">*</span><span class="hljs-params">mem</span>, <span class="hljs-params">size_t</span> <span class="hljs-params">size</span>)</span>;
+
+<span class="hljs-comment">// 将第一个逻辑数据块按照给定大小分割，分割后，每个片段独立成Block</span>
+<span class="hljs-comment">// 不支持 vmem Node</span>
+dblk_t *dblk<span class="hljs-constructor">_fragment(<span class="hljs-params">const</span> <span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk</span>, <span class="hljs-params">size_t</span> <span class="hljs-params">fsize</span>)</span>;
+
+...</code></pre>
+
+<h3 id="6-测试"><a href="#6-测试" class="headerlink" title="6 测试"></a>6 测试</h3><pre><code class="hljs C"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">dblk_t</span> *b1 = dblk_node_new_with_buff(<span class="hljs-number">12</span>);
+    <span class="hljs-keyword">dblk_t</span> *b2 = dblk_node_new_with_buff(<span class="hljs-number">12</span>);
+    <span class="hljs-keyword">dblk_t</span> *b3 = dblk_node_new_with_buff(<span class="hljs-number">12</span>);
+    dblk_node_concat(b1, b2);
+    dblk_node_concat(b2, b3);
+
+    <span class="hljs-keyword">dblk_t</span> *it = b1;
+    <span class="hljs-keyword">while</span> (it) &#123;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; it-&gt;size; ++i) &#123;
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%02X &quot;</span>, it-&gt;data[i]);
+        &#125;
+        it = dblk_node_next(it);
+    &#125;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+
+    dblk_copy_from(b1, <span class="hljs-string">&quot;123456789098765432101234567890123456&quot;</span>, <span class="hljs-number">36</span>);
+    <span class="hljs-keyword">char</span> buff[<span class="hljs-number">36</span>];
+    &#123;
+        <span class="hljs-keyword">int</span> c = (<span class="hljs-keyword">int</span>)dblk_copy_to(b1, buff, <span class="hljs-number">36</span>);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; c; ++i) &#123;
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%02X &quot;</span>, buff[i]);
+        &#125;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+    &#125;
+
+    <span class="hljs-keyword">dblk_t</span> *fragments = dblk_fragment(b1, <span class="hljs-number">7</span>);
+    it = fragments;
+    <span class="hljs-keyword">while</span> (it) &#123;
+        <span class="hljs-built_in">memset</span>(buff, <span class="hljs-number">0</span>, <span class="hljs-number">36</span>);
+        <span class="hljs-keyword">int</span> c = (<span class="hljs-keyword">int</span>)dblk_copy_to(it, buff, <span class="hljs-number">36</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%sn: &quot;</span>, dblk_node_is_vmem_node(it)?<span class="hljs-string">&quot;v&quot;</span>:<span class="hljs-string">&quot; &quot;</span>);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; c; ++i) &#123;
+             <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%02X &quot;</span>, buff[i]);
+        &#125;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+        it = dblk_next(it);
+    &#125;
+
+    <span class="hljs-keyword">if</span> (dblk_list_to_rmem_list(fragments)) &#123;
+        it = fragments;
+        <span class="hljs-keyword">while</span> (it) &#123;
+            <span class="hljs-built_in">memset</span>(buff, <span class="hljs-number">0</span>, <span class="hljs-number">36</span>);
+            <span class="hljs-keyword">int</span> c = (<span class="hljs-keyword">int</span>)dblk_copy_to(it, buff, <span class="hljs-number">36</span>);
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%sn: &quot;</span>, dblk_node_is_vmem_node(it)?<span class="hljs-string">&quot;v&quot;</span>:<span class="hljs-string">&quot; &quot;</span>);
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; c; ++i) &#123;
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%02X &quot;</span>, buff[i]);
+            &#125;
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+            it = dblk_next(it);
+        &#125;
+    &#125;
+    dblk_list_delete(fragments);
+
+
+    fragments = dblk_fragment(b1, <span class="hljs-number">5</span>);
+    it = fragments;
+    <span class="hljs-keyword">while</span> (it) &#123;
+        <span class="hljs-built_in">memset</span>(buff, <span class="hljs-number">0</span>, <span class="hljs-number">36</span>);
+        <span class="hljs-keyword">int</span> c = (<span class="hljs-keyword">int</span>)dblk_copy_to(it, buff, <span class="hljs-number">36</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%sn: &quot;</span>, dblk_node_is_vmem_node(it)?<span class="hljs-string">&quot;v&quot;</span>:<span class="hljs-string">&quot; &quot;</span>);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; c; ++i) &#123;
+             <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%02X &quot;</span>, buff[i]);
+        &#125;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+        it = dblk_next(it);
+    &#125;
+    dblk_list_delete(fragments);
+
+    dblk_list_delete(b1);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+
+输出：
+CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD CD
+<span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span> <span class="hljs-number">36</span> <span class="hljs-number">37</span> <span class="hljs-number">38</span> <span class="hljs-number">39</span> <span class="hljs-number">30</span> <span class="hljs-number">39</span> <span class="hljs-number">38</span> <span class="hljs-number">37</span> <span class="hljs-number">36</span> <span class="hljs-number">35</span> <span class="hljs-number">34</span> <span class="hljs-number">33</span> <span class="hljs-number">32</span> <span class="hljs-number">31</span> <span class="hljs-number">30</span> <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span> <span class="hljs-number">36</span> <span class="hljs-number">37</span> <span class="hljs-number">38</span> <span class="hljs-number">39</span> <span class="hljs-number">30</span> <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span> <span class="hljs-number">36</span>
+vn: <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span> <span class="hljs-number">36</span> <span class="hljs-number">37</span>
+vn: <span class="hljs-number">38</span> <span class="hljs-number">39</span> <span class="hljs-number">30</span> <span class="hljs-number">39</span> <span class="hljs-number">38</span> <span class="hljs-number">37</span> <span class="hljs-number">36</span>
+vn: <span class="hljs-number">35</span> <span class="hljs-number">34</span> <span class="hljs-number">33</span> <span class="hljs-number">32</span> <span class="hljs-number">31</span> <span class="hljs-number">30</span> <span class="hljs-number">31</span>
+vn: <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span> <span class="hljs-number">36</span> <span class="hljs-number">37</span> <span class="hljs-number">38</span>
+vn: <span class="hljs-number">39</span> <span class="hljs-number">30</span> <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span>
+vn: <span class="hljs-number">36</span>
+ n: <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span> <span class="hljs-number">36</span> <span class="hljs-number">37</span>
+ n: <span class="hljs-number">38</span> <span class="hljs-number">39</span> <span class="hljs-number">30</span> <span class="hljs-number">39</span> <span class="hljs-number">38</span> <span class="hljs-number">37</span> <span class="hljs-number">36</span>
+ n: <span class="hljs-number">35</span> <span class="hljs-number">34</span> <span class="hljs-number">33</span> <span class="hljs-number">32</span> <span class="hljs-number">31</span> <span class="hljs-number">30</span> <span class="hljs-number">31</span>
+ n: <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span> <span class="hljs-number">36</span> <span class="hljs-number">37</span> <span class="hljs-number">38</span>
+ n: <span class="hljs-number">39</span> <span class="hljs-number">30</span> <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span>
+ n: <span class="hljs-number">36</span>
+vn: <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span>
+vn: <span class="hljs-number">36</span> <span class="hljs-number">37</span> <span class="hljs-number">38</span> <span class="hljs-number">39</span> <span class="hljs-number">30</span>
+vn: <span class="hljs-number">39</span> <span class="hljs-number">38</span> <span class="hljs-number">37</span> <span class="hljs-number">36</span> <span class="hljs-number">35</span>
+vn: <span class="hljs-number">34</span> <span class="hljs-number">33</span> <span class="hljs-number">32</span> <span class="hljs-number">31</span> <span class="hljs-number">30</span>
+vn: <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span>
+vn: <span class="hljs-number">36</span> <span class="hljs-number">37</span> <span class="hljs-number">38</span> <span class="hljs-number">39</span> <span class="hljs-number">30</span>
+vn: <span class="hljs-number">31</span> <span class="hljs-number">32</span> <span class="hljs-number">33</span> <span class="hljs-number">34</span> <span class="hljs-number">35</span>
+vn: <span class="hljs-number">36</span></code></pre>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/13/UDP%E5%8D%8F%E8%AE%AE/">
+                        <span class="hidden-mobile">UDP协议</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "6q9eFigSE9Szj6EB2AYQbBEw-gzGzoHsz",
+          app_key: "hdofqAbDXsCzzLI6Tu0fNjyo",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    }
+    waitElementVisible('vcomments', loadValine);
+  </script>
+  <noscript>Please enable JavaScript to view the <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "一种灵活的内存块数据结构设计&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d59b3d8dd18fa79fc7e9701ceaaf7f5c";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+</body>
+</html>

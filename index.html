@@ -188,6 +188,54 @@
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
+        <a href="/2021/01/13/%E4%B8%80%E7%A7%8D%E7%81%B5%E6%B4%BB%E7%9A%84%E5%86%85%E5%AD%98%E5%9D%97%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1/">一种灵活的内存块数据结构设计</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/01/13/%E4%B8%80%E7%A7%8D%E7%81%B5%E6%B4%BB%E7%9A%84%E5%86%85%E5%AD%98%E5%9D%97%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1/">
+          
+          
+            
+          
+          一种灵活的内存块数据结构设计初衷：在dts.net中提供一个数据块结构，用于在网络各层模块中传递数据的同时，尽可能的将动态内存分配推迟到用户层。
+完整代码及其实现见dts.net.dblk。
+术语Node：节点Block：逻辑数据块
+1 UDP到IP时的数据变化假设UDP数据为A，到IP层后，IP层需要在上层的数据的头部新增一个IP头部B，其结构形如链表：B-&gt;A。
+故此，我们设计一个如下链
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-01-13 13:34" pubdate>
+              2021-01-13
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
+            
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+            
+              <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
         <a href="/2021/01/13/UDP%E5%8D%8F%E8%AE%AE/">UDP协议</a>
       </h1>
 
@@ -621,65 +669,11 @@ L   R
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+            
               <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
             
               <a href="/tags/%E6%A0%91/">树</a>
-            
-              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/10/12/CMake%E7%AC%94%E8%AE%B0/">CMake笔记</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/12/CMake%E7%AC%94%E8%AE%B0/">
-          
-          
-            
-          
-          CMake笔记基本语法变量设置与打印set命令设置变量名及其对应值，通过$&#123;变量名&#125;的方式引用变量。message可打印信息。
-set(VAR_A 100)
-
-message(STATUS $&#123;VAR_A&#125;)
-
-输出：
-...
-
--- 100
-
-...
-
-条件语句同大多数编程语言一样，if用于条件控制。需要注意的是，cmake中&lt;condition&g
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-12 14:13" pubdate>
-              2020-10-12
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/CMake/">CMake</a>
-            
-              <a href="/tags/%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7/">编译构建工具</a>
             
           </div>
         
