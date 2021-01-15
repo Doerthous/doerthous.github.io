@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>ARP协议 - Doerthous</title>
+  <title>有趣的C宏 - Doerthous</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -177,8 +177,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-07 20:37" pubdate>
-        2020年11月7日 晚上
+      <time datetime="2021-01-14 23:09" pubdate>
+        2021年1月14日 晚上
       </time>
     </span>
   
@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      438 字
+      432 字
     </span>
   
 
@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5
+      7
        分钟
     </span>
   
@@ -237,62 +237,129 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">ARP协议</h1>
+            <h1 style="display: none">有趣的C宏</h1>
             
             <div class="markdown-body" id="post-body">
-              <h2 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h2><h3 id="1-目的"><a href="#1-目的" class="headerlink" title="1 目的"></a>1 目的</h3><p>解决已知目标网络地址但未知其硬件地址时，如何获取目标硬件地址的问题。</p>
-<h3 id="2-交互过程"><a href="#2-交互过程" class="headerlink" title="2 交互过程"></a>2 交互过程</h3><p>一子网中有A（192.168.1.101）、B（192.168.1.1）、X（X知道B的MAC地址）。A要发送数据给B，但不知道B的MAC地址：</p>
-<p>A广播：谁有192.168.1.1的MAC地址，请告诉我（192.168.1.101）</p>
-<p>X单播到A：192.168.1.1的MAC地址是AA:BB:CC:DD:EE:FF。</p>
-<h3 id="3-ARP包格式"><a href="#3-ARP包格式" class="headerlink" title="3 ARP包格式"></a>3 ARP包格式</h3><pre><code class="hljs asciidoc"><span class="hljs-code"> 0                   1                   2                   3</span>
-<span class="hljs-code"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</span>
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|            hrd (2)            |             pro (2)           |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|     hln (1)   |     pln (1)   |             op (2)            |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                            sha (n)                            |
-|                              ...                              |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                            spa (m)                            |
-|                              ...                              |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                            tha (n)                            | 
-|                              ...                              |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
-|                            tpa (m)                            | 
-|                              ...                              |
-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+              <h2 id="有趣的C宏"><a href="#有趣的C宏" class="headerlink" title="有趣的C宏"></a>有趣的C宏</h2><p>不定时更新一些C宏用法</p>
+<h3 id="变量后添加行号"><a href="#变量后添加行号" class="headerlink" title="变量后添加行号"></a>变量后添加行号</h3><p>想法来源：在一些自动生成变量而又不会<strong>直接</strong>使用到该变量的情况。</p>
+<pre><code class="hljs reasonml">#define <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> x##y
+#define <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span>
+#define <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">v</span>)</span> <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">__LINE__</span>)</span>
 
-字段      字节数     说明
-<span class="hljs-bullet">----      </span>----      ----
-hrd       2         硬件地址类型（1=Ethernet（以太网））。
-pro       2         网络地址类型（0x0800=IP）。
-hln       1         硬件地址长度（以太网地址长度6字节）。
-pln       1         网络地址长度（IP地址长度4字节）。
-op        2         操作码（1=REEQUEST，2=REPLY）。
-sha       n         源硬件地址，长度由hln指定。
-spa       m         源网络地址，长度由pln指定。
-tha       n         目标硬件地址，长度由hln指定。
-tpa       m         目标网络地址，长度由pln指定。</code></pre>
+<span class="hljs-built_in">int</span> main<span class="hljs-literal">()</span>
+&#123;
+    <span class="hljs-built_in">int</span> <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">a</span>)</span>;
+    return <span class="hljs-number">0</span>;
+&#125;</code></pre>
 
-<h3 id="4-实现考虑"><a href="#4-实现考虑" class="headerlink" title="4 实现考虑"></a>4 实现考虑</h3><ul>
-<li><p>ARP表</p>
-<p>  以网络地址为key，硬件地址为value的数据库</p>
-</li>
-<li><p>ARP模块</p>
-<p>  ARP协议本身并未假定某个硬件（Ethernet）或网络（IP），针对任意的<strong>硬件-网络</strong>协议对，都可以使用ARP协议解决获取硬件地址的问题。故可将ARP实现为<strong>ARP协议拆包组包模块</strong>及<strong>Ethernet-IP ARP模块</strong>。前者只负责ARP包的拆组，后者负责处理ARP交互逻辑。</p>
-</li>
-</ul>
-<h3 id="5-其他"><a href="#5-其他" class="headerlink" title="5 其他"></a>5 其他</h3><ul>
-<li><p>Linux下抓包</p>
-<p>  sudo tcpdump -i eth0 -x</p>
-</li>
-</ul>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
-<li>[1] <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc826">An Ethernet Address Resolution Protocol</a></li>
-</ul>
+<p>预编译后：</p>
+<pre><code class="hljs angelscript"><span class="hljs-built_in">int</span> main()
+&#123;
+    <span class="hljs-built_in">int</span> x7;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
 
+<p>用法举例：</p>
+<pre><code class="hljs reasonml">#<span class="hljs-keyword">include</span> &lt;stdio.h&gt;
+#<span class="hljs-keyword">include</span> &lt;stdint.h&gt;
+#<span class="hljs-keyword">include</span> &lt;<span class="hljs-built_in">string</span>.h&gt;
+
+#define <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> x##y
+#define <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span>
+#define <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">v</span>)</span> <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">__LINE__</span>)</span>
+
+#define alloc<span class="hljs-constructor">_from_stack(<span class="hljs-params">pp</span>, <span class="hljs-params">size</span>)</span> \
+    uint8_t <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">stack_memory</span>)</span><span class="hljs-literal">[<span class="hljs-identifier">size</span>]</span>; \
+    *(pp) = <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">stack_memory</span>)</span>;
+
+<span class="hljs-built_in">int</span> main<span class="hljs-literal">()</span>
+&#123;
+    uint8_t *p;
+
+    alloc<span class="hljs-constructor">_from_stack(&amp;<span class="hljs-params">p</span>, 12)</span>;
+    memcpy(p, <span class="hljs-string">&quot;Hello world\0&quot;</span>, <span class="hljs-number">12</span>);
+    printf(<span class="hljs-string">&quot;%s\n&quot;</span>, p);
+
+    return <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+<h3 id="List-foreach"><a href="#List-foreach" class="headerlink" title="List foreach"></a>List foreach</h3><p>来源：如何在遍历list的同时删除其中的节点，又不暴露list内部的next指针。</p>
+<pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">// list.h</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list</span></span>
+<span class="hljs-class">&#123;</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list</span> *<span class="hljs-title">next</span>;</span>
+&#125; <span class="hljs-keyword">list_t</span>;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> list_append(list, node) do \</span>
+&#123; \
+    <span class="hljs-keyword">list_t</span> **it = &amp;(((<span class="hljs-keyword">list_t</span> *)(<span class="hljs-built_in">list</span>))-&gt;next); \
+    ((<span class="hljs-keyword">list_t</span> *)node)-&gt;next = <span class="hljs-literal">NULL</span>; \
+    <span class="hljs-keyword">while</span> (*it) &#123; \
+        it = &amp;((*it)-&gt;next); \
+    &#125; \
+    (*it) = (<span class="hljs-keyword">list_t</span> *)node; \
+&#125; <span class="hljs-keyword">while</span> (<span class="hljs-number">0</span>)
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> list_foreach_remove(node) list_foreach_rm = 1; *node = (*(node))-&gt;next;</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> list_foreach(type, name, list, do_something) \</span>
+    <span class="hljs-keyword">for</span> (type **name = (type **)&amp;((<span class="hljs-built_in">list</span>)-&gt;next); *name; ) &#123; \
+        <span class="hljs-keyword">int</span> list_foreach_rm = <span class="hljs-number">0</span>; \
+        do_something \
+        <span class="hljs-keyword">if</span> (*name &amp;&amp; !list_foreach_rm) &#123; \
+            name = &amp;((*name)-&gt;next); \
+        &#125; \
+    &#125;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LIST_INIT(list) (list)-&gt;next = NULL;</span>
+
+<span class="hljs-comment">// something.h</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">int_node</span></span>
+<span class="hljs-class">&#123;</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">int_node</span> *<span class="hljs-title">next</span>;</span>
+    <span class="hljs-keyword">int</span> val;
+&#125; <span class="hljs-keyword">int_node_t</span>;
+
+<span class="hljs-comment">// main.c</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">list_t</span> <span class="hljs-built_in">list</span>;
+    <span class="hljs-keyword">int_node_t</span> n[<span class="hljs-number">5</span>];
+
+    LIST_INIT(&amp;<span class="hljs-built_in">list</span>);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) &#123;
+        n[i].val = i;
+        list_append(&amp;<span class="hljs-built_in">list</span>, &amp;n[i]);
+    &#125;
+
+    <span class="hljs-comment">// 输出：0 1 2 3 4</span>
+    list_foreach(<span class="hljs-keyword">int_node_t</span>, item, &amp;<span class="hljs-built_in">list</span>, &#123;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, (*item)-&gt;val);
+    &#125;);
+
+    <span class="hljs-comment">// 删除0，1，4节点</span>
+    list_foreach(<span class="hljs-keyword">int_node_t</span>, item, &amp;<span class="hljs-built_in">list</span>, &#123;
+        <span class="hljs-keyword">if</span> ((*item)-&gt;val == <span class="hljs-number">0</span> || (*item)-&gt;val == <span class="hljs-number">1</span> || (*item)-&gt;val == <span class="hljs-number">4</span>) &#123;
+            list_foreach_remove(item);
+        &#125;
+    &#125;);
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+
+    <span class="hljs-comment">// 输出：2 3</span>
+    list_foreach(<span class="hljs-keyword">int_node_t</span>, item, &amp;<span class="hljs-built_in">list</span>, &#123;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, (*item)-&gt;val);
+    &#125;);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+
+<span class="hljs-comment">/* 完整输出：</span>
+<span class="hljs-comment">0 1 2 3 4</span>
+<span class="hljs-comment">2 3</span>
+<span class="hljs-comment">*/</span></code></pre>
             </div>
             <hr>
             <div>
@@ -302,11 +369,9 @@ tpa       m         目标网络地址，长度由pln指定。</code></pre>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+                      <a class="hover-with-bg" href="/tags/C/">C</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
-                    
-                      <a class="hover-with-bg" href="/tags/ARP/">ARP</a>
+                      <a class="hover-with-bg" href="/tags/%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/">编程技巧</a>
                     
                   </div>
                 
@@ -319,18 +384,12 @@ tpa       m         目标网络地址，长度由pln指定。</code></pre>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/01/07/STM32F10x-RTThread-MDK%E7%A7%BB%E6%A4%8D/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">STM32F10x+RTThread+MDK移植</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/11/06/ENC28J60%E7%AC%94%E8%AE%B0/">
-                        <span class="hidden-mobile">ENC28J60笔记</span>
+                      <a href="/2021/01/13/%E4%B8%80%E7%A7%8D%E7%81%B5%E6%B4%BB%E7%9A%84%E5%86%85%E5%AD%98%E5%9D%97%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1/">
+                        <span class="hidden-mobile">一种灵活的内存块数据结构设计</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -526,7 +585,7 @@ tpa       m         目标网络地址，长度由pln指定。</code></pre>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "ARP协议&nbsp;",
+        "有趣的C宏&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
