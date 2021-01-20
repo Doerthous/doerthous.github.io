@@ -188,6 +188,55 @@
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
+        <a href="/2021/01/15/TCP%E5%8D%8F%E8%AE%AE/">TCP协议</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/01/15/TCP%E5%8D%8F%E8%AE%AE/">
+          
+          
+            
+          
+          TCP协议术语
+Otect：八位字节（可直接理解成字节）。
+TCP Segment：TCP段。
+Max Segment Lifetime：MSL，TCP段最长寿命。
+Connection Termination Request：CRT，连接终止请求。
+1 TCP的序列思想TCP为某些控制标志和用户数据中的每个octet进行编号（序列号，递增，详细编号规则说明见第3章），逻辑上类似于把用户数据拷贝进
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-01-15 10:33" pubdate>
+              2021-01-15
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+            
+              <a href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
+            
+              <a href="/tags/TCP/">TCP</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
         <a href="/2021/01/14/%E6%9C%89%E8%B6%A3%E7%9A%84C%E5%AE%8F/">有趣的C宏</a>
       </h1>
 
@@ -201,7 +250,7 @@
 变量后添加行号想法来源：在一些自动生成变量而又不会直接使用到该变量的情况。
 #define CONCAT_(x,y) x##y
 #define CONCAT(x,y) CONCAT_(x,y)
-#define VAR_LINE(v) CONCAT(x,__LINE__)
+#define VAR_LINE(v) CONCAT(v,__LINE__)
 
 int main()
 &#123;
@@ -632,48 +681,6 @@ X单播到A：192.168.1.1的MAC地址是AA:BB:CC:
               <a href="/tags/%E9%A9%B1%E5%8A%A8/">驱动</a>
             
               <a href="/tags/%E7%BD%91%E7%BB%9C/">网络</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/11/02/Python-ArgParse%E7%AC%94%E8%AE%B0/">Python ArgParse笔记</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/11/02/Python-ArgParse%E7%AC%94%E8%AE%B0/">
-          
-          
-            
-          
-          可选参数和位置参数可选参数由类似add_argument(&#39;-f&#39;,&#39;--foo&#39;)的语句创建，add_argument(&#39;foo&#39;)创建位置参数。当调用parse_args()时，带-前缀的将被识别为可选参数，剩余的被识别为位置参数。
-参数配置通过调用add_argument可设置参数的一些属性，如默认值、参数类型等。
-子命令子命令通过add_su
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-11-02 22:42" pubdate>
-              2020-11-02
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">使用记录</a>
             
           </div>
         

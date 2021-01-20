@@ -244,7 +244,7 @@
 <h3 id="变量后添加行号"><a href="#变量后添加行号" class="headerlink" title="变量后添加行号"></a>变量后添加行号</h3><p>想法来源：在一些自动生成变量而又不会<strong>直接</strong>使用到该变量的情况。</p>
 <pre><code class="hljs reasonml">#define <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> x##y
 #define <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span>
-#define <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">v</span>)</span> <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">__LINE__</span>)</span>
+#define <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">v</span>)</span> <span class="hljs-constructor">CONCAT(<span class="hljs-params">v</span>,<span class="hljs-params">__LINE__</span>)</span>
 
 <span class="hljs-built_in">int</span> main<span class="hljs-literal">()</span>
 &#123;
@@ -255,7 +255,7 @@
 <p>预编译后：</p>
 <pre><code class="hljs angelscript"><span class="hljs-built_in">int</span> main()
 &#123;
-    <span class="hljs-built_in">int</span> x7;
+    <span class="hljs-built_in">int</span> a7;
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 &#125;</code></pre>
 
@@ -266,7 +266,7 @@
 
 #define <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> x##y
 #define <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span>
-#define <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">v</span>)</span> <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">__LINE__</span>)</span>
+#define <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">v</span>)</span> <span class="hljs-constructor">CONCAT(<span class="hljs-params">v</span>,<span class="hljs-params">__LINE__</span>)</span>
 
 #define alloc<span class="hljs-constructor">_from_stack(<span class="hljs-params">pp</span>, <span class="hljs-params">size</span>)</span> \
     uint8_t <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">stack_memory</span>)</span><span class="hljs-literal">[<span class="hljs-identifier">size</span>]</span>; \
@@ -383,6 +383,12 @@
                 <div class="post-prevnext row">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/01/15/TCP%E5%8D%8F%E8%AE%AE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">TCP协议</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
