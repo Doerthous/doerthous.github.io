@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>5 TCP协议 - Doerthous</title>
+  <title>6 TCP协议 - Doerthous</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      8.2k 字
+      8.3k 字
     </span>
   
 
@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      105
+      106
        分钟
     </span>
   
@@ -237,7 +237,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">5 TCP协议</h1>
+            <h1 style="display: none">6 TCP协议</h1>
             
             <div class="markdown-body" id="post-body">
               <h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><p><strong>术语</strong></p>
@@ -865,6 +865,8 @@ Data             x         用户数据</code></pre>
 <p>We have taken advantage of the numbering scheme to protect certain control information as well.  This is achieved by implicitly including some control flags in the sequence space so they can be retransmitted and acknowledged without confusion (i.e., one and only one copy of the control will be acted upon).  Control information is not physically carried in the segment data space.  Consequently, we must adopt rules for implicitly assigning sequence numbers to control.  The SYN and FIN are the only controls requiring this protection, and these controls are used only at connection opening and closing.  For sequence number purposes, the SYN is considered to occur before the first actual data octet of the segment in which it occurs, while the FIN is considered to occur after the last actual data octet in a segment in which it occurs.  The segment length (SEG.LEN) includes both data and sequence space occupying controls.  When a SYN is present then SEG.SEQ is the sequence number of the SYN.</p>
 </blockquote>
 </li>
+<li><p>Q9. 为什么初始化时（OPEN）要把SND.NXT设置为ISS+1而不是直接设置为ISS？（因为测试时，SND.NXT=ISS目前也没有遇到问题，反而ISS+1有问题）</p>
+</li>
 </ul>
 <h4 id="A-6-关于协议设计的思考"><a href="#A-6-关于协议设计的思考" class="headerlink" title="A.6 关于协议设计的思考"></a>A.6 关于协议设计的思考</h4><p>协议的功能：用什么方法或机制，实现什么目标。</p>
 <p>协议的组成：传输格式，交互过程，状态机（状态、事件、动作、状态转移），接口（对外依赖，对外提供）。</p>
@@ -1107,7 +1109,7 @@ Data             x         用户数据</code></pre>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "5 TCP协议&nbsp;",
+        "6 TCP协议&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

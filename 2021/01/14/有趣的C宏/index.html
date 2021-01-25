@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      432 字
+      656 字
     </span>
   
 
@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      12
        分钟
     </span>
   
@@ -241,7 +241,7 @@
             
             <div class="markdown-body" id="post-body">
               <h2 id="有趣的C宏"><a href="#有趣的C宏" class="headerlink" title="有趣的C宏"></a>有趣的C宏</h2><p>不定时更新一些C宏用法</p>
-<h3 id="变量后添加行号"><a href="#变量后添加行号" class="headerlink" title="变量后添加行号"></a>变量后添加行号</h3><p>想法来源：在一些自动生成变量而又不会<strong>直接</strong>使用到该变量的情况。</p>
+<h3 id="1-变量后添加行号"><a href="#1-变量后添加行号" class="headerlink" title="1 变量后添加行号"></a>1 变量后添加行号</h3><p>想法来源：在一些自动生成变量而又不会<strong>直接</strong>使用到该变量的情况。</p>
 <pre><code class="hljs reasonml">#define <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> x##y
 #define <span class="hljs-constructor">CONCAT(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span> <span class="hljs-constructor">CONCAT_(<span class="hljs-params">x</span>,<span class="hljs-params">y</span>)</span>
 #define <span class="hljs-constructor">VAR_LINE(<span class="hljs-params">v</span>)</span> <span class="hljs-constructor">CONCAT(<span class="hljs-params">v</span>,<span class="hljs-params">__LINE__</span>)</span>
@@ -283,7 +283,7 @@
     return <span class="hljs-number">0</span>;
 &#125;</code></pre>
 
-<h3 id="List-foreach"><a href="#List-foreach" class="headerlink" title="List foreach"></a>List foreach</h3><p>来源：如何在遍历list的同时删除其中的节点，又不暴露list内部的next指针。</p>
+<h3 id="2-List-foreach"><a href="#2-List-foreach" class="headerlink" title="2 List foreach"></a>2 List foreach</h3><p>来源：如何在遍历list的同时删除其中的节点，又不暴露list内部的next指针。</p>
 <pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
 
 <span class="hljs-comment">// list.h</span>
@@ -360,6 +360,63 @@
 <span class="hljs-comment">0 1 2 3 4</span>
 <span class="hljs-comment">2 3</span>
 <span class="hljs-comment">*/</span></code></pre>
+
+<h3 id="3-协程"><a href="#3-协程" class="headerlink" title="3 协程"></a>3 协程</h3><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> c_start() static int __c_break_point;switch(__c_break_point)default:&#123;</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> c_end() &#125; return 0;</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> c_yield() do&#123;__c_break_point=__LINE__;return 1;case __LINE__:;&#125;while(0)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> c_yield_val(val) do &#123; *c_yval = (val); c_yield(); &#125; while (0)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> c_call(c_func, ...) do \</span>
+&#123; \
+    <span class="hljs-keyword">case</span> __LINE__: <span class="hljs-keyword">if</span> (c_func(__VA_ARGS__)) &#123; \
+        __c_break_point = __LINE__; <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; \
+    &#125; \
+&#125; <span class="hljs-keyword">while</span> (<span class="hljs-number">0</span>)
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">c_level_3</span><span class="hljs-params">()</span> </span>&#123;
+    c_start();
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;l3: c_yield()\n&quot;</span>); c_yield();
+    c_end();
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">c_level_2</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *c_yval)</span> </span>&#123;
+    c_start();
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;l2: c_yield_val(201)\n&quot;</span>); c_yield_val(<span class="hljs-number">201</span>);
+    c_call(c_level_3);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;l2: c_yield_val(202)\n&quot;</span>); c_yield_val(<span class="hljs-number">202</span>);
+    c_end();
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">c_level_1</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *c_yval)</span> </span>&#123;
+    c_start();
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;l1: c_yield_val(101)\n&quot;</span>); c_yield_val(<span class="hljs-number">101</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;l1: c_yield()\n&quot;</span>); c_yield();
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">3</span>;
+    <span class="hljs-keyword">while</span>(--i) &#123;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;l1: c_yield_val(i*4+100), i=%d\n&quot;</span>, i); c_yield_val(i*<span class="hljs-number">4</span>+<span class="hljs-number">100</span>);
+    &#125;
+    c_call(c_level_2, c_yval);
+    c_end();
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span> </span>&#123;
+    <span class="hljs-keyword">while</span> (c_level_1(&amp;argc))
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;yield: %d\n&quot;</span>, argc);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+<p>输出：</p>
+<pre><code class="hljs yaml"><span class="hljs-attr">l1:</span> <span class="hljs-string">c_yield_val(101)</span>
+<span class="hljs-attr">yield:</span> <span class="hljs-number">101</span>
+<span class="hljs-attr">l1:</span> <span class="hljs-string">c_yield()</span>
+<span class="hljs-attr">yield:</span> <span class="hljs-number">101</span>
+<span class="hljs-attr">l1:</span> <span class="hljs-string">c_yield_val(i*4+100),</span> <span class="hljs-string">i=2</span>
+<span class="hljs-attr">yield:</span> <span class="hljs-number">108</span>
+<span class="hljs-attr">l1:</span> <span class="hljs-string">c_yield_val(i*4+100),</span> <span class="hljs-string">i=1</span>
+<span class="hljs-attr">yield:</span> <span class="hljs-number">104</span>
+<span class="hljs-attr">l2:</span> <span class="hljs-string">c_yield_val(201)</span>
+<span class="hljs-attr">yield:</span> <span class="hljs-number">201</span>
+<span class="hljs-attr">l3:</span> <span class="hljs-string">c_yield()</span>
+<span class="hljs-attr">yield:</span> <span class="hljs-number">201</span>
+<span class="hljs-attr">l2:</span> <span class="hljs-string">c_yield_val(202)</span>
+<span class="hljs-attr">yield:</span> <span class="hljs-number">202</span></code></pre>
             </div>
             <hr>
             <div>
@@ -386,7 +443,7 @@
                     
                       <a href="/2021/01/15/TCP%E5%8D%8F%E8%AE%AE/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">5 TCP协议</span>
+                        <span class="hidden-mobile">6 TCP协议</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

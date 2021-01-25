@@ -188,7 +188,7 @@
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2021/01/15/TCP%E5%8D%8F%E8%AE%AE/">5 TCP协议</a>
+        <a href="/2021/01/15/TCP%E5%8D%8F%E8%AE%AE/">6 TCP协议</a>
       </h1>
 
       <p class="index-excerpt">
@@ -254,7 +254,7 @@ Connection Termination Request：CRT，连接终止请求。
             
           
           有趣的C宏不定时更新一些C宏用法
-变量后添加行号想法来源：在一些自动生成变量而又不会直接使用到该变量的情况。
+1 变量后添加行号想法来源：在一些自动生成变量而又不会直接使用到该变量的情况。
 #define CONCAT_(x,y) x##y
 #define CONCAT(x,y) CONCAT_(x,y)
 #define VAR_LINE(v) CONCAT(v,__LINE__)
@@ -262,7 +262,7 @@ Connection Termination Request：CRT，连接终止请求。
 int main()
 &#123;
     int VAR_LINE(a);
-    ret
+    r
         </a>
       </p>
 
@@ -350,7 +350,7 @@ int main()
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2021/01/13/UDP%E5%8D%8F%E8%AE%AE/">4 UDP协议</a>
+        <a href="/2021/01/13/UDP%E5%8D%8F%E8%AE%AE/">5 UDP协议</a>
       </h1>
 
       <p class="index-excerpt">
@@ -406,7 +406,7 @@ int main()
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2021/01/12/Ethernet%E5%B8%A7%E5%8F%8A%E5%85%B6%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97%E5%AE%9E%E7%8E%B0/">1 Ethernet帧及其软件模块实现</a>
+        <a href="/2021/01/12/Ethernet%E5%B8%A7%E5%8F%8A%E5%85%B6%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97%E5%AE%9E%E7%8E%B0/">2 Ethernet帧及其软件模块实现</a>
       </h1>
 
       <p class="index-excerpt">
@@ -459,7 +459,7 @@ int main()
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2021/01/12/BOOTP%E5%8D%8F%E8%AE%AE/">6 BOOTP协议</a>
+        <a href="/2021/01/12/BOOTP%E5%8D%8F%E8%AE%AE/">7 BOOTP协议</a>
       </h1>
 
       <p class="index-excerpt">
@@ -506,6 +506,60 @@ IP地址确定及镜像文件定位（RFC951主要内容）。
               <a href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
             
               <a href="/tags/BOOTP/">BOOTP</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2021/01/11/DHCP%E5%8D%8F%E8%AE%AE/">8 DHCP协议</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/01/11/DHCP%E5%8D%8F%E8%AE%AE/">
+          
+          
+            
+          
+          DHCP协议概述DHCP协议是BOOTP协议的扩展，在术语方面，BOOTP的Vend在DHCP协议中被定义为Option。
+DHCP提供了两种service：1)配置参数仓库（客户端可以从服务端获取网络配置参数），2)网络地址分配。
+1 DHCP消息消息格式 0                   1                   2                   3
+ 0 1 2 3
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-01-11 18:47" pubdate>
+              2021-01-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E9%80%A0%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E6%A0%88/">从零开始造网络协议栈</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+            
+              <a href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
+            
+              <a href="/tags/DHCP/">DHCP</a>
             
           </div>
         
@@ -638,7 +692,7 @@ embedd
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2020/11/07/ARP%E5%8D%8F%E8%AE%AE/">2 ARP协议</a>
+        <a href="/2020/11/07/ARP%E5%8D%8F%E8%AE%AE/">3 ARP协议</a>
       </h1>
 
       <p class="index-excerpt">
@@ -680,56 +734,6 @@ X单播到A：192.168.1.1的MAC地址是AA:BB:CC:
               <a href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
             
               <a href="/tags/ARP/">ARP</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/11/06/ENC28J60%E7%AC%94%E8%AE%B0/">0 ENC28J60笔记</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/11/06/ENC28J60%E7%AC%94%E8%AE%B0/">
-          
-          
-            
-          
-          ENC28J60笔记本文记录了开发驱动过程中的大致实施思路以及踩过的一些坑，方便后续回顾。本文尚未完善，但已有基本思路，如后续有需要再进行细化。具体的细节还需参考芯片的数据手册。实现见dts_driver中enc28j60*。
-供给协议栈的接口和其他通讯硬件类似，ENC28J60提供给上层软件的接口基本上包括初始化接口和收发接口，其可能的形式如下（如无特殊说明，下文中提到的基本接口均指此处提到的软
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-11-06 15:57" pubdate>
-              2020-11-06
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E9%80%A0%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E6%A0%88/">从零开始造网络协议栈</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%A9%B1%E5%8A%A8/">驱动</a>
-            
-              <a href="/tags/%E7%BD%91%E7%BB%9C/">网络</a>
             
           </div>
         

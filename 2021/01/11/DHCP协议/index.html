@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>8 DHCP协议 - Doerthous</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Doerthous</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/resume/">
+                <i class="iconfont icon-addrcard"></i>
+                简历
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/bg/hexo.fluid-dev.com/4xvpqo.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-11 18:47" pubdate>
+        2021年1月11日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      24
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">8 DHCP协议</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h2 id="DHCP协议"><a href="#DHCP协议" class="headerlink" title="DHCP协议"></a>DHCP协议</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>DHCP协议是BOOTP协议的扩展，在术语方面，BOOTP的Vend在DHCP协议中被定义为Option。</p>
+<p>DHCP提供了两种service：1)配置参数仓库（客户端可以从服务端获取网络配置参数），2)网络地址分配。</p>
+<h3 id="1-DHCP消息"><a href="#1-DHCP消息" class="headerlink" title="1 DHCP消息"></a>1 DHCP消息</h3><h4 id="消息格式"><a href="#消息格式" class="headerlink" title="消息格式"></a>消息格式</h4><pre><code class="hljs asciidoc"><span class="hljs-code"> 0                   1                   2                   3</span>
+<span class="hljs-code"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</span>
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|     op (1)    |   htype (1)   |   hlen (1)    |   hops (1)    |
+<span class="hljs-code">+---------------+</span>---------------<span class="hljs-code">+---------------+</span>---------------+
+|                            xid (4)                            |
+<span class="hljs-code">+-------------------------------+</span>-------------------------------+
+|           secs (2)            |           flags (2)           |
+<span class="hljs-code">+-------------------------------+</span>-------------------------------+
+|                          ciaddr  (4)                          |
+<span class="hljs-code">+---------------------------------------------------------------+</span>
+|                          yiaddr  (4)                          |
+<span class="hljs-code">+---------------------------------------------------------------+</span>
+|                          siaddr  (4)                          |
+<span class="hljs-code">+---------------------------------------------------------------+</span>
+|                          giaddr  (4)                          |
+<span class="hljs-code">+---------------------------------------------------------------+</span>
+|                          chaddr  (16)                         |
+<span class="hljs-code">+---------------------------------------------------------------+</span>
+|                          sname   (64)                         |
+<span class="hljs-code">+---------------------------------------------------------------+</span>
+|                          file    (128)                        |
+<span class="hljs-code">+---------------------------------------------------------------+</span>
+|                          options (n)                          |
+<span class="hljs-code">+---------------------------------------------------------------+</span>
+
+字段      字节数     说明
+<span class="hljs-bullet">----      </span>----      ----
+op        1         包类型标志（1=BOOTREQUEST，2=BOOTREPLY）。
+htype     1         同ARP协议，见RFC826。
+hlen      1         同ARP协议。
+hops      1         网关可选使用该字段（客户端填0）。
+xid       4         会话ID，随机数，客户端产生，用于匹配REQUEST及REPLY。
+secs      2         自客户端尝试BOOT起所消耗的时间（秒），由客户端填充。
+flags     2                              1 1 1 1 1 1
+<span class="hljs-code">                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5</span>
+<span class="hljs-code">                    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span>
+<span class="hljs-code">                    |B|             MBZ             |</span>
+<span class="hljs-code">                    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span>
+<span class="hljs-code">                     B:  BROADCAST flag</span>
+<span class="hljs-code">                     MBZ:  MUST BE ZERO (reserved for future use)</span>
+ciaddr    4         客户端IP地址（如果客户端BOOT有IP则填充，否则填0）。
+yiaddr    4         服务端分配给客户端的IP地址（如ciaddr为0则填充该字段）。
+siaddr    4         BOOT文件传输服务端IP地址（REPLY中由服务端填充）。
+giaddr    4         网关IP地址（其他角色填0）。
+chaddr    16        客户端硬件地址（客户端填充）。
+sname     64        服务端主机名，可选，null-结尾字符串。
+file      128       BOOT文件名（null串，通用名，全路径）。
+options   n         DHCP选项。</code></pre>
+
+<p><strong>关于siaddr与server identifier</strong></p>
+<p>按照BOOTP协议的描述，无盘系统自举有两个阶段，一个是获取地址，另一个是获取BOOT文件。一个无盘系统可能从一个服务器获取到其自身的IP地址，然后从另一个服务器获取BOOT文件。在DHCP协议中，siaddr指存放了BOOT文件的服务器地址，这个服务器不一定是DHCP服务器。所以DHCP服务端可能会将自己的地址写入siaddr，如果该DHCP服务端能够提供BOOTP协议中定义的文件传输功能。而DHCP中定义的server identifier选项中指示的地址总是DHCP服务端的地址。</p>
+<p>因此，如在不使用BOOTP的BOOT文件的情况下，尽量使用<code>server identifier</code>。</p>
+<p><strong>Options</strong></p>
+<p>DHCP的Option为变长字段，以magic cookie：99, 130, 83, 99（十进制）开头，以255结尾。Option格式有定长及变长两种（括号中的数字标识Otect的个数）：</p>
+<pre><code class="hljs isbl">定长：<span class="hljs-function"><span class="hljs-title">CODE</span>(<span class="hljs-number">1</span>)</span>
+变长：<span class="hljs-function"><span class="hljs-title">CODE</span>(<span class="hljs-number">1</span>) <span class="hljs-title">LEN</span>(<span class="hljs-number">1</span>) <span class="hljs-title">DATA</span>(<span class="hljs-variable">LEN</span>)</span></code></pre>
+
+<p>其中，变长格式中的LEN字段不包含CODE和LEN本身。</p>
+<p>DHCP的定长Option仅有两个，一个是用于填充的PAD选项，其CODE值为0，另一个用于标识Option结尾的END选项，其CODE值为255。</p>
+<p>举例：一个空的Option</p>
+<pre><code class="hljs jboss-cli">Otect:      0    1    2    3    4
+          +<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+
+Value:    | 99 |130 | 83 | 99 |255 |
+          +<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+
+Meaning:  |    Magic cookie   |END |
+          +<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+</code></pre>
+
+<p>动态网络地址分配中涉及到的常见Option主要有：</p>
+<ol>
+<li>DHCP Message Type</li>
+<li>Server Identifier</li>
+<li>Requested IP Address</li>
+<li>Subnet Mask</li>
+<li>IP Lease Time</li>
+</ol>
+<h4 id="消息类型"><a href="#消息类型" class="headerlink" title="消息类型"></a>消息类型</h4><p>每个DHCP消息中必须包含一个特殊的Option：DHCP Message Type，此Option标识了DHCP消息的类型。</p>
+<p>DHCP中定义了如下的消息类型：</p>
+<ul>
+<li>DISCOVER：客户端广播，探测DHCP服务端</li>
+<li>OFFER：服务端响应DISCOVER（带有分配的地址及网络配置参数）。</li>
+<li>REQUEST：客户端广播，向服务器请求网络地址或参数。</li>
+<li>ACK：服务端发出，带有网络配置参数。</li>
+<li>NAK：服务端发出，暗示客户端网络地址错误或租期过期。</li>
+<li>DECLINE：客户端发出，告知服务端，其分配的地址已被占用。</li>
+<li>RELEASE：客户端发出，表示放弃已分配的地址，取消租用。</li>
+<li>INFORM：客户端发出，向服务端请求网络配置参数。</li>
+</ul>
+<h3 id="2-交互过程"><a href="#2-交互过程" class="headerlink" title="2 交互过程"></a>2 交互过程</h3><p>DHCP使用UDP的67及68端口进行交互：</p>
+<pre><code class="hljs routeros">DHCP<span class="hljs-built_in"> client </span>    DHCP server
+     | ---udp(67)--&gt; | BOOTREQUEST
+     | &lt;--udp(68)--- | BOOTREPLY</code></pre>
+
+<h4 id="动态地址分配"><a href="#动态地址分配" class="headerlink" title="动态地址分配"></a>动态地址分配</h4><ol>
+<li><p>客户端广播discover，并等待offer，期间可能有多个server提供offer，客户端根据offer中的网络参数自行选择一个server。</p>
+</li>
+<li><p>服务端回复offer，offer中yiaddr为服务端分配的IP，有标识服务端IP地址的server identifier，以及其他网络参数。</p>
+</li>
+<li><p>客户端广播request，必须含server identifier选项以指定某个server，requested ip address必须和server发送的offer中的yiaddr相同。如果超时且未收到offer，则客户端重发discover。</p>
+</li>
+<li><p>服务端存储binding并回复ack。如果不能满足客户端，则回复nak。如果分配成功，服务端可以把已分配的地址标记为不可用。如果没有收到客服端的request，服务端应该将分配的地址标记为可用。</p>
+</li>
+<li><p>如果客户端发现分配的地址已经被占用（通过arp协议），则发送decline给服务端，并等待至少10s，然后重启配置流程。如果客户端收到nak，则重启配置流程。如果客户端既没收到ack，也没收到nak，则按照rfc中提到的算法，重发request。如果客户端重传失败，则进入init状态，并重启初始化流程。</p>
+</li>
+<li><p>客户端可以发送release释放已分配的地址。</p>
+</li>
+</ol>
+<pre><code class="hljs gherkin">     Server          Client          Server
+(未选中的server)                    (选中的server)
+
+        v               v               v
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">           开始初始化           </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string"> _____________/</span>|<span class="hljs-string">\____________  </span>|
+        |<span class="hljs-string">/DHCPDISCOVER  </span>|<span class="hljs-string"> DHCPDISCOVER \</span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+    确定配置参数         |<span class="hljs-string">           确定配置参数</span>
+<span class="hljs-string">        </span>|<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">\              </span>|<span class="hljs-string">  ____________/</span>|
+        |<span class="hljs-string"> \________     </span>|<span class="hljs-string"> /DHCPOFFER    </span>|
+        |<span class="hljs-string"> DHCPOFFER\    </span>|<span class="hljs-string">/              </span>|
+        |<span class="hljs-string">           \   </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">            收集offer          </span>|
+        |<span class="hljs-string">             \ </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">            选择offer          </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string"> _____________/</span>|<span class="hljs-string">\____________  </span>|
+        |<span class="hljs-string">/ DHCPREQUEST  </span>|<span class="hljs-string">  DHCPREQUEST\ </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">            提交配置</span>
+<span class="hljs-string">        </span>|<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string"> _____________/</span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">/ DHCPACK      </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">           初始化完成           </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        .               .               .
+        .               .               .
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">            正常结束            </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">\ ____________ </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string"> DHCPRELEASE  \</span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        |<span class="hljs-string">               </span>|<span class="hljs-string">            取消租用</span>
+<span class="hljs-string">        </span>|<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
+        v               v               v</code></pre>
+
+<h3 id="3-DHCP客户端状态"><a href="#3-DHCP客户端状态" class="headerlink" title="3 DHCP客户端状态"></a>3 DHCP客户端状态</h3><pre><code class="hljs gherkin"> --------                               -------
+|<span class="hljs-string">        </span>|<span class="hljs-string"> +--------------------------&gt;</span>|<span class="hljs-string">       </span>|<span class="hljs-string">&lt;-------------------+</span>
+|<span class="hljs-string"> INIT-  </span>|<span class="hljs-string"> </span>|<span class="hljs-string">     +--------------------&gt;</span>|<span class="hljs-string"> INIT  </span>|<span class="hljs-string">                    </span>|
+|<span class="hljs-string"> REBOOT </span>|<span class="hljs-string">DHCPNAK/         +----------&gt;</span>|<span class="hljs-string">       </span>|<span class="hljs-string">&lt;---+               </span>|
+|<span class="hljs-string">        </span>|<span class="hljs-string">Restart</span>|<span class="hljs-string">         </span>|<span class="hljs-string">            -------     </span>|<span class="hljs-string">               </span>|
+ --------  |<span class="hljs-string">  DHCPNAK/     </span>|<span class="hljs-string">               </span>|<span class="hljs-string">                        </span>|
+    |<span class="hljs-string">      Discard offer   </span>|<span class="hljs-string">      -/Send DHCPDISCOVER               </span>|
+-/Send DHCPREQUEST         |<span class="hljs-string">               </span>|<span class="hljs-string">                        </span>|
+    |<span class="hljs-string">      </span>|<span class="hljs-string">     </span>|<span class="hljs-string">      DHCPACK            v        </span>|<span class="hljs-string">               </span>|
+ -----------     |<span class="hljs-string">   (not accept.)/   -----------   </span>|<span class="hljs-string">               </span>|
+|<span class="hljs-string">           </span>|<span class="hljs-string">    </span>|<span class="hljs-string">  Send DHCPDECLINE </span>|<span class="hljs-string">           </span>|<span class="hljs-string">                  </span>|
+|<span class="hljs-string"> REBOOTING </span>|<span class="hljs-string">    </span>|<span class="hljs-string">         </span>|<span class="hljs-string">         </span>|<span class="hljs-string"> SELECTING </span>|<span class="hljs-string">&lt;----+            </span>|
+|<span class="hljs-string">           </span>|<span class="hljs-string">    </span>|<span class="hljs-string">        /          </span>|<span class="hljs-string">           </span>|<span class="hljs-string">     </span>|<span class="hljs-string">DHCPOFFER/  </span>|
+ -----------     |<span class="hljs-string">       /            -----------   </span>|<span class="hljs-string">  </span>|<span class="hljs-string">Collect     </span>|
+    |<span class="hljs-string">            </span>|<span class="hljs-string">      /                  </span>|<span class="hljs-string">   </span>|<span class="hljs-string">       </span>|<span class="hljs-string">  replies   </span>|
+DHCPACK/         |<span class="hljs-string">     /  +----------------+   +-------+            </span>|
+Record lease, set|<span class="hljs-string">    </span>|<span class="hljs-string">   v   Select offer/                         </span>|
+timers T1, T2   ------------  send DHCPREQUEST      |<span class="hljs-string">               </span>|
+    |<span class="hljs-string">   +-----&gt;</span>|<span class="hljs-string">            </span>|<span class="hljs-string">             DHCPNAK, Lease expired/   </span>|
+    |<span class="hljs-string">   </span>|<span class="hljs-string">      </span>|<span class="hljs-string"> REQUESTING </span>|<span class="hljs-string">                  Halt network         </span>|
+    DHCPOFFER/ |<span class="hljs-string">            </span>|<span class="hljs-string">                       </span>|<span class="hljs-string">               </span>|
+    Discard     ------------                        |<span class="hljs-string">               </span>|
+    |<span class="hljs-string">   </span>|<span class="hljs-string">        </span>|<span class="hljs-string">        </span>|<span class="hljs-string">                   -----------           </span>|
+    |<span class="hljs-string">   +--------+     DHCPACK/              </span>|<span class="hljs-string">           </span>|<span class="hljs-string">          </span>|
+    |<span class="hljs-string">              Record lease, set    -----</span>|<span class="hljs-string"> REBINDING </span>|<span class="hljs-string">          </span>|
+    |<span class="hljs-string">                timers T1, T2     /     </span>|<span class="hljs-string">           </span>|<span class="hljs-string">          </span>|
+    |<span class="hljs-string">                     </span>|<span class="hljs-string">        DHCPACK/   -----------           </span>|
+    |<span class="hljs-string">                     v     Record lease, set   ^               </span>|
+    +----------------&gt; -------      /timers T1,T2   |<span class="hljs-string">               </span>|
+               +-----&gt;|<span class="hljs-string">       </span>|<span class="hljs-string">&lt;---+                </span>|<span class="hljs-string">               </span>|
+               |<span class="hljs-string">      </span>|<span class="hljs-string"> BOUND </span>|<span class="hljs-string">&lt;---+                </span>|<span class="hljs-string">               </span>|
+  DHCPOFFER, DHCPACK, |<span class="hljs-string">       </span>|<span class="hljs-string">    </span>|<span class="hljs-string">            T2 expires/   DHCPNAK/</span>
+<span class="hljs-string">   DHCPNAK/Discard     -------     </span>|<span class="hljs-string">             Broadcast  Halt network</span>
+<span class="hljs-string">               </span>|<span class="hljs-string">       </span>|<span class="hljs-string"> </span>|<span class="hljs-string">         </span>|<span class="hljs-string">            DHCPREQUEST         </span>|
+               +-------+ |<span class="hljs-string">        DHCPACK/          </span>|<span class="hljs-string">               </span>|
+                    T1 expires/   Record lease, set |<span class="hljs-string">               </span>|
+                 Send DHCPREQUEST timers T1, T2     |<span class="hljs-string">               </span>|
+                 to leasing server |<span class="hljs-string">                </span>|<span class="hljs-string">               </span>|
+                         |<span class="hljs-string">   ----------             </span>|<span class="hljs-string">               </span>|
+                         |<span class="hljs-string">  </span>|<span class="hljs-string">          </span>|<span class="hljs-string">------------+               </span>|
+                         +-&gt;|<span class="hljs-string"> RENEWING </span>|<span class="hljs-string">                            </span>|
+                            |<span class="hljs-string">          </span>|<span class="hljs-string">----------------------------+</span>
+<span class="hljs-string">                             ----------</span></code></pre>
+
+<h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>DHCP客户端维护有两个定时器T1、T2。进入BOUND状态后，客户端启动定时器。T1、T2超时时间可由服务器通过DHCP的Option配置，T1默认值为<code>0.5*lease</code>，T2默认为<code>0.875*lease</code>（T1 &lt; T2 &lt; Lease）。T1超时后，客户端进入RENEWING状态，T2超时后客户端进入REBINDING状态，租期到期后，客户端进入INIT状态。</p>
+<h3 id="4-其他"><a href="#4-其他" class="headerlink" title="4 其他"></a>4 其他</h3><p>一个Window上的DHCP服务器：<a target="_blank" rel="noopener" href="http://www.dhcpserver.de/cms/download/">http://www.dhcpserver.de/cms/download/</a></p>
+<h3 id="A-附录"><a href="#A-附录" class="headerlink" title="A 附录"></a>A 附录</h3><h4 id="部分Option定义"><a href="#部分Option定义" class="headerlink" title="部分Option定义"></a>部分Option定义</h4><p>本节列举DHCP动态网络地址分配中涉及到的常见的Option，完整Option定义参考[2]。</p>
+<h5 id="Pad"><a href="#Pad" class="headerlink" title="Pad"></a>Pad</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code</span>
+<span class="hljs-code">+-----+</span>
+|  0  |
+<span class="hljs-code">+-----+</span></code></pre>
+
+<p>填充Option。</p>
+<h5 id="End"><a href="#End" class="headerlink" title="End"></a>End</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code</span>
+<span class="hljs-code">+-----+</span>
+| 255 |
+<span class="hljs-code">+-----+</span></code></pre>
+
+<p>标识Option字段结尾的End选项。</p>
+<h5 id="DHCP-Message-Type"><a href="#DHCP-Message-Type" class="headerlink" title="DHCP Message Type"></a>DHCP Message Type</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code   Len  Type</span>
+<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>
+|  53 |  1  | 1-7 |
+<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span></code></pre>
+
+<p>此Option用于标识DHCP消息的类型，合法的值及其含义如下：</p>
+<pre><code class="hljs routeros">Value   Message Type
+-----   ------------
+1       DHCPDISCOVER
+2       DHCPOFFER
+3       DHCPREQUEST
+4       DHCPDECLINE
+5       DHCPACK
+6       DHCPNAK
+7       DHCPRELEASE</code></pre>
+
+<h5 id="Server-Identifier"><a href="#Server-Identifier" class="headerlink" title="Server Identifier"></a>Server Identifier</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code   Len            Address</span>
+<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+
+|  54 |  4  |  a1 |  a2 |  a3 |  a4 |
+<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+</code></pre>
+
+<p>此Option用在DHCPOFFER和DHCPREQUEST消息中，DHCPACK及DHCPNAK可选携带。DHCP服务端通过在DHCPOFFER中携带该Option表明自己的IP地址，DHCP客户端通过在DHCPREQUEST中携带该Option表明自己选择哪一个DHCP服务端（由于DISCOVER是广播，所有客户端可能收到多个OFFER）。</p>
+<p>该Option的Address总是DHCP服务端的IP地址。</p>
+<h5 id="Requested-IP-Address"><a href="#Requested-IP-Address" class="headerlink" title="Requested IP Address"></a>Requested IP Address</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code   Len          Address</span>
+<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+
+|  50 |  4  |  a1 |  a2 |  a3 |  a4 |
+<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+</code></pre>
+
+<p>此Option用在DISCOVER及REQUEST中，表示客户端要申请的IP。</p>
+<h5 id="IP-Address-Lease-Time"><a href="#IP-Address-Lease-Time" class="headerlink" title="IP Address Lease Time"></a>IP Address Lease Time</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code   Len         Lease Time</span>
+<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+
+|  51 |  4  |  t1 |  t2 |  t3 |  t4 |
+<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+</code></pre>
+
+<p>此选项用在DHCPDISCOVER或DHCPREQUEST中，表示客户端想申请的租期时长。在OFFER中表示服务端给出的租期时长。单位秒，0xFFFFFFFF表示永久租期。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><p>[1] <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc2131">Dynamic Host Configuration Protocol, RFC2131</a></p>
+</li>
+<li><p>[2] <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc1533">DHCP Options and BOOTP Vendor Extensions, RFC1533</a></p>
+</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E9%80%A0%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E6%A0%88/">从零开始造网络协议栈</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%8D%8F%E8%AE%AE%E6%A0%88/">协议栈</a>
+                    
+                      <a class="hover-with-bg" href="/tags/DHCP/">DHCP</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/01/12/BOOTP%E5%8D%8F%E8%AE%AE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">7 BOOTP协议</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/10/FatFS%E7%A7%BB%E6%A4%8D/">
+                        <span class="hidden-mobile">FatFS移植</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "6q9eFigSE9Szj6EB2AYQbBEw-gzGzoHsz",
+          app_key: "hdofqAbDXsCzzLI6Tu0fNjyo",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    }
+    waitElementVisible('vcomments', loadValine);
+  </script>
+  <noscript>Please enable JavaScript to view the <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "8 DHCP协议&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d59b3d8dd18fa79fc7e9701ceaaf7f5c";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+</body>
+</html>
