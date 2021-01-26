@@ -1,0 +1,1195 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>LwIP移植 - Doerthous</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Doerthous</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/resume/">
+                <i class="iconfont icon-addrcard"></i>
+                简历
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/bg/hexo.fluid-dev.com/4xvpqo.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-26 10:50" pubdate>
+        2021年1月26日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      54
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">LwIP移植</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>硬件：</p>
+<ul>
+<li>STM32F10XZET6</li>
+<li>ENC28J60</li>
+</ul>
+<p>软件：</p>
+<ul>
+<li>LwIP v2.0.0.release</li>
+</ul>
+<h3 id="1-裸机移植"><a href="#1-裸机移植" class="headerlink" title="1 裸机移植"></a>1 裸机移植</h3><p>此项目代码参考<a target="_blank" rel="noopener" href="https://github.com/Doerthous/dts.embedded">project/stm32f10x-mdk-none_lwip</a>。</p>
+<h4 id="1-1-配置文件"><a href="#1-1-配置文件" class="headerlink" title="1.1 配置文件"></a>1.1 配置文件</h4><p>针对平台、操作系统及LwIP进行配置，此处主要涉及cc.h、sys_arch.h、lwipopts.h三个文件。</p>
+<p>cc.h：平台及编译器相关的文件，例如控制大小端的宏定义：</p>
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BYTE_ORDER  LITTLE_ENDIAN</span></code></pre>
+
+<p>sys_arch.h：RTOS接口（裸机仅需根据需要，定义一些多余的类型）。</p>
+<p>lwipopts.h：lwip配置（根据需要修改）。</p>
+<pre><code class="hljs C"><span class="hljs-comment">// 裸机环境</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NO_SYS                      1</span>
+
+<span class="hljs-comment">// 禁用libc的malloc</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_LIBC_MALLOC             0</span>
+
+<span class="hljs-comment">// 硬件无padding</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ETH_PAD_SIZE                0</span>
+
+<span class="hljs-comment">// 此宏控制了ethernet.h中的ethernet头部的padding</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">eth_hdr</span> &#123;</span>
+    <span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> ETH_PAD_SIZE</span>
+    PACK_STRUCT_FLD_8(<span class="hljs-keyword">u8_t</span> padding[ETH_PAD_SIZE]);
+    <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+    PACK_STRUCT_FLD_S(struct eth_addr dest);
+    PACK_STRUCT_FLD_S(struct eth_addr src);
+    PACK_STRUCT_FIELD(<span class="hljs-keyword">u16_t</span> type);
+&#125; PACK_STRUCT_STRUCT;</code></pre>
+
+<h4 id="1-2-实现内存管理接口"><a href="#1-2-实现内存管理接口" class="headerlink" title="1.2 实现内存管理接口"></a>1.2 实现内存管理接口</h4><p><code>lwip/mem.h</code>中定义了内存管理相关的接口，需要根据情况实现这些接口，或者使用lwip中已经存在的实现：<code>core/mem.c</code>。由于本文中使用了tlsf的内存管理接口，故本文中的移植不使用<code>core/mem.c</code>。</p>
+<p>在<code>lwipopts.h</code>中引入tlsf接口：</p>
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_free                    tlsf_free</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_malloc                  tlsf_malloc</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_calloc                  tlsf_calloc</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_realloc                 tlsf_realloc</span></code></pre>
+
+<p>实现mem_init和mem_trim接口（lwipport.c）：</p>
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/mem.h&quot;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">mem_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
+<span class="hljs-function"></span>&#123;
+	<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_POOL_SIZE 10240</span>
+	<span class="hljs-keyword">static</span> <span class="hljs-keyword">uint8_t</span> mem[MEM_POOL_SIZE];
+	init_memory_pool(MEM_POOL_SIZE, mem);
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span>* <span class="hljs-title">mem_trim</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *mem, <span class="hljs-keyword">mem_size_t</span> size)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">return</span> mem;
+&#125;</code></pre>
+
+<blockquote>
+<p>注：<br>按我的理解<code>core/mem.c</code>只是LwIP中提供的对<code>lwip/mem.h</code>的一种实现，如果本身已经有内存管理接口，可以不使用<code>core/mem.c</code>文件。</p>
+</blockquote>
+<h4 id="1-3-接入硬件驱动"><a href="#1-3-接入硬件驱动" class="headerlink" title="1.3 接入硬件驱动"></a>1.3 接入硬件驱动</h4><p>本例程中针对ENC28J60芯片已实现了如下的发送接收接口：</p>
+<pre><code class="hljs C"><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">enc28j60_send</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">enc28j60_recv</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size)</span></span>;</code></pre>
+
+<p>根据LwIP提供的<code>netif/ethernetif.c</code>，将上述驱动接口填入到<code>netif/ethernetif.c</code>中的指定部分即可，完整内容参考后边的源码部分。</p>
+<h4 id="1-4-实现sys-now接口"><a href="#1-4-实现sys-now接口" class="headerlink" title="1.4 实现sys_now接口"></a>1.4 实现sys_now接口</h4><pre><code class="hljs applescript">/**
+ * @ingroup sys_time
+ * Returns <span class="hljs-keyword">the</span> current <span class="hljs-built_in">time</span> <span class="hljs-keyword">in</span> milliseconds,
+ * may be <span class="hljs-keyword">the</span> same <span class="hljs-keyword">as</span> sys_jiffies <span class="hljs-keyword">or</span> <span class="hljs-keyword">at</span> least based <span class="hljs-keyword">on</span> <span class="hljs-keyword">it</span>.
+ */
+u32_t sys_now(void);</code></pre>
+
+<p>随便返回一个时间给LwIP。</p>
+<h4 id="1-5-初始化"><a href="#1-5-初始化" class="headerlink" title="1.5 初始化"></a>1.5 初始化</h4><pre><code class="hljs reasonml"><span class="hljs-comment">// 设置地址</span>
+ip_addr_t ipaddr, netmask, gw;
+<span class="hljs-constructor">IP4_ADDR(&amp;<span class="hljs-params">gw</span>, 10,0,0,1)</span>;
+<span class="hljs-constructor">IP4_ADDR(&amp;<span class="hljs-params">ipaddr</span>, 10,0,0,2)</span>;
+<span class="hljs-constructor">IP4_ADDR(&amp;<span class="hljs-params">netmask</span>, 255,255,255,0)</span>;
+
+<span class="hljs-comment">// lwIP裸机初始化接口</span>
+lwip<span class="hljs-constructor">_init()</span>;
+
+<span class="hljs-comment">// 添加netif，设置为默认接口，并启动</span>
+netif<span class="hljs-constructor">_add(&amp;<span class="hljs-params">netif</span>, &amp;<span class="hljs-params">ipaddr</span>, &amp;<span class="hljs-params">netmask</span>, &amp;<span class="hljs-params">gw</span>, NULL, <span class="hljs-params">ethernetif_init</span>, <span class="hljs-params">ethernet_input</span>)</span>;
+netif<span class="hljs-constructor">_set_default(&amp;<span class="hljs-params">netif</span>)</span>;
+netif<span class="hljs-constructor">_set_up(&amp;<span class="hljs-params">netif</span>)</span>;</code></pre>
+
+<p>添加netif时涉及两个接口，一个是硬件及netif初始化接口（init），即上述代码中的ethernetif_init。另一个是硬件数据传入LwIP的接口（input），上述代码中的ethernet_input。</p>
+<p>当硬件收到数据时，调用input接口将输入传入LwIP，input接口在netif_add中会被赋值给netif-&gt;input。所以，硬件收到数据时调用netif-&gt;input即可。</p>
+<p>input接口在LwIP中已有实现，针对ethernet硬件使用ethernet_input（netif/ethernet.c），非ethernet硬件使用ip_input（core/ip.c）.而init接口需要用户实现，此处使用1.3中定义的接口ethernetif_init（netif/ethernetif.c）</p>
+<h4 id="1-6-查询及中断处理"><a href="#1-6-查询及中断处理" class="headerlink" title="1.6 查询及中断处理"></a>1.6 查询及中断处理</h4><p>在主循环（Loop）中查询各种状态：</p>
+<pre><code class="hljs gcode"><span class="hljs-keyword">while</span> <span class="hljs-comment">(1)</span> &#123;
+    <span class="hljs-comment">// irq poll</span>
+    sys_check_timeouts<span class="hljs-comment">()</span>;
+&#125;</code></pre>
+
+<p>中断时通知LwIP收到数据：</p>
+<pre><code class="hljs reasonml">void some<span class="hljs-constructor">_isr(<span class="hljs-params">void</span>)</span>
+&#123;
+    <span class="hljs-keyword">struct</span> pbuf *buff = pbuf<span class="hljs-constructor">_alloc(PBUF_RAW, 2048, PBUF_RAM)</span>;
+	buff-&gt;len = enc28j60<span class="hljs-constructor">_recv(&amp;<span class="hljs-params">enc28j60</span>, <span class="hljs-params">buff</span>-&gt;<span class="hljs-params">payload</span>, 2048)</span>;
+	<span class="hljs-keyword">if</span> (buff-&gt;len) &#123;
+		netif.input(buff, &amp;netif); <span class="hljs-comment">// 将输入传入LwIP</span>
+	&#125;
+&#125;</code></pre>
+
+<h4 id="1-7-测试"><a href="#1-7-测试" class="headerlink" title="1.7 测试"></a>1.7 测试</h4><p>完成上述步骤后可通过ping进行测试。</p>
+<h4 id="总结及问题"><a href="#总结及问题" class="headerlink" title="总结及问题"></a>总结及问题</h4><h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>LwIP文件：core中大部分、core/ipv4中部分、netif中部分。需要指出，由于本文使用tlsf内存管理模块，所以并未使用<code>core/mem.c</code>。根据编译报错情况酌情修改【:-)】。</p>
+<p>新建文件：cc.h、sys_arch.h、lwipopts.h、lwipport.c</p>
+<p>需要实现的接口：内存管理接口、时钟接口、硬件驱动接口（参考netif/ethernetif.c）</p>
+<p>需要注意的调用：LwIP初始化、netif注册、收到数据时调用netif-&gt;input通知LwIP、sys_check_timeouts</p>
+<h5 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h5><p>Q1: ISR中已经直接调用enc28j60_recv将数据传入LwIP了，那ethernetif.c中的low_level_input里调用enc28j60_recv有什么意义？</p>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><h4 id="裸机移植参考源码"><a href="#裸机移植参考源码" class="headerlink" title="裸机移植参考源码"></a>裸机移植参考源码</h4><h5 id="arch-cc-h"><a href="#arch-cc-h" class="headerlink" title="arch/cc.h"></a>arch/cc.h</h5><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> __ARCH_CC_H__</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __ARCH_CC_H__</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdint.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BYTE_ORDER  LITTLE_ENDIAN</span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">uint8_t</span>     <span class="hljs-keyword">u8_t</span>;
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">int8_t</span>      <span class="hljs-keyword">s8_t</span>;
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">uint16_t</span>    <span class="hljs-keyword">u16_t</span>;
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">int16_t</span>     <span class="hljs-keyword">s16_t</span>;
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">uint32_t</span>    <span class="hljs-keyword">u32_t</span>;
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">int32_t</span>     <span class="hljs-keyword">s32_t</span>;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">uintptr_t</span>   <span class="hljs-keyword">mem_ptr_t</span>;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_ERR_T  int</span>
+
+<span class="hljs-comment">/* Define (sn)printf formatters for these lwIP types */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> U16_F <span class="hljs-meta-string">&quot;hu&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> S16_F <span class="hljs-meta-string">&quot;hd&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> X16_F <span class="hljs-meta-string">&quot;hx&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> U32_F <span class="hljs-meta-string">&quot;u&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> S32_F <span class="hljs-meta-string">&quot;d&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> X32_F <span class="hljs-meta-string">&quot;x&quot;</span></span>
+
+<span class="hljs-comment">/* Compiler hints for packing structures */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PACK_STRUCT_FIELD(x)    x</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PACK_STRUCT_STRUCT  __attribute__((packed))</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PACK_STRUCT_BEGIN</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PACK_STRUCT_END</span>
+
+<span class="hljs-comment">/* Plaform specific diagnostic output */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_PLATFORM_DIAG(x)   do &#123;&#125; while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_PLATFORM_ASSERT(x) do &#123;&#125; while (0)</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;arch/sys_arch.h&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* __ARCH_CC_H__ */</span></span>
+</code></pre>
+
+<h5 id="arch-sys-arch-h"><a href="#arch-sys-arch-h" class="headerlink" title="arch/sys_arch.h"></a>arch/sys_arch.h</h5><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> __ARCH_SYS_ARCH_H__</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __ARCH_SYS_ARCH_H__</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SYS_MBOX_NULL   NULL</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SYS_SEM_NULL    NULL</span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">void</span> * <span class="hljs-keyword">sys_prot_t</span>;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* __ARCH_SYS_ARCH_H__ */</span></span>
+</code></pre>
+
+<h5 id="lwipopts-h"><a href="#lwipopts-h" class="headerlink" title="lwipopts.h"></a>lwipopts.h</h5><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> __LWIPOPTS_H__</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __LWIPOPTS_H__</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stddef.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;mem/tlsf.h&gt; // tlsf内存管理接口</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NO_SYS                      1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_LIBC_MALLOC             0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_MEM_MALLOC             1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_ALIGNMENT               4</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_SIZE                    (4 * 1024 * 1024)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_PBUF               1024</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_UDP_PCB            20</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_TCP_PCB            20</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_TCP_PCB_LISTEN     16</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_TCP_SEG            128</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_REASSDATA          32</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_ARP_QUEUE          10</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PBUF_POOL_SIZE              512</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_ARP                    1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IP_REASS_MAX_PBUFS          64</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IP_FRAG_USES_STATIC_BUF     0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IP_DEFAULT_TTL              255</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IP_SOF_BROADCAST            1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IP_SOF_BROADCAST_RECV       1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_ICMP                   1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_BROADCAST_PING         1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_MULTICAST_PING         1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_RAW                    1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_WND                     (4 * TCP_MSS)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_MSS                     1460</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_SND_BUF                 (8 * TCP_MSS)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_LISTEN_BACKLOG          1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_NETIF_STATUS_CALLBACK  1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_NETIF_LINK_CALLBACK    1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_NETIF_HWADDRHINT       1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_NETCONN                0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_SOCKET                 0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_STATS_DISPLAY          1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_STATS                   0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SYS_STATS                   0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_STATS                  0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LINK_STATS                  0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ETHARP_TRUST_IP_MAC         0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ETH_PAD_SIZE                0</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_CHKSUM_ALGORITHM       2</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_TCP_KEEPALIVE          1</span>
+
+<span class="hljs-comment">// Keepalive values, compliant with RFC 1122. Don&#x27;t change this unless you know what you&#x27;re doing</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_KEEPIDLE_DEFAULT        10000UL <span class="hljs-comment">// Default KEEPALIVE timer in milliseconds</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_KEEPINTVL_DEFAULT       2000UL  <span class="hljs-comment">// Default Time between KEEPALIVE probes in milliseconds</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_KEEPCNT_DEFAULT         9U      <span class="hljs-comment">// Default Counter for KEEPALIVE probes</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_free                    tlsf_free</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_malloc                  tlsf_malloc</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_calloc                  tlsf_calloc</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_realloc                 tlsf_realloc</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LWIP_DEBUG                  0</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ETHARP_DEBUG                LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NETIF_DEBUG                 LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PBUF_DEBUG                  LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> API_LIB_DEBUG               LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> API_MSG_DEBUG               LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SOCKETS_DEBUG               LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ICMP_DEBUG                  LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> INET_DEBUG                  LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IP_DEBUG                    LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IP_REASS_DEBUG              LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> RAW_DEBUG                   LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_DEBUG                   LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_DEBUG                  LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SYS_DEBUG                   LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_DEBUG                   LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_INPUT_DEBUG             LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_OUTPUT_DEBUG            LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_RTO_DEBUG               LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_CWND_DEBUG              LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_WND_DEBUG               LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_FR_DEBUG                LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_QLEN_DEBUG              LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCP_RST_DEBUG               LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> UDP_DEBUG                   LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TCPIP_DEBUG                 LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PPP_DEBUG                   LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SLIP_DEBUG                  LWIP_DBG_OFF</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> DHCP_DEBUG                  LWIP_DBG_OFF</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* __LWIPOPTS_H__ */</span></span>
+</code></pre>
+
+<h5 id="netif-ethernetif-c"><a href="#netif-ethernetif-c" class="headerlink" title="netif/ethernetif.c"></a>netif/ethernetif.c</h5><pre><code class="hljs C"><span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * @file</span>
+<span class="hljs-comment"> * Ethernet Interface Skeleton</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> */</span>
+
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment"> * Copyright (c) 2001-2004 Swedish Institute of Computer Science.</span>
+<span class="hljs-comment"> * All rights reserved.</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * Redistribution and use in source and binary forms, with or without modification,</span>
+<span class="hljs-comment"> * are permitted provided that the following conditions are met:</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * 1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="hljs-comment"> *    this list of conditions and the following disclaimer.</span>
+<span class="hljs-comment"> * 2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="hljs-comment"> *    this list of conditions and the following disclaimer in the documentation</span>
+<span class="hljs-comment"> *    and/or other materials provided with the distribution.</span>
+<span class="hljs-comment"> * 3. The name of the author may not be used to endorse or promote products</span>
+<span class="hljs-comment"> *    derived from this software without specific prior written permission.</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS&#x27;&#x27; AND ANY EXPRESS OR IMPLIED</span>
+<span class="hljs-comment"> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF</span>
+<span class="hljs-comment"> * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT</span>
+<span class="hljs-comment"> * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,</span>
+<span class="hljs-comment"> * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT</span>
+<span class="hljs-comment"> * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="hljs-comment"> * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="hljs-comment"> * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING</span>
+<span class="hljs-comment"> * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY</span>
+<span class="hljs-comment"> * OF SUCH DAMAGE.</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * This file is part of the lwIP TCP/IP stack.</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * Author: Adam Dunkels &lt;adam@sics.se&gt;</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> */</span>
+
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment"> * This file is a skeleton for developing Ethernet network interface</span>
+<span class="hljs-comment"> * drivers for lwIP. Add code to the low_level functions and do a</span>
+<span class="hljs-comment"> * search-and-replace for the word &quot;ethernetif&quot; to replace it with</span>
+<span class="hljs-comment"> * something that better describes your network interface.</span>
+<span class="hljs-comment"> */</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/opt.h&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> 1 <span class="hljs-comment">/* don&#x27;t build, this is only a skeleton, see previous comment */</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/def.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/mem.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/pbuf.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/stats.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/snmp.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/ethip6.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/etharp.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;netif/ppp/pppoe.h&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;enc28j60.h&gt;</span></span>
+<span class="hljs-keyword">extern</span> <span class="hljs-keyword">enc28j60_t</span> enc28j60;
+
+<span class="hljs-comment">/* Define those to better describe your network interface. */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IFNAME0 <span class="hljs-meta-string">&#x27;e&#x27;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> IFNAME1 <span class="hljs-meta-string">&#x27;n&#x27;</span></span>
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * Helper struct to hold private data used to operate your ethernet interface.</span>
+<span class="hljs-comment"> * Keeping the ethernet address of the MAC in this struct is not necessary</span>
+<span class="hljs-comment"> * as it is already kept in the struct netif.</span>
+<span class="hljs-comment"> * But this is only an example, anyway...</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ethernetif</span> &#123;</span>
+  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">eth_addr</span> *<span class="hljs-title">ethaddr</span>;</span>
+  <span class="hljs-comment">/* Add whatever per-interface state that is needed here. */</span>
+&#125;;
+
+<span class="hljs-comment">/* Forward declarations. */</span>
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>  <span class="hljs-title">ethernetif_input</span><span class="hljs-params">(struct netif *netif)</span></span>;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * In this function, the hardware should be initialized.</span>
+<span class="hljs-comment"> * Called from ethernetif_init().</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * @param netif the already initialized lwip network interface structure</span>
+<span class="hljs-comment"> *        for this ethernetif</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>
+low_level_init(struct netif *netif)
+&#123;
+  <span class="hljs-comment">//struct ethernetif *ethernetif = netif-&gt;state;</span>
+
+  <span class="hljs-comment">/* set MAC hardware address length */</span>
+  netif-&gt;hwaddr_len = ETHARP_HWADDR_LEN;
+
+  <span class="hljs-comment">/* set MAC hardware address */</span>
+  <span class="hljs-built_in">memcpy</span>(netif-&gt;hwaddr, enc28j60.mac_addr, <span class="hljs-number">6</span>); <span class="hljs-comment">// 这里设置MAC地址</span>
+
+  <span class="hljs-comment">/* maximum transfer unit */</span>
+  netif-&gt;mtu = <span class="hljs-number">1500</span>;
+
+  <span class="hljs-comment">/* device capabilities */</span>
+  <span class="hljs-comment">/* don&#x27;t set NETIF_FLAG_ETHARP if this device is not an ethernet one */</span>
+  netif-&gt;flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> LWIP_IPV6 &amp;&amp; LWIP_IPV6_MLD</span>
+  <span class="hljs-comment">/*</span>
+<span class="hljs-comment">   * For hardware/netifs that implement MAC filtering.</span>
+<span class="hljs-comment">   * All-nodes link-local is handled by default, so we must let the hardware know</span>
+<span class="hljs-comment">   * to allow multicast packets in.</span>
+<span class="hljs-comment">   * Should set mld_mac_filter previously. */</span>
+  <span class="hljs-keyword">if</span> (netif-&gt;mld_mac_filter != <span class="hljs-literal">NULL</span>) &#123;
+    <span class="hljs-keyword">ip6_addr_t</span> ip6_allnodes_ll;
+    ip6_addr_set_allnodes_linklocal(&amp;ip6_allnodes_ll);
+    netif-&gt;mld_mac_filter(netif, &amp;ip6_allnodes_ll, NETIF_ADD_MAC_FILTER);
+  &#125;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* LWIP_IPV6 &amp;&amp; LWIP_IPV6_MLD */</span></span>
+
+  <span class="hljs-comment">/* Do whatever else is needed to initialize interface. */</span>
+&#125;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * This function should do the actual transmission of the packet. The packet is</span>
+<span class="hljs-comment"> * contained in the pbuf that is passed to the function. This pbuf</span>
+<span class="hljs-comment"> * might be chained.</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * @param netif the lwip network interface structure for this ethernetif</span>
+<span class="hljs-comment"> * @param p the MAC packet to send (e.g. IP packet including MAC addresses and type)</span>
+<span class="hljs-comment"> * @return ERR_OK if the packet could be sent</span>
+<span class="hljs-comment"> *         an err_t value if the packet couldn&#x27;t be sent</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * @note Returning ERR_MEM here if a DMA queue of your MAC is full can lead to</span>
+<span class="hljs-comment"> *       strange results. You might consider waiting for space in the DMA queue</span>
+<span class="hljs-comment"> *       to become available since the stack doesn&#x27;t retry to send a packet</span>
+<span class="hljs-comment"> *       dropped because of memory failure (except for the TCP timers).</span>
+<span class="hljs-comment"> */</span>
+
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">err_t</span>
+low_level_output(struct netif *netif, struct pbuf *p)
+&#123;
+  <span class="hljs-comment">//struct ethernetif *ethernetif = netif-&gt;state;</span>
+  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pbuf</span> *<span class="hljs-title">q</span>;</span>
+
+  <span class="hljs-comment">//initiate transfer();</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> ETH_PAD_SIZE</span>
+  pbuf_header(p, -ETH_PAD_SIZE); <span class="hljs-comment">/* drop the padding word */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+  <span class="hljs-keyword">for</span> (q = p; q != <span class="hljs-literal">NULL</span>; q = q-&gt;next) &#123;
+    <span class="hljs-comment">/* Send the data from the pbuf to the interface, one pbuf at a</span>
+<span class="hljs-comment">       time. The size of the data in each pbuf is kept in the -&gt;len</span>
+<span class="hljs-comment">       variable. */</span>
+    <span class="hljs-comment">//send data from(q-&gt;payload, q-&gt;len);</span>
+	enc28j60_send(&amp;enc28j60, q-&gt;payload, q-&gt;len); <span class="hljs-comment">// 这里发送</span>
+  &#125;
+
+  <span class="hljs-comment">//signal that packet should be sent();</span>
+
+  MIB2_STATS_NETIF_ADD(netif, ifoutoctets, p-&gt;tot_len);
+  <span class="hljs-keyword">if</span> (((<span class="hljs-keyword">u8_t</span>*)p-&gt;payload)[<span class="hljs-number">0</span>] &amp; <span class="hljs-number">1</span>) &#123;
+    <span class="hljs-comment">/* broadcast or multicast packet*/</span>
+    MIB2_STATS_NETIF_INC(netif, ifoutnucastpkts);
+  &#125; <span class="hljs-keyword">else</span> &#123;
+    <span class="hljs-comment">/* unicast packet */</span>
+    MIB2_STATS_NETIF_INC(netif, ifoutucastpkts);
+  &#125;
+  <span class="hljs-comment">/* increase ifoutdiscards or ifouterrors on error */</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> ETH_PAD_SIZE</span>
+  pbuf_header(p, ETH_PAD_SIZE); <span class="hljs-comment">/* reclaim the padding word */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+  LINK_STATS_INC(link.xmit);
+
+  <span class="hljs-keyword">return</span> ERR_OK;
+&#125;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * Should allocate a pbuf and transfer the bytes of the incoming</span>
+<span class="hljs-comment"> * packet from the interface into the pbuf.</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * @param netif the lwip network interface structure for this ethernetif</span>
+<span class="hljs-comment"> * @return a pbuf filled with the received packet (including MAC header)</span>
+<span class="hljs-comment"> *         NULL on memory error</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pbuf</span> *</span>
+<span class="hljs-class"><span class="hljs-title">low_level_input</span>(<span class="hljs-title">struct</span> <span class="hljs-title">netif</span> *<span class="hljs-title">netif</span>)</span>
+<span class="hljs-class">&#123;</span>
+  <span class="hljs-comment">//struct ethernetif *ethernetif = netif-&gt;state;</span>
+  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pbuf</span> *<span class="hljs-title">p</span>, *<span class="hljs-title">q</span>;</span>
+  <span class="hljs-keyword">u16_t</span> len;
+
+  <span class="hljs-comment">/* Obtain the size of the packet and put it into the &quot;len&quot;</span>
+<span class="hljs-comment">     variable. */</span>
+  len = <span class="hljs-number">1518</span>;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> ETH_PAD_SIZE</span>
+  len += ETH_PAD_SIZE; <span class="hljs-comment">/* allow room for Ethernet padding */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+  <span class="hljs-comment">/* We allocate a pbuf chain of pbufs from the pool. */</span>
+  p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
+
+  <span class="hljs-keyword">if</span> (p != <span class="hljs-literal">NULL</span>) &#123;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> ETH_PAD_SIZE</span>
+    pbuf_header(p, -ETH_PAD_SIZE); <span class="hljs-comment">/* drop the padding word */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+    <span class="hljs-comment">/* We iterate over the pbuf chain until we have read the entire</span>
+<span class="hljs-comment">     * packet into the pbuf. */</span>
+    <span class="hljs-keyword">for</span> (q = p; q != <span class="hljs-literal">NULL</span>; q = q-&gt;next) &#123;
+      <span class="hljs-comment">/* Read enough bytes to fill this pbuf in the chain. The</span>
+<span class="hljs-comment">       * available data in the pbuf is given by the q-&gt;len</span>
+<span class="hljs-comment">       * variable.</span>
+<span class="hljs-comment">       * This does not necessarily have to be a memcpy, you can also preallocate</span>
+<span class="hljs-comment">       * pbufs for a DMA-enabled MAC and after receiving truncate it to the</span>
+<span class="hljs-comment">       * actually received size. In this case, ensure the tot_len member of the</span>
+<span class="hljs-comment">       * pbuf is the sum of the chained pbuf len members.</span>
+<span class="hljs-comment">       */</span>
+      <span class="hljs-comment">//read data into(q-&gt;payload, q-&gt;len);</span>
+	  <span class="hljs-keyword">if</span> (enc28j60_recv(&amp;enc28j60, q-&gt;payload, q-&gt;len)) &#123; <span class="hljs-comment">// 这里接收</span>
+	    <span class="hljs-comment">//netif.input(buff, &amp;netif);</span>
+	  &#125;
+    &#125;
+    <span class="hljs-comment">//acknowledge that packet has been read();</span>
+
+    MIB2_STATS_NETIF_ADD(netif, ifinoctets, p-&gt;tot_len);
+    <span class="hljs-keyword">if</span> (((<span class="hljs-keyword">u8_t</span>*)p-&gt;payload)[<span class="hljs-number">0</span>] &amp; <span class="hljs-number">1</span>) &#123;
+      <span class="hljs-comment">/* broadcast or multicast packet*/</span>
+      MIB2_STATS_NETIF_INC(netif, ifinnucastpkts);
+    &#125; <span class="hljs-keyword">else</span> &#123;
+      <span class="hljs-comment">/* unicast packet*/</span>
+      MIB2_STATS_NETIF_INC(netif, ifinucastpkts);
+    &#125;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> ETH_PAD_SIZE</span>
+    pbuf_header(p, ETH_PAD_SIZE); <span class="hljs-comment">/* reclaim the padding word */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+    LINK_STATS_INC(link.recv);
+  &#125; <span class="hljs-keyword">else</span> &#123;
+    <span class="hljs-comment">//drop packet();</span>
+    LINK_STATS_INC(link.memerr);
+    LINK_STATS_INC(link.drop);
+    MIB2_STATS_NETIF_INC(netif, ifindiscards);
+  &#125;
+
+  <span class="hljs-keyword">return</span> p;
+&#125;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * This function should be called when a packet is ready to be read</span>
+<span class="hljs-comment"> * from the interface. It uses the function low_level_input() that</span>
+<span class="hljs-comment"> * should handle the actual reception of bytes from the network</span>
+<span class="hljs-comment"> * interface. Then the type of the received packet is determined and</span>
+<span class="hljs-comment"> * the appropriate input function is called.</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * @param netif the lwip network interface structure for this ethernetif</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>
+ethernetif_input(struct netif *netif)
+&#123;
+  <span class="hljs-comment">//struct ethernetif *ethernetif;</span>
+  <span class="hljs-comment">//struct eth_hdr *ethhdr;</span>
+  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pbuf</span> *<span class="hljs-title">p</span>;</span>
+
+  <span class="hljs-comment">//ethernetif = netif-&gt;state;</span>
+
+  <span class="hljs-comment">/* move received packet into a new pbuf */</span>
+  p = low_level_input(netif);
+  <span class="hljs-comment">/* if no packet could be read, silently ignore this */</span>
+  <span class="hljs-keyword">if</span> (p != <span class="hljs-literal">NULL</span>) &#123;
+    <span class="hljs-comment">/* pass all packets to ethernet_input, which decides what packets it supports */</span>
+    <span class="hljs-keyword">if</span> (netif-&gt;input(p, netif) != ERR_OK) &#123;
+      LWIP_DEBUGF(NETIF_DEBUG, (<span class="hljs-string">&quot;ethernetif_input: IP input error\n&quot;</span>));
+      pbuf_free(p);
+      p = <span class="hljs-literal">NULL</span>;
+    &#125;
+  &#125;
+&#125;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * Should be called at the beginning of the program to set up the</span>
+<span class="hljs-comment"> * network interface. It calls the function low_level_init() to do the</span>
+<span class="hljs-comment"> * actual setup of the hardware.</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * This function should be passed as a parameter to netif_add().</span>
+<span class="hljs-comment"> *</span>
+<span class="hljs-comment"> * @param netif the lwip network interface structure for this ethernetif</span>
+<span class="hljs-comment"> * @return ERR_OK if the loopif is initialized</span>
+<span class="hljs-comment"> *         ERR_MEM if private data couldn&#x27;t be allocated</span>
+<span class="hljs-comment"> *         any other err_t on error</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-keyword">err_t</span>
+ethernetif_init(struct netif *netif)
+&#123;
+  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ethernetif</span> *<span class="hljs-title">ethernetif</span>;</span>
+
+  LWIP_ASSERT(<span class="hljs-string">&quot;netif != NULL&quot;</span>, (netif != <span class="hljs-literal">NULL</span>));
+
+  ethernetif = mem_malloc(<span class="hljs-keyword">sizeof</span>(struct ethernetif));
+  <span class="hljs-keyword">if</span> (ethernetif == <span class="hljs-literal">NULL</span>) &#123;
+    LWIP_DEBUGF(NETIF_DEBUG, (<span class="hljs-string">&quot;ethernetif_init: out of memory\n&quot;</span>));
+    <span class="hljs-keyword">return</span> ERR_MEM;
+  &#125;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> LWIP_NETIF_HOSTNAME</span>
+  <span class="hljs-comment">/* Initialize interface hostname */</span>
+  netif-&gt;hostname = <span class="hljs-string">&quot;lwip&quot;</span>;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* LWIP_NETIF_HOSTNAME */</span></span>
+
+  <span class="hljs-comment">/*</span>
+<span class="hljs-comment">   * Initialize the snmp variables and counters inside the struct netif.</span>
+<span class="hljs-comment">   * The last argument should be replaced with your link speed, in units</span>
+<span class="hljs-comment">   * of bits per second.</span>
+<span class="hljs-comment">   */</span>
+  MIB2_INIT_NETIF(netif, snmp_ifType_ethernet_csmacd, LINK_SPEED_OF_YOUR_NETIF_IN_BPS);
+
+  netif-&gt;state = ethernetif;
+  netif-&gt;name[<span class="hljs-number">0</span>] = IFNAME0;
+  netif-&gt;name[<span class="hljs-number">1</span>] = IFNAME1;
+  <span class="hljs-comment">/* We directly use etharp_output() here to save a function call.</span>
+<span class="hljs-comment">   * You can instead declare your own function an call etharp_output()</span>
+<span class="hljs-comment">   * from it if you have to do some checks before sending (e.g. if link</span>
+<span class="hljs-comment">   * is available...) */</span>
+  netif-&gt;output = etharp_output;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> LWIP_IPV6</span>
+  netif-&gt;output_ip6 = ethip6_output;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* LWIP_IPV6 */</span></span>
+  netif-&gt;linkoutput = low_level_output;
+
+  ethernetif-&gt;ethaddr = (struct eth_addr *)&amp;(netif-&gt;hwaddr[<span class="hljs-number">0</span>]);
+
+  <span class="hljs-comment">/* initialize the hardware */</span>
+  low_level_init(netif);
+
+  <span class="hljs-keyword">return</span> ERR_OK;
+&#125;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* 0 */</span></span>
+</code></pre>
+
+<h5 id="lwipport-c"><a href="#lwipport-c" class="headerlink" title="lwipport.c"></a>lwipport.c</h5><pre><code class="hljs arduino"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/mem.h&quot;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">mem_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
+<span class="hljs-function"></span>&#123;
+	<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_POOL_SIZE 10240</span>
+	<span class="hljs-keyword">static</span> <span class="hljs-keyword">uint8_t</span> mem[MEM_POOL_SIZE];
+	init_memory_pool(MEM_POOL_SIZE, mem);
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span>* <span class="hljs-title">mem_trim</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *mem, <span class="hljs-keyword">mem_size_t</span> <span class="hljs-built_in">size</span>)</span></span>
+<span class="hljs-function"></span>&#123;
+  <span class="hljs-keyword">return</span> mem;
+&#125;</code></pre>
+
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><p>[1] <a target="_blank" rel="noopener" href="https://lwip.fandom.com/wiki/LwIP_Wiki">LwIP Wiki</a></p>
+</li>
+<li><p>[2] <a target="_blank" rel="noopener" href="https://lwip.fandom.com/wiki/LwIP_Platform_Developers_Manual">LwIP Platform Developers Manual</a></p>
+</li>
+<li><p>[3] <a target="_blank" rel="noopener" href="https://lwip.fandom.com/wiki/Porting_For_Bare_Metal">Porting For Bare Metal</a></p>
+</li>
+<li><p>[4] <a target="_blank" rel="noopener" href="https://lwip.fandom.com/wiki/Writing_a_device_driver">Writing a device driver</a></p>
+</li>
+<li><p>[5] <a target="_blank" rel="noopener" href="https://lwip.fandom.com/wiki/Initialization_for_simple_lwIP">Initialization for simple lwIP</a></p>
+</li>
+<li><p>[6] <a target="_blank" rel="noopener" href="https://lwip.fandom.com/wiki/LwIP_with_or_without_an_operating_system">LwIP with or without an operating system</a></p>
+</li>
+<li><p>[7] <a target="_blank" rel="noopener" href="https://github.com/lwip-tcpip/lwip">LwIP github mirror</a></p>
+</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/15/TCP%E5%8D%8F%E8%AE%AE/">
+                        <span class="hidden-mobile">6 TCP协议</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "6q9eFigSE9Szj6EB2AYQbBEw-gzGzoHsz",
+          app_key: "hdofqAbDXsCzzLI6Tu0fNjyo",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    }
+    waitElementVisible('vcomments', loadValine);
+  </script>
+  <noscript>Please enable JavaScript to view the <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "LwIP移植&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d59b3d8dd18fa79fc7e9701ceaaf7f5c";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+</body>
+</html>
