@@ -1,0 +1,1672 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>USB协议 - Doerthous</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Doerthous</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/resume/">
+                <i class="iconfont icon-addrcard"></i>
+                简历
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/bg/hexo.fluid-dev.com/4xvpqo.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-30 10:09" pubdate>
+        2021年1月30日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      109
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">USB协议</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h2 id="USB协议分析"><a href="#USB协议分析" class="headerlink" title="USB协议分析"></a>USB协议分析</h2><p>本文侧重从软件开发的角度描述USB设备及如何实现一个USB设备。</p>
+<p>本文第1章从整体的角度介绍了部分USB的一些概念，2到5章节以自底向上的方式描述了USB传输层次构建、数据通信交互的过程。6章以实验的方式分析USB枚举过程，7章则以CDC设备为例深入分析USB的Class及Subclass规范，8章以STM32F10X为例，说明如何使用其USB外设，并简要描绘了USB设备的硬件驱动接口及通用软件模块设计。9章则列举一系列USB设备的应用及其实现思路。</p>
+<p>【TODO】:</p>
+<ul>
+<li><p>中断（Coding）</p>
+</li>
+<li><p>顶向下补充</p>
+</li>
+<li><p>硬件信号分析</p>
+</li>
+</ul>
+<h3 id="1-USB概念"><a href="#1-USB概念" class="headerlink" title="1 USB概念"></a>1 USB概念</h3><p>一个USB系统可通过三个方面描述：USB Host、USB Device、USB Interconnect。</p>
+<p>一个USB Host的逻辑组件包括：Client SW、USB System SW、USB Host Controller。</p>
+<p>一个USB Device（物理设备）的逻辑组件包括：Function、USB Logical Device、USB Bus Interface。</p>
+<pre><code class="hljs routeros">        Host          Interconnect       Device
+
+[    <span class="hljs-built_in"> Client </span>SW     ]   &lt;&lt;&lt;-&gt;&gt;&gt;   [      Function      ] --has-&gt; Interfaces
+        ^                                  ^
+        |                                  |
+        v                                  v 
+[   USB<span class="hljs-built_in"> System </span>SW   ]   &lt;&lt;---&gt;&gt;   [ USB Logical Device ] --has-&gt; Endpoints
+        ^                                  ^
+        |                                  |
+        v                                  v
+[USB Host Controller]   &lt;-----&gt;   [ USB Bus<span class="hljs-built_in"> Interface </span> ]
+
+图例：
+&lt;&lt;&lt;-&gt;&gt;&gt;：逻辑数据流
+&lt;&lt;---&gt;&gt;：Pipe
+&lt;-----&gt;：实际数据流
+[xxx]：逻辑组件</code></pre>
+
+<p><strong>USB Device</strong></p>
+<p>USB设备有一个或多个Configuration，一个Configuration有提供一个或多个Interface，一个Interface有零个或多个Endpoint。一个Configuration下的Interfaces不能共用一个Endpoint。不同Configuration下的Interfaces可以共用一个Endpoint。</p>
+<pre><code class="hljs gherkin">      USB Device
+     /          \
+    C1           C2
+   / \         /  |<span class="hljs-string">  \</span>
+<span class="hljs-string">  I1 I2      I1   I2  I3</span>
+<span class="hljs-string">  </span>|<span class="hljs-string">   </span>|<span class="hljs-string"> \    </span>|<span class="hljs-string">    </span>|
+  E0  E0 E1  E1   E1(x)
+
+注：C2.I2.E1是异常的，因为同一个Configuration下的Interfaces不能共用一个Endpoint。</code></pre>
+
+<p>USB设备通过多个Interface提供某种Function，比如【TODO】。一个USB物理设备能提供多个Function。</p>
+<p><strong>端点（Endpoint）</strong></p>
+<p>Device地址、Endpoint编号、Endpoint数据流向三者组合唯一标识一个Endpoint。</p>
+<p>所有USB Device必须支持在Endpoint0建立一个专用的Pipe（Default Control Pipe）。</p>
+<p><strong>管道（Pipe）</strong></p>
+<p>USB数据在Host Software和USB Device’s Endpoint之间传输，Host Software和USB Device’s Endpoint之间形成的连接被称为Pipe。一个USB Device可能有多个Pipe，例如一个输入Pipe，一个输出Pipe。Pipe有两种类型，一种是Message，一种是Stream。</p>
+<p>四种数据传输类型：控制传输（Control Transfer）、批量传输（Bulk Transfer）、中断传输（Interrupt Transfer）、同步传输（Isochronous Transfer）。</p>
+<p>一个Pipe只能支持某一种传数据输类型。</p>
+<h3 id="2-包（Packet）"><a href="#2-包（Packet）" class="headerlink" title="2 包（Packet）"></a>2 包（Packet）</h3><p>Packet是USB总线上真实存在的数据结构，每个Packet以一个SYNC开头，一个EOP（End Of Packet）结尾，SYNC中含有SOP（Start Of Packet）。SYNC与EOP属于硬件信号，大多数由硬件产生，故其细节不在本文中赘述。</p>
+<p><strong>总线上的信号流</strong></p>
+<pre><code class="hljs css"><span class="hljs-selector-tag">USB</span> <span class="hljs-selector-tag">Bus</span>
+&lt;&lt;&lt;<span class="hljs-selector-tag">-----------------------------------------------------------------------------</span>
+<span class="hljs-selector-attr">[SYNC]</span> <span class="hljs-selector-attr">[Packet 1]</span> <span class="hljs-selector-attr">[EOP]</span>   <span class="hljs-selector-attr">[SYNC]</span> <span class="hljs-selector-attr">[Packet 2]</span> <span class="hljs-selector-attr">[EOP]</span>  ...  <span class="hljs-selector-attr">[SYNC]</span> <span class="hljs-selector-attr">[Packet n]</span> <span class="hljs-selector-attr">[EOP]</span>
+&lt;&lt;&lt;<span class="hljs-selector-tag">-----------------------------------------------------------------------------</span></code></pre>
+
+<p>Packet分为Token、Data、Handshake、Special四种类型，每种类型由Packet中第一个字段PID指示。除了PID字段外，Packet可能还包含Address、Endpoint、Frame number、Data、CRC字段，不同类型的Packet有不同的字段结构。</p>
+<p><strong>Packet通用格式</strong></p>
+<pre><code class="hljs asciidoc">Packet
+<span class="hljs-code">+-----+</span>--------------+
+| PID | Other Fields |
+<span class="hljs-code">+-----+</span>--------------+</code></pre>
+
+<h4 id="Packet字段"><a href="#Packet字段" class="headerlink" title="Packet字段"></a>Packet字段</h4><h5 id="PID"><a href="#PID" class="headerlink" title="PID"></a>PID</h5><pre><code class="hljs angelscript"> b0  b1  b2  b3  b4  b5  b6  b7
++---+---+---+---+---+---+---+---+
+|      PID      |     (~PID)    |
++---+---+---+---+---+---+---+---+
+
+字段       大小    说明
+----       ----    ----
+PID        <span class="hljs-number">4</span>b      Packet类型标识（PID）
+                        <span class="hljs-number">3</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span> <span class="hljs-number">0</span>
+                       +-+-+-+-+
+                       |<span class="hljs-number">1</span>|<span class="hljs-number">0</span>|X|X| = Token Packet
+                       +-+-+-+-+
+                           <span class="hljs-number">1000</span> = OUT Token Packet (PID = <span class="hljs-number">0x87</span>)
+                           <span class="hljs-number">1001</span> = IN Token Packet (PID = <span class="hljs-number">0x96</span>)
+                           <span class="hljs-number">1010</span> = SOF Token Packet (PID = <span class="hljs-number">0xA5</span>)
+                           <span class="hljs-number">1011</span> = SETUP Token Packet (PID = <span class="hljs-number">0xB4</span>)
+                       <span class="hljs-number">11</span>XX = Data Packet
+                           <span class="hljs-number">1100</span> = DATA0 Data Packet (PID = <span class="hljs-number">0xC3</span>)
+                           <span class="hljs-number">1101</span> = DATA1 Data Packet (PID = <span class="hljs-number">0xD2</span>)
+                           <span class="hljs-number">1110</span> = DATA2 Data Packet (PID = <span class="hljs-number">0xE1</span>)
+                           <span class="hljs-number">1111</span> = MDATA Data Packet (PID = <span class="hljs-number">0xF0</span>)
+                       <span class="hljs-number">01</span>XX = Handshake Packet
+                           <span class="hljs-number">0100</span> = ACK Handshake Packet (PID = <span class="hljs-number">0x4B</span>)
+                           <span class="hljs-number">0101</span> = NAK Handshake Packet (PID = <span class="hljs-number">0x5A</span>)
+                           <span class="hljs-number">0110</span> = NYET Handshake Packet (PID = <span class="hljs-number">0x69</span>)
+                           <span class="hljs-number">0111</span> = STALL Handshake Packet (PID = <span class="hljs-number">078</span>)
+                       <span class="hljs-number">00</span>XX = Special Packet
+                           <span class="hljs-number">0001</span> = SPLIT Special Packet (PID = <span class="hljs-number">0x1E</span>)
+                           <span class="hljs-number">0010</span> = PING Special Packet (PID = <span class="hljs-number">0x2D</span>)
+                           <span class="hljs-number">0011</span> = PRE Special Packet (PID = <span class="hljs-number">0x3C</span>)
+                           <span class="hljs-number">0011</span> = ERR Special Packet (PID = <span class="hljs-number">0x3C</span>)
+                           <span class="hljs-number">0000</span> = Reserved
+(~PID)     <span class="hljs-number">4</span>b      PID取反</code></pre>
+
+<h5 id="Address"><a href="#Address" class="headerlink" title="Address"></a>Address</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> b0  b1  b2  b3  b4  b5  b6  </span>
+<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>
+|          Adress           |
+<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>
+
+字段       大小    说明
+<span class="hljs-bullet">----       </span>----    ----
+Address    7b      Function地址。Power up并Reset后，Function的地址被必须设置为默认
+<span class="hljs-code">                   地址：0。在枚举过程中，Host必须为Function设置一个唯一的地址。</span></code></pre>
+
+<h5 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> b0  b1  b2  b3</span>
+<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---+
+|    Endpoint   |
+<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---+
+
+字段       大小    说明
+<span class="hljs-bullet">----       </span>----    ----
+Endpoint   4b      Endpoint编号。Endpoint域为IN、SETUP、OUT和PING而定义。特殊
+<span class="hljs-code">                   Endpoint：Ep0。所有Funciton必须支持一个在Ep0的控制Pipe，又称为</span>
+<span class="hljs-code">                   Default Control Pipe。Low-speed设备最多使用3个Pipes，一个</span>
+<span class="hljs-code">                   Default Control Pipe和两个附加的Pipe，这两个附加的Pipe只能是</span>
+<span class="hljs-code">                   Control Pipe或Interrupt Pipe。</span></code></pre>
+
+<h5 id="Frame-Number"><a href="#Frame-Number" class="headerlink" title="Frame Number"></a>Frame Number</h5><p>11bit，由Host在发送一帧后递增，仅在SOF中使用。</p>
+<h5 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h5><p>0到1024字节。Low-Speed设备最大大小为8字节，Full-Speed最大大小为1023字节，High-Speed最大大小为1024字节。</p>
+<h5 id="CRC"><a href="#CRC" class="headerlink" title="CRC"></a>CRC</h5><h6 id="Token-CRCs"><a href="#Token-CRCs" class="headerlink" title="Token CRCs"></a>Token CRCs</h6><p>【TODO】</p>
+<h6 id="Data-CRCs"><a href="#Data-CRCs" class="headerlink" title="Data CRCs"></a>Data CRCs</h6><p>【TODO】</p>
+<h4 id="Packet格式"><a href="#Packet格式" class="headerlink" title="Packet格式"></a>Packet格式</h4><pre><code class="hljs asciidoc"><span class="hljs-code">+---+</span>-------<span class="hljs-code">+--------+</span>----+
+|PID|Address|Endpoint|CRC5|     (IN, OUT, SETUP)
+<span class="hljs-code">+---+</span>-------<span class="hljs-code">+--------+</span>----+
+
+<span class="hljs-code">+---+</span>------------<span class="hljs-code">+----+</span>
+|PID|Frame Number|CRC5|         (SOF)
+<span class="hljs-code">+---+</span>------------<span class="hljs-code">+----+</span>
+
+<span class="hljs-code">+---+</span>----<span class="hljs-code">+-----+</span>
+|PID|Data|CRC16|                (DATA0, DATA1, DATA2, MDATA)
+<span class="hljs-code">+---+</span>----<span class="hljs-code">+-----+</span>
+
+<span class="hljs-code">+---+</span>
+|PID|                           (ACK, NACK, STALL, NYET, ERR)
+<span class="hljs-code">+---+</span></code></pre>
+
+<p>只有Host能发Token包【出自：USB2.0 8.4.1：Only the host can issue token packets，这里有一个问题（Q1），经实测，虚拟串口可以主动发bulk in给host，那么这个bulk in中的in token是谁发出的？】</p>
+<p>IN：定义了一个Function-to-Host的数据事务（Data transaction）。<br>OUT：定了了一个Host-to-Function的数据数据。</p>
+<p>STALL：Function to Host，表示Function永久性停机（Halted），需要USB Software System干涉。<br>NAK：Function to Host，表示Function暂时无法处理Host的请求</p>
+<h3 id="3-事务（Transaction）"><a href="#3-事务（Transaction）" class="headerlink" title="3 事务（Transaction）"></a>3 事务（Transaction）</h3><p>在Packet一章中有提到Packet分为Token Packet、Data Packet、Handshake Packet以及Special Packet，Transaction则由各种类型的Packet构成。一个Transaction通常包含一个Token包、一个可选的Data包以及一个可选的Handshake包，不同类型的Transaction可能还包含其他类型的包。</p>
+<blockquote>
+<p>Transaction实际上是一种逻辑概念，在总线中只有Packet在传输。</p>
+</blockquote>
+<h4 id="Setup事务"><a href="#Setup事务" class="headerlink" title="Setup事务"></a>Setup事务</h4><p>下图表示了一个Setup事务，其由一个SETUP Token Packet以及一个DATA0 Data Packet和一个Handshake Packet构成（注：Setup事务的Data Packet只能是DATA0）。</p>
+<pre><code class="hljs txt">                Token               Data             Handshake
+                Phase               Phase            Phase
+Setup       /------------\      /------------\      /----------\
+Transaction [SETUP Packet] ---&gt; [DATA0 Packet] ---&gt; [ACK Packet]  (正常流程)
+
+图例：
+[]：Packet</code></pre>
+
+<h4 id="Out事务"><a href="#Out事务" class="headerlink" title="Out事务"></a>Out事务</h4><p>Out事务由一个OUT Token Packet以及一个DATA0/1 Data Packet和一个Handshake Packet构成。</p>
+<pre><code class="hljs txt">               Token               Data               Handshake
+               Phase               Phase              Phase
+Out         /----------\      /--------------\      /------------\
+Transaction [OUT Packet] ---&gt; [DATA0/1 Packet] ---&gt; [ACK   Packet]  (正常流程)
+                  +-------------------------------&gt; [NAK   Packet]  (异常流程)
+                  +-------------------------------&gt; [STALL Packet]  (异常流程)
+                  +-------------------------------&gt; [NYET  Packet]  (异常流程)
+图例：
+[]：Packet
+
+注：
+1. NYET仅在High-Speed设备中使用</code></pre>
+
+<h4 id="In事务"><a href="#In事务" class="headerlink" title="In事务"></a>In事务</h4><p>In事务由一个IN Token Packet以及一个DATA0/1 Data Packet和一个Handshake Packet构成。</p>
+<pre><code class="hljs txt">               Token              Data               Handshake
+               Phase              Phase              Phase
+In          /---------\      /--------------\      /------------\
+Transaction [IN Packet] ---&gt; [DATA0/1 Packet] ---&gt; [ACK   Packet]  (正常流程)
+                 +-------------------------------&gt; [NAK   Packet]  (异常流程)
+                 +-------------------------------&gt; [STALL Packet]  (异常流程)
+图例：
+[]：Packet</code></pre>
+
+<h4 id="Ping事务"><a href="#Ping事务" class="headerlink" title="Ping事务"></a>Ping事务</h4><p>Ping事务有一个PING Special Packet以及一个Handshake Packet构成。</p>
+<pre><code class="hljs txt">               Special            Handshake
+               Phase              Phase
+Ping        /-----------\      /------------\
+Transaction [PING Packet] ---&gt; [ACK   Packet]  (正常流程)
+                  +----------&gt; [NAK   Packet]  (异常流程)
+                  +----------&gt; [STALL Packet]  (异常流程)
+
+图例：
+[]：Packet
+
+注：
+1. PING事务仅在High-Speed设备中使用</code></pre>
+
+<h4 id="Start-Split事务"><a href="#Start-Split事务" class="headerlink" title="Start-Split事务"></a>Start-Split事务</h4><p>【TODO】</p>
+<h4 id="Complete-Split事务"><a href="#Complete-Split事务" class="headerlink" title="Complete-Split事务"></a>Complete-Split事务</h4><p>【TODO】</p>
+<h3 id="4-传输（Transfer）"><a href="#4-传输（Transfer）" class="headerlink" title="4 传输（Transfer）"></a>4 传输（Transfer）</h3><p>Transfer指一个或多个在总线上传输的Transaction。</p>
+<blockquote>
+<p>Transfer实际上是一种逻辑概念，在总线中只有Packet在传输。</p>
+</blockquote>
+<h4 id="Control传输"><a href="#Control传输" class="headerlink" title="Control传输"></a>Control传输</h4><p>Control传输有Setup、Data、Status三个阶段。Setup阶段包含一个Setup事务，Data阶段包含零个或多个Out事务，或者零个或多个In事务，Status阶段包含一个和上一个阶段中最后一个事务传输方向相反的事务（见下图说明）。Control传输使用双向Message Pipe。Control传输有三种类型：Control写、Control读、无数据Control。</p>
+<pre><code class="hljs gherkin">             Setup                      Data                      Status
+             Stage                      Stage                     Stage
+            /---------\  /------------------------------------\  /-------\
+Control     <span class="hljs-variable">&lt;Setup (0)&gt;</span>  <span class="hljs-variable">&lt;Out (1)&gt;</span>  <span class="hljs-variable">&lt;Out (0)&gt;</span>  ...  <span class="hljs-variable">&lt;Out (0/1)&gt;</span>  <span class="hljs-variable">&lt;In  (1)&gt;</span>
+Write           DATA0      DATA1      DATA0           DATA0/1      DATA1
+
+Control     <span class="hljs-variable">&lt;Setup (0)&gt;</span>  <span class="hljs-variable">&lt;In  (1)&gt;</span>  <span class="hljs-variable">&lt;In  (0)&gt;</span>  ...  <span class="hljs-variable">&lt;In  (0/1)&gt;</span>  <span class="hljs-variable">&lt;Out (1)&gt;</span>
+Read            DATA0      DATA1      DATA0           DATA0/1      DATA1
+
+
+             Setup        Status
+             Stage        Stage
+            /---------\  /-------\
+No-Data     <span class="hljs-variable">&lt;Setup (0)&gt;</span>  <span class="hljs-variable">&lt;IN  (1)&gt;</span>
+Control         DATA0      DATA1
+            |<span class="hljs-string">           \</span>
+<span class="hljs-string">            </span>|<span class="hljs-string">                 \</span>
+<span class="hljs-string">            </span>|<span class="hljs-string">                       \</span>
+<span class="hljs-string">            </span>|<span class="hljs-string">                             \</span>
+<span class="hljs-string">            </span>|<span class="hljs-string">                                     \</span>
+<span class="hljs-string">            </span>|<span class="hljs-string"> Token          Data          Handshake</span>
+<span class="hljs-string">            </span>|<span class="hljs-string"> Phase          Phase         Phase</span>
+<span class="hljs-string">            /------------\ /------------\ /----------\</span>
+<span class="hljs-string">            [SETUP Packet] [DATA0 Packet] [ACK Packet]</span>
+<span class="hljs-string">            &lt;---       Setup  Transaction         ---&gt;</span>
+
+
+<span class="hljs-string">    Control                   Control                  No-Data</span>
+<span class="hljs-string">    Write                     Read                     Control</span>
+
+<span class="hljs-string">Host      Function        Host      Function       Host      Function </span>
+<span class="hljs-string"> </span>|<span class="hljs-string">   Setup   </span>|<span class="hljs-string">             </span>|<span class="hljs-string">   Setup   </span>|<span class="hljs-string">            </span>|<span class="hljs-string">   Setup   </span>|
+ |<span class="hljs-string"> &gt;-------&gt; </span>|<span class="hljs-string">             </span>|<span class="hljs-string"> &gt;-------&gt; </span>|<span class="hljs-string">            </span>|<span class="hljs-string"> &gt;-------&gt; </span>|
+ |<span class="hljs-string">    Out    </span>|<span class="hljs-string">             </span>|<span class="hljs-string">    In     </span>|<span class="hljs-string">            </span>|<span class="hljs-string">    In     </span>|
+ |<span class="hljs-string"> &gt;-------&gt; </span>|<span class="hljs-string">             </span>|<span class="hljs-string"> &lt;-------&lt; </span>|<span class="hljs-string">            </span>|<span class="hljs-string"> &lt;-------&lt; </span>|
+ |<span class="hljs-string">    ...    </span>|<span class="hljs-string">             </span>|<span class="hljs-string">    ...    </span>|
+ |<span class="hljs-string">    Out    </span>|<span class="hljs-string">             </span>|<span class="hljs-string">    In     </span>|
+ |<span class="hljs-string"> &gt;-------&gt; </span>|<span class="hljs-string">             </span>|<span class="hljs-string"> &lt;-------&lt; </span>|
+ |<span class="hljs-string">    In     </span>|<span class="hljs-string">             </span>|<span class="hljs-string">    Out    </span>|
+ |<span class="hljs-string"> &lt;-------&lt; </span>|<span class="hljs-string">             </span>|<span class="hljs-string"> &gt;-------&gt; </span>|
+
+
+图例：
+[]：Packet
+<span class="hljs-variable">&lt;&gt;</span>：Transaction
+<span class="hljs-variable">&lt; (0)&gt;</span>：使用DATA0的Transaction
+<span class="hljs-variable">&lt; (1)&gt;</span>：使用DATA1的Transaction</code></pre>
+
+<h4 id="Bulk传输"><a href="#Bulk传输" class="headerlink" title="Bulk传输"></a>Bulk传输</h4><p>Bulk传输仅有一个阶段，该阶段包含一个或多个In/Out事务。Bulk传输使用单向Stream Pipe。Bulk传输有两种类型：Bulk写，Bulk读。</p>
+<pre><code class="hljs angelscript">                       A Stage
+        /------------------------------------\
+Bulk    &lt;Out (<span class="hljs-number">0</span>)&gt;  &lt;Out (<span class="hljs-number">1</span>)&gt;  ...  &lt;Out (<span class="hljs-number">0</span>/<span class="hljs-number">1</span>)&gt;
+Write     DATA0      DATA1           DATA0/<span class="hljs-number">1</span>
+
+Bulk    &lt;In  (<span class="hljs-number">0</span>)&gt;  &lt;In  (<span class="hljs-number">1</span>)&gt;  ...  &lt;In  (<span class="hljs-number">0</span>/<span class="hljs-number">1</span>)&gt;
+Read      DATA0      DATA1           DATA0/<span class="hljs-number">1</span>
+
+图例：
+&lt;&gt;：Transaction
+&lt; (<span class="hljs-number">0</span>)&gt;：使用DATA0的Transaction
+&lt; (<span class="hljs-number">1</span>)&gt;：使用DATA1的Transaction</code></pre>
+
+<p>Bulk传输提供的服务有以下特点：</p>
+<ul>
+<li>Access to the USB on a bandwidth-available basis（【不理解】）</li>
+<li>Retry of transfers, in the case of occasional delivery failure due to errors on the bus（有重传机制）</li>
+<li>Guaranteed delivery of data but no guarantee of bandwidth or latency（保证交付，但不保证带宽（传输速率）和延迟【不理解】）</li>
+</ul>
+<blockquote>
+<p>带宽和延迟的关系：<br>【TODO】</p>
+</blockquote>
+<h4 id="Interrupt传输"><a href="#Interrupt传输" class="headerlink" title="Interrupt传输"></a>Interrupt传输</h4><p>Interrupt传输仅有一个阶段，该阶段包含一个In/Out事务（又称为Interrupt事务）。Interrupt传输使用单向Stream Pipe。</p>
+<pre><code class="hljs angelscript">               A Stage
+            /------------\
+Interrupt   &lt;In/Out (<span class="hljs-number">0</span>/<span class="hljs-number">1</span>)&gt;
+Transfer         DATA0/<span class="hljs-number">1</span>
+
+图例：
+&lt;&gt;：Transaction
+&lt; (<span class="hljs-number">0</span>)&gt;：使用DATA0的Transaction
+&lt; (<span class="hljs-number">1</span>)&gt;：使用DATA1的Transaction</code></pre>
+
+<h4 id="Isochronous传输"><a href="#Isochronous传输" class="headerlink" title="Isochronous传输"></a>Isochronous传输</h4><p>Isochronous传输仅有一个阶段，该阶段包含一个没有Handshake Phase的In/Out事务（又称为Isochronous事务）。Isochronous传输使用单向Stream Pipe，如果要进行双向Isochronous传输，则需要两个Pipe。</p>
+<pre><code class="hljs livescript">               A Stage
+            /------------<span class="hljs-string">\</span>
+Isochronous &lt;In/Out (<span class="hljs-number">0</span>/<span class="hljs-number">1</span>)&gt;
+Transfer         DATA0/<span class="hljs-number">1</span>
+            |            <span class="hljs-string">\</span>
+            |               <span class="hljs-string">\</span>
+            |                  <span class="hljs-string">\</span>
+            |                     <span class="hljs-string">\</span>
+            |                        <span class="hljs-string">\</span>
+            | Token           Data     <span class="hljs-string">\</span>
+            | Phase           Phase     <span class="hljs-string">\</span>
+            <span class="hljs-regexp">/-------------\ /</span>------------<span class="hljs-string">\</span>
+            [IN/OUT Packet] [DATA0/<span class="hljs-number">1</span> Packet]
+            &lt;-- Isochronous Transaction<span class="hljs-function">  --&gt;</span>
+
+图例：
+&lt;&gt;：Transaction
+&lt; (<span class="hljs-number">0</span>)&gt;：使用DATA0的Transaction
+&lt; (<span class="hljs-number">1</span>)&gt;：使用DATA1的Transaction</code></pre>
+
+<p>Isochronous传输提供的服务有以下特点：</p>
+<ul>
+<li>Guaranteed access to USB bandwidth with bounded latency（有限延迟访问USB带宽【不理解】）</li>
+<li>Guaranteed constant data rate through the pipe as long as data is provided to the pipe（有数据需要传输时，保证数据能够以恒定的速率在Pipe中传输）</li>
+<li>In the case of a delivery failure due to error, no retrying of the attempt to deliver the data（没有重传机制，无法保证可靠传输）</li>
+</ul>
+<h3 id="5-有效数据流"><a href="#5-有效数据流" class="headerlink" title="5 有效数据流"></a>5 有效数据流</h3><p>USB协议通过Packet、Transaction、Transfer语义定义USB传输的基础设施，拿网络协议栈类比，相当于定义了应用层以下的层次，应用层的数据、命令在这些语义的基础上进行传输。拿I2C总线类比，相当于定义了开始条件、结束条件、设备地址、读写操作、ACK/NAK等，实际的具体的有效数据在这些框架中进行传输。例如：Host要设置Device的地址，获取Device的各种信息，或者是和Device之间进行数据传输等等操作都在Packet、Transaction、Transfer的基础上进行，或者说在逻辑Pipe中进行。</p>
+<pre><code class="hljs gherkin">Host                  Device
+ |<span class="hljs-string">   cmd:set_address   </span>|
+ |<span class="hljs-string">   arg:some_addr     </span>|
+ |<span class="hljs-string"> ------------------&gt; </span>|
+
+Host                  Device
+ |<span class="hljs-string">      bulk data      </span>|
+ |<span class="hljs-string"> ------------------&gt; </span>|
+ |<span class="hljs-string">      bulk data      </span>|
+ |<span class="hljs-string"> &lt;------------------ </span>|</code></pre>
+
+<p>USB协议定义了一种命令格式（称为设备请求），并在此格式下定义了一些标准的命令，USB设备供应商还可在此种格式下定义自己的命令。此外，USB协议还定义了一种数据格式（称为描述符），在此格式下定义了一些标准的描述符，这些标准描述符中带有关于设备以及设备内部各层次组件的各类信息。这些结构性的数据在Message Pipe中传输。另一些无结构的原始数据流（如存储设备读写）则在Stream Piep中传输。</p>
+<h4 id="设备请求（Device-Request）"><a href="#设备请求（Device-Request）" class="headerlink" title="设备请求（Device Request）"></a>设备请求（Device Request）</h4><p>Host通过设备请求获取USB设备信息或对设备进行配置。Host通过Setup事务向USBS设备发送请求，并在Setup事务的Data Phase中携带请求参数。</p>
+<p>Setup Data（Data Phase中携带的参数）格式如下：</p>
+<pre><code class="hljs angelscript"> <span class="hljs-number">0</span>                   <span class="hljs-number">1</span>                   <span class="hljs-number">2</span>                   <span class="hljs-number">3</span>
+ <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bmRequestType |   bRequest    |            wValue             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             wIndex            |            wLength            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+字段             大小       说明
+----             ----      ----
+bmRequestType    <span class="hljs-number">1</span>B        请求类型。
+                           bit[<span class="hljs-number">0</span>:<span class="hljs-number">4</span>]: 接收方
+                               <span class="hljs-number">0</span> = Device。
+                               <span class="hljs-number">1</span> = Interface
+                               <span class="hljs-number">2</span> = Endpoint
+                               <span class="hljs-number">3</span> = Other
+                               其他保留。
+                           bit[<span class="hljs-number">5</span>:<span class="hljs-number">6</span>]：类型
+                               <span class="hljs-number">0</span> = Standard
+                               <span class="hljs-number">1</span> = Class
+                               <span class="hljs-number">2</span> = Vendor
+                               其他保留。
+                           bit[<span class="hljs-number">7</span>]：Data Stage中数据传输的方向
+                               <span class="hljs-number">0</span> = Host-to-device
+                               <span class="hljs-number">1</span> = Device-to-host
+bRequest         <span class="hljs-number">1</span>B        具体的请求。
+wValue           <span class="hljs-number">2</span>B        参数，由具体的request决定。
+wIndex           <span class="hljs-number">2</span>B        参数，由具体的request决定。
+                           当bmRequestType.bit[<span class="hljs-number">0</span>:<span class="hljs-number">4</span>] = <span class="hljs-number">2</span>（Endpoint）时，
+                               bit[<span class="hljs-number">7</span>]：方向
+                               bit[<span class="hljs-number">0</span>:<span class="hljs-number">3</span>]：Endpoint编号。
+                           当bmRequestType.bit[<span class="hljs-number">0</span>:<span class="hljs-number">4</span>] = <span class="hljs-number">1</span>（Interface）时，
+                               bit[<span class="hljs-number">0</span>:<span class="hljs-number">7</span>]：Interface编号。
+wLength          <span class="hljs-number">2</span>B        如果存在Data Stage，则此域标识要传输的字节数。
+                           如果此字段为<span class="hljs-number">0</span>，则不存在second phase of 控制传输（Data
+                           Stage），并且bmRequestType.bit[<span class="hljs-number">7</span>]为<span class="hljs-number">0</span>。</code></pre>
+
+<h5 id="标准的设备请求（Standard-Device-Requests）"><a href="#标准的设备请求（Standard-Device-Requests）" class="headerlink" title="标准的设备请求（Standard Device Requests）"></a>标准的设备请求（Standard Device Requests）</h5><p>所有USB设备必须支持的请求。</p>
+<p>Clear Feature：【TODO】。<br>Get Configuration：获取当前使用的Configuration的Value（编号）。一个Control Read传输（含Setup、In、Out事务）。<br>Get Descriptor：获取Device、Configuration或String描述符。获取Configuration描述符时，其下的Interface、Endpoint描述符也会带出。<br>Get Interface：获取指定接口当前使用的Alternate Setting。一个Control Read传输（含Setup、In、Out事务）。<br>Get Status：获取Device或Interface或Endpoint状态。一个Control Read传输（含Setup、In、Out事务）。<br>Set Address：设置设备地址。一个No-Data Control传输（含Setup、In事务）。<br>Set Configuration：选择设备的某个配置。一个No-Data Control传输（含Setup、In事务）。<br>Set Descriptor：【TODO】。<br>Set Feature：【TODO】。<br>Set Interface：选择设备当前配置中的某个接口的某个Alternate Setting。一个No-Data Control传输（含Setup、In事务）。<br>Synch Frame：【TODO】。</p>
+<h4 id="描述符（Descriptor）"><a href="#描述符（Descriptor）" class="headerlink" title="描述符（Descriptor）"></a>描述符（Descriptor）</h4><p>USB设备通过描述符汇报其属性。</p>
+<p>描述符格式：</p>
+<pre><code class="hljs angelscript"> <span class="hljs-number">0</span>                   <span class="hljs-number">1</span>                   <span class="hljs-number">2</span>                   <span class="hljs-number">3</span>
+ <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bLen          |bDescriptorType|              nData ...        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+字段             大小       说明
+----             ----      ----
+bLen             <span class="hljs-number">1</span>B        描述符长度（含bLen和bDescriptorType）。
+bDescriptorType  <span class="hljs-number">1</span>B        描述符类型。
+nData            (bLen<span class="hljs-number">-1</span>)B 具体属性。</code></pre>
+
+<h5 id="标准设备描述符"><a href="#标准设备描述符" class="headerlink" title="标准设备描述符"></a>标准设备描述符</h5><table>
+<thead>
+<tr>
+<th>描述符类型</th>
+<th>bDescriptorType值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Device描述符</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Configuration描述符</td>
+<td>2</td>
+</tr>
+<tr>
+<td>String描述符</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Interface描述符</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Endpoint描述符</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Device Qualifier描述符</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Other Speed Configuration描述符</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Interface Power描述符</td>
+<td>8</td>
+</tr>
+</tbody></table>
+<pre><code class="hljs C"><span class="hljs-keyword">enum</span> usb_desc_type
+&#123;
+    USB_DEVICE_DESC_TYPE = <span class="hljs-number">1</span>,
+    USB_CONFIGURATION_DESC_TYPE,
+    USB_STRING_DESC_TYPE,
+    USB_INTERFACE_DESC_TYPE,
+    USB_ENDPOINT_DESC_TYPE,
+    USB_DEVICE_QUALIFIER_DESC_TYPE,
+    USB_OTHER_SPEED_CONFIGURATION_DESC_TYPE,
+    USB_INTERFACE_POWER_DESC_TYPE,
+&#125;;</code></pre>
+
+
+<h6 id="Device描述符"><a href="#Device描述符" class="headerlink" title="Device描述符"></a>Device描述符</h6><p>Device描述符带有设备USB版本、产品、制造商、Ep0、Configuration等信息。一个USB设备仅有一个Device描述符。如果High-Speed设备针对Full-Speed和High-Speed有不同的设备信息，则必须使用Device_Qualifier描述符。</p>
+<pre><code class="hljs asciidoc"><span class="hljs-code"> 0                   1</span>
+<span class="hljs-code"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5</span>
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| bLen          |bDescriptorType| 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|            bcdUSB             |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|     bClass    |    bSubClass  |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|   bProtocol   |bMaxPacketSize0|
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|            idVendor           |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|            idProduct          |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|            bcdDevice          |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| iManufacturer |    iProduct   |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| iSerialNumber |   bNumConfs   |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+
+字段               大小    说明
+<span class="hljs-bullet">----               </span>----    ----
+bLen               1B      描述符长度（含bLen和bDescriptorType）。
+bDescriptorType    1B      1 = Device描述符。
+bcdUSB             2B      设备兼容的USB协议版本，BCD码。JJ.M.N，JJ表示Major 
+<span class="hljs-code">                           Number，M表示Mirror Number，N表示Sub-Mirror Number，</span>
+<span class="hljs-code">                           例如：0x210表示2.10。</span>
+bClass             1B      Device的Class（由USB-IF分配）。
+bSubClass          1B      Device的SubClass（由USB-IF分配）。
+bProtocol          1B      Device的Protocol（由USB-IF分配）。
+bMaxPacketSize0    1B      Endpoint0的【Packet？还是Packet.Data】的最大长度。可选
+<span class="hljs-code">                           值包括&#123;8, 16, 32, 64&#125;，如果是Hight-Speed设备，只能选</span>
+<span class="hljs-code">                           64。</span>
+idVendor           2B      供应商ID（由USB-IF分配）。
+idProduct          2B      产品ID（由制造商分配）。
+bcdDevice          2B      设备发布编号，BCD码。
+iManufacturer      1B      制造商描述的字符串，String描述符索引。
+iProduct           1B      产品描述的字符串，String描述符索引。
+iSerialNumber      1B      设备序列号的字符串，String描述符索引。
+bNumConfs          1B      设备在当前速度（如Full-Speed或Hight-Speed）下的
+<span class="hljs-code">                           Configuration数量。</span></code></pre>
+
+<h6 id="Device-Qualifier描述符"><a href="#Device-Qualifier描述符" class="headerlink" title="Device_Qualifier描述符"></a>Device_Qualifier描述符</h6><p>【TODO】</p>
+<h6 id="Configuration描述符"><a href="#Configuration描述符" class="headerlink" title="Configuration描述符"></a>Configuration描述符</h6><pre><code class="hljs asciidoc"><span class="hljs-code"> 0                   1</span>
+<span class="hljs-code"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5</span>
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| bLen          |bDescriptorType| 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|          wTotalLength         |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| bNumInterfaces|   bConfValue  |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| iConfiguration|  bmAttributes |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|   bMaxPower   |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+
+字段               大小    说明
+<span class="hljs-bullet">----               </span>----    ----
+bLen               1B      描述符长度（含bLen和bDescriptorType）。
+bDescriptorType    1B      2 = Device描述符。
+wTotalLength       2B      请求此Configuration时，返回给Host的数据的总长度。含所有
+<span class="hljs-code">                           描述符（Configuration、Interface、Endpoint以及</span>
+<span class="hljs-code">                           Class-specific及Vendor-specific描述符）。</span>
+bNumInterfaces     1B      此Configuration的Interface数量。
+bConfValue         1B      Configuration编号，用于SetConfiguration的参数，以选中
+<span class="hljs-code">                           对应的Configuration。</span>
+iConfiguration     1B      Configuration描述字符串，String描述符索引。
+bmAttributes       1B      Configuration属性【TODO】。
+bMaxPower          1B      此Configuration时，USB设备的最大Power consumption
+<span class="hljs-code">                           【TODO】。</span></code></pre>
+
+<h6 id="Other-Speed-Configuration描述符"><a href="#Other-Speed-Configuration描述符" class="headerlink" title="Other_Speed_Configuration描述符"></a>Other_Speed_Configuration描述符</h6><p>【TODO】</p>
+<h6 id="Interface描述符"><a href="#Interface描述符" class="headerlink" title="Interface描述符"></a>Interface描述符</h6><p>Interface描述符带有Interface、其备用Setting和Endpoint等信息。</p>
+<p>Interface描述符总是作为Configuration描述符的一部分，在GetConfiguration()时被提取。GetDescriptor()和SetDescriptor()不能直接访问到Interface描述符。如果Interface有Endpoint，则Endpoint的描述符会跟随在Interface描述符之后被Host通过GetConfiguration()提取。</p>
+<pre><code class="hljs jboss-cli">Host <span class="hljs-params">---</span>&gt;                   GetConfiguration<span class="hljs-params">()</span>                   <span class="hljs-params">---</span>&gt; Device
+
+                 <span class="hljs-string">/Eps</span> of Interface0\     <span class="hljs-string">/Eps</span> of Interface1\
+Host &lt;-- <span class="hljs-string">...</span> I0.Desc E1.Desc E3.Desc I1.Desc E1.Desc E2.Desc <span class="hljs-string">...</span> &lt;<span class="hljs-params">---</span> Device
+         \<span class="hljs-params">-----</span>               Configuration               <span class="hljs-params">-----/</span></code></pre>
+
+<pre><code class="hljs asciidoc"><span class="hljs-code"> 0                   1</span>
+<span class="hljs-code"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5</span>
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| bLen          |bDescriptorType| 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|    bNumber    | bAlterSetting | 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| bNumEndpoints |     bClass    | 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|   bSubClass   |   bProtocol   |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|   iInterface  |
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+
+字段               大小    说明
+<span class="hljs-bullet">----               </span>----    ----
+bLen               1B      描述符长度（含bLen和bDescriptorType）。
+bDescriptorType    1B      4 = Interface描述符。
+bNumber            1B      Interface编号。
+bAlterSetting      1B      Interface Setting编号（一个Interface可能有多个
+<span class="hljs-code">                           Setting）。</span>
+bNumEndpoints      1B      Interface中包含的Endpoint的数量（不包括Ep0）。
+bClass             1B      Interface的Class（由USB-IF分配）。
+bSubClass          1B      Interface的SubClass（由USB-IF分配）。
+bProtocol          1B      Interface的Protocol（由USB-IF分配）。
+iInterface         1B      描述Interface的字符串，String描述符索引。</code></pre>
+
+<h6 id="Endpoint描述符"><a href="#Endpoint描述符" class="headerlink" title="Endpoint描述符"></a>Endpoint描述符</h6><p>Endpoint描述符总是作为Configuration描述符的一部分，在GetDescriptor(Configuration)时被提取。GetDescriptor()和SetDescriptor()不能直接访问到Endpoint描述符。Ep0没有描述符。</p>
+<pre><code class="hljs angelscript"> <span class="hljs-number">0</span>                   <span class="hljs-number">1</span>
+ <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bLen          |bDescriptorType| 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bEndpointAddr |  bmAttributes | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        wMaxPacketSize         | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   bInterval   |
++-+-+-+-+-+-+-+-+
+
+字段               大小    说明
+----               ----    ----
+bLen               <span class="hljs-number">1</span>B      描述符长度（含bLen和bDescriptorType）。
+bDescriptorType    <span class="hljs-number">1</span>B      <span class="hljs-number">5</span> = Endpoint描述符。
+bEndpointAddr      <span class="hljs-number">1</span>B      Endpoint地址，唯一确定一个Endpoint，包括编号和方向。
+                               bit[<span class="hljs-number">0</span>:<span class="hljs-number">3</span>]：Endpoint编号。
+                               bit[<span class="hljs-number">4</span>:<span class="hljs-number">6</span>]：保留，必须设置为<span class="hljs-number">0</span>。
+                               bit[<span class="hljs-number">7</span>]：传输方向（控制Endpoint不适用此域）。
+                                   bit[<span class="hljs-number">7</span>] = <span class="hljs-number">0</span>: OUT Endpoint。
+                                   bit[<span class="hljs-number">7</span>] = <span class="hljs-number">1</span>: IN Endpoint。
+bmAttributes       <span class="hljs-number">1</span>B      Endpoint属性（传输类型及其子属性）。
+                               bit[<span class="hljs-number">0</span>:<span class="hljs-number">1</span>]: 传输类型
+                                   bit[<span class="hljs-number">0</span>:<span class="hljs-number">1</span>] = <span class="hljs-number">00</span> = <span class="hljs-number">0x00</span>：Control
+                                   bit[<span class="hljs-number">0</span>:<span class="hljs-number">1</span>] = <span class="hljs-number">01</span> = <span class="hljs-number">0x01</span>：Isochronous
+                                   bit[<span class="hljs-number">0</span>:<span class="hljs-number">1</span>] = <span class="hljs-number">10</span> = <span class="hljs-number">0x02</span>：Bulk
+                                   bit[<span class="hljs-number">0</span>:<span class="hljs-number">1</span>] = <span class="hljs-number">11</span> = <span class="hljs-number">0x03</span>：Interrupt
+                               bit[<span class="hljs-number">2</span>:<span class="hljs-number">5</span>]：
+                                   如果传输类型不是Isochronous，则保留，
+                                   否则：
+                                       bit[<span class="hljs-number">2</span>:<span class="hljs-number">3</span>]：同步类型 【TODO】
+                                       bit[<span class="hljs-number">4</span>:<span class="hljs-number">5</span>]：使用类型 【TODO】
+                               bit[<span class="hljs-number">6</span>:<span class="hljs-number">7</span>]：保留，必须设置为<span class="hljs-number">0</span>。
+wMaxPacketSize     <span class="hljs-number">2</span>B      Endpoint发送或接收时【Packet?还是Packet.Data】的最大长
+                           度。
+                               bit[<span class="hljs-number">0</span>:<span class="hljs-number">10</span>]：最大长度（单位byte）。
+                               bit[<span class="hljs-number">11</span>:<span class="hljs-number">12</span>]：
+                                   如果不是是High-Speed的Isochronous或Interrupt 
+                                   Endpoint，则保留，
+                                   否则：
+                                       bit[<span class="hljs-number">11</span>:<span class="hljs-number">12</span>]【TODO】
+                               bit[<span class="hljs-number">13</span>:<span class="hljs-number">15</span>]：保留，必须设置为<span class="hljs-number">0</span>。
+bInterval          <span class="hljs-number">1</span>B      【TODO】</code></pre>
+
+<h6 id="String描述符"><a href="#String描述符" class="headerlink" title="String描述符"></a>String描述符</h6><p>从程序员的角度看，USB设备中存在一个由String描述符构成的数组string_descs，其他标准描述符通过String描述符数组的索引引用字符串。String使用Unicode编码，并且支持多国语言的字符串，所以使用了一个特殊的String描述符string_descs[0]来表明了当前USB设备支持哪些语言。</p>
+<p>string_descs[0]描述符格式：</p>
+<pre><code class="hljs asciidoc"><span class="hljs-code"> 0                   1</span>
+<span class="hljs-code"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5</span>
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| bLen          |bDescriptorType| 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|            wLANGID[0]         | 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|              ...              | 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|            wLANGID[n]         | 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+
+字段             大小       说明
+<span class="hljs-bullet">----             </span>----      ----
+bLen             1B        描述符长度（含bLen和bDescriptorType）。
+bDescriptorType  1B        3 = String描述符。
+wLANGID[0]       2B        语言ID，定义在http://www.usb.org/developers/docs.html
+...
+wLANGID[n]       2B        语言ID，定义在http://www.usb.org/developers/docs.html</code></pre>
+
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> USB_STRING_DESC_STRING_LANGID_LEN x</span>
+<span class="hljs-keyword">uint8_t</span> <span class="hljs-keyword">const</span> string_desc_string_langid[USB_STRING_DESC_STRING_LANGID_LEN] = 
+&#123;
+    USB_STRING_DESC_STRING_LANGID_LEN
+    USB_STRING_DESC_TYPE,
+    <span class="hljs-comment">//...</span>
+&#125;;</code></pre>
+
+<p>实际String描述符格式：</p>
+<pre><code class="hljs asciidoc"><span class="hljs-code"> 0                   1</span>
+<span class="hljs-code"> 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5</span>
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+| bLen          |bDescriptorType| 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+|            bString            | 
+<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
+
+字段             大小       说明
+<span class="hljs-bullet">----             </span>----      ----
+bLen             1B        描述符长度（含bLen和bDescriptorType）。
+bDescriptorType  1B        3 = String描述符。
+bString          (bLen-2)B Unicode编码字符串。</code></pre>
+
+<pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> USB_STRING_DESC_PRODUCE_ID_LEN x</span>
+<span class="hljs-keyword">uint8_t</span> <span class="hljs-keyword">const</span> string_desc_product_id[USB_STRING_DESC_PRODUCE_ID_LEN] = 
+&#123;
+    USB_STRING_DESC_PRODUCE_ID_LEN
+    USB_STRING_DESC_TYPE,
+    <span class="hljs-comment">//...</span>
+&#125;;
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> USB_STRING_DESC_VENDER_ID_LEN x</span>
+<span class="hljs-keyword">uint8_t</span> <span class="hljs-keyword">const</span> string_desc_vender_id[USB_STRING_DESC_VENDER_ID_LEN] = 
+&#123;
+    USB_STRING_DESC_VENDER_ID_LEN
+    USB_STRING_DESC_TYPE,
+    <span class="hljs-comment">//...</span>
+&#125;;</code></pre>
+
+<pre><code class="hljs C"><span class="hljs-keyword">uint8_t</span> *string_descs[] = 
+&#123;
+    string_desc_string_langid,
+    string_desc_product_id,
+    string_desc_vender_id,
+    <span class="hljs-comment">//...</span>
+&#125;;</code></pre>
+
+
+
+<h3 id="6-USB枚举过程"><a href="#6-USB枚举过程" class="headerlink" title="6 USB枚举过程"></a>6 USB枚举过程</h3><p>本章对USB总线进行监控，并通过抓包分析设备枚举过程。</p>
+<p>整个枚举的传输过程如下图所示：</p>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/02/d72007213bcd6e5f.png" srcset="/img/loading.gif" alt="p3"></p>
+<p>大致步骤包括：</p>
+<ol>
+<li><p>Reset信号（电平信号）</p>
+</li>
+<li><p>GetDescriptor(0, 0, Device)</p>
+</li>
+<li><p>SetAddress(new_address, 0)</p>
+</li>
+<li><p>GetDescriptor(new_address, 0, Device)</p>
+</li>
+<li><p>GetDescriptor(new_address, 0, Configuration)</p>
+</li>
+<li><p>GetDescriptor(new_address, 0, String)</p>
+</li>
+<li><p>SetConfiguration(new_address, 0, index)</p>
+</li>
+<li><p>Class-specific Process</p>
+</li>
+</ol>
+<p><strong>GetDescriptor(0, 0, Device)</strong></p>
+<p>这里以最初的Control传输：GetDescriptor(0, 0, Device)为例，细说单个Transfer中所含的Transaction及Packet。可以看到该传输中包含了5个事务，按时间顺序分别为Setup、In、In、Out、Out。</p>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/02/6b9ba871efe42f90.png" srcset="/img/loading.gif" alt="p1"></p>
+<p>Host首先向Device发送GetDescriptor(0, 0, Device)设备请求，该请求的实际数据在Setup事务的Data Phase中，长度为8字节，对应图中的Packet 43。随后设备Nak了Host，表示暂时无法处理。第二次In事务才将Device描述符带出，长度为18字节，对应Packet 50。最后由Host以Out事务作为Status阶段的事务结束整个Control传输。</p>
+<p>前边有提到，实际在USB总线上传输的只有Packet，Transfer、Transaction实际上都是某种逻辑数据，由不同含义的物理数据Packet组成。</p>
+<p><strong>SetAddress</strong></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/02/1eb8c7542b6cfe07.png" srcset="/img/loading.gif" alt="p2"></p>
+<p><strong>SetConfiguration</strong></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/02/14eb8b7fe740a135.png" srcset="/img/loading.gif" alt="p4"></p>
+<h4 id="USB设备状态迁移"><a href="#USB设备状态迁移" class="headerlink" title="USB设备状态迁移"></a>USB设备状态迁移</h4><pre><code class="hljs txt">+-----------------+                             
+|  +---------+----+----------&gt;+----------+      
+|  | powered |    |           | attached |      
+|  +---------+&lt;---+-----------+----------+      
+|    |     ^      |                             
+|reset     |      |                             
+|    |     |      |                             
+|    v     |      |                             
+|  +---------+    |                             
+|  | default |    |                             
+|  +---------+    |                             
+|    |     ^      |                             
+|address   |      |                             
+|assgined  |      |                             
+|    v     |      |                             
+|  +---------+    |                             
+|  | address |    |                             
+|  +---------+    |                             
+|    |     ^      |                             
+|device    |      |                             
+|config    |      -,    bus inactive            
+|    |     |      | `&#x27;-,                        
+|    v     |      |     `&#x27;-,                    
+|  +------------+ |         `&gt;+-----------+     
+|  | configured | |           | suspended |     
+|  +------------+ |&lt;----------+-----------+     
++-----------------+ bus active</code></pre>
+
+<h3 id="7-USB-Class规范"><a href="#7-USB-Class规范" class="headerlink" title="7 USB Class规范"></a>7 USB Class规范</h3><p>本章侧重从如何实现USB虚拟串口及USB存储设备的角度，分析USB Class相关规范。虚拟串口涉及的规范有：USBCDC1.2、USBPSTN1.2。</p>
+<p>Class、SubClass、Protocol仅在Device描述符和Interface描述符中使用，有些Class只能用在Device描述符，有些只能用在Interface描述符，有些都能用于Device和Interface描述符。不同类型的Class由不同的文件进行定义，如02h表示的CDC Control在USBCDC120（也称USBCDC1.2）中定义，且其SubClass定义在SubClass规范中，如USBPSTN120（也成USBPSTN1.2）。</p>
+<pre><code class="hljs routeros">Class   Descriptor Usage    Description
+-----   ----------------    -----------
+02h     Both                Communications <span class="hljs-keyword">and</span> CDC Control（USBCDC120）
+09h     Device              Hub
+08h    <span class="hljs-built_in"> Interface </span>          Mass Storage
+0Ah    <span class="hljs-built_in"> Interface </span>          CDC-Data（USBCDC120）</code></pre>
+
+<p>USB规范文件关系：</p>
+<pre><code class="hljs apache"><span class="hljs-attribute">USB</span>规范     Class规范     SubClass规范
+
+<span class="hljs-attribute">USB2</span>.<span class="hljs-number">0</span> --- USBCDC<span class="hljs-number">1</span>.<span class="hljs-number">2</span> --- USBPSTN<span class="hljs-number">1</span>.<span class="hljs-number">2</span></code></pre>
+
+<h4 id="USBCDC1-2"><a href="#USBCDC1-2" class="headerlink" title="USBCDC1.2"></a>USBCDC1.2</h4><p>USBCDC1.2是众多USB Class规范之一，USB设备可以实现PSTN Modem、Ethernet Networking Device等几种Communication Device（CD），而USBCDC120便对如何实现Communication设备的通用部分做了定义。</p>
+<p>CD设备有两种接口：Communication Class Interface（Communication接口）与Data Class Interface（Data接口）。Communication接口是一个管理接口，所有CD设备都需要支持该接口，Data接口用于传输数据。</p>
+<p>Communication接口包括一个Management Element和一个可选的Notificatioin Element。Management Element用于配置和控制Device，该Element使用Endpoint0。Notification Element用于向Host报告Event，通常使用一个Interrupt Endpoint，也可以是Bulk Endpoint。</p>
+<p>Management Element又细分为Device Management和Call Management，前者用于管理Device的状态、响应数据、事件通知，后者用于控制拨号的建立/断开以及拨号相关的控制参数。Call Management在使用Communication接口的同时，也可以可选地使用Data接口。</p>
+<blockquote>
+<p>Call（拨号）</p>
+<p>Call是Telecommunication中的术语之一，Call指通过某种方式在Called（或Callee）与Calling之间建立的连接。<br>Tele-是一个前缀，也是一个词根；来源于希腊语，意为”far”。</p>
+</blockquote>
+<h5 id="Class设备请求"><a href="#Class设备请求" class="headerlink" title="Class设备请求"></a>Class设备请求</h5><p>前边说过，USB定义了一个设备请求格式，设备请求分为标准设备请求、Class设备请求和Vender设备请求，所有USB设备必须支持标准设备请求，以实现对USB设备的统一管理及配置，Class设备请求则是为了实现某种Class的设备而定义的请求。为了完成Management Element的功能，USBCDC120中定义了实现Communication设备的通用的Class设备请求，并引用/收集了SubClass中定义的Class设备请求，此处仅列出部分。</p>
+<pre><code class="hljs txt">bmRequestType   bRequest                        Reference         
+-------------   --------                        ---------
+class           SET_LINE_CODING（32）           USBPSTN120
+class           GET_LINE_CODING（33）           USBPSTN120
+class           SET_CONTROL_LINE_STATE（34）    USBPSTN120</code></pre>
+
+<h5 id="Functional描述符"><a href="#Functional描述符" class="headerlink" title="Functional描述符"></a>Functional描述符</h5><p>为了实现Management Element，USBCDC120针对Communication接口定义了一种新的描述符：Functional描述符，该描述符将几个Interface绑定到一个控制/主控Interface上，将Interfaces组合成一个Functional unit。Functional描述符紧跟在Interface描述符之后，由一个Header Functional描述符开头，后边跟着其他Functional描述符，此处仅对Header和Union Functional描述符进行说明，完整描述符说明参考USBCDC120。</p>
+<h6 id="Header-Functional描述符"><a href="#Header-Functional描述符" class="headerlink" title="Header Functional描述符"></a>Header Functional描述符</h6><p>Header Functional描述符作为所有Functional描述符的开头。</p>
+<pre><code class="hljs txt"> 0                   1                   2
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bLen          | bFunDescType  |bFunDescSubType|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             bcdCDC            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+字段               大小    说明
+----               ----    ----
+bLen               1B      此Functional描述符长度（含bLen和bDescriptorType）。
+bFunDescType       1B      Functional描述符类型，CS_INTERFACE（=0x24）。
+bFunDescSubType    1B      Functional描述符sub类型。
+                                0x00：Header Functional Descriptor。
+bcdCDC             2B      USBCDC规范版本，BCD码。</code></pre>
+
+<h6 id="Union-Functional描述符"><a href="#Union-Functional描述符" class="headerlink" title="Union Functional描述符"></a>Union Functional描述符</h6><p>Union Functional描述符将多个接口和一个控制接口绑定成一个Functional unit。</p>
+<pre><code class="hljs txt"> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bLen          | bFunDescType  |bFunDescSubType| bCtrlInterface| 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bInterface0   |       ...          ...        | bInterfaceN   |
++-+-+-+-+-+-+-+-+-+-+-+-...-+-+-+-+-+...+-+-+-+-+-+-+-+-+-+-+-+-+
+
+字段               大小    说明
+----               ----    ----
+bLen               1B      此Functional描述符长度（含bLen和bDescriptorType）。
+bFunDescType       1B      Functional描述符类型，CS_INTERFACE（=0x24）。
+bFunDescSubType    1B      Functional描述符sub类型。
+                                0x06：Union Functional Descriptor。
+bCtrlInterface     1B      控制整个Union的Interface的编号（Communication or Data
+                            Interface）。
+bInterface0        1B      从属与此Union的Interface的编号。
+...                ...     从属与此Union的Interface的编号。
+bInterfaceN        1B      从属与此Union的Interface的编号。</code></pre>
+
+<h5 id="Event-Message"><a href="#Event-Message" class="headerlink" title="Event Message"></a>Event Message</h5><p>Notification Element使用一个标准的格式向Host汇报事件，该格式包括一个标准的8字节Header和变长数据域。【TODO】</p>
+<h4 id="USBPSTN1-2"><a href="#USBPSTN1-2" class="headerlink" title="USBPSTN1.2"></a>USBPSTN1.2</h4><p>USBCDC120规范针对不同的Communication设备指定了一系列SubClass规范（具体见USBCDC120中的Related Documents部分），因为虚拟串口的实现定义在USBPSTN120中，故本文仅对USBPSTN120进行分析。</p>
+<pre><code class="hljs txt">SubClass    Description
+--------    -----------
+00h         REVERSED
+01h         Direct Line Control Model
+02h         Abstract Control Model
+03h         Telephone Control Model</code></pre>
+
+<p>USBPSTN120规范针对连接到Public Switched Telephone Network (PSTN)的Voiceband Modem和Telephones两种设备提供了实现标准。其中Voiceband Modem又细分为两种：一种为Smart Modem，通过Abtract Control Model实现。另一种Modem依赖于Host的实现方式，由Direct Line Model实现。Telephones则由Telephony Control Model实现。</p>
+<blockquote>
+<p>Modem的历史</p>
+<p>Modem：调制解调器，负责将数字信号转换为模拟信号，或从模拟信号转换为数字信号，使数字信号能够在模拟信号线中传输。1981年，Hayes开发了一种Smart Modem，Smart Modem不再是一个盲目地Converting Serial Data to and from Audio Tones的“哑巴”设备，因为它带有些许“智能”属性：可以接收指令并响应。有了在Serial Line上传输的这些指令，便可以对Smart Modem进行配置、或令其执行某些操作。这些指令集称为Hayes指令集，也是最初的AT指令集（AT：Attention!），AT指令集在ITU的V.250中标准化。</p>
+</blockquote>
+<p>虚拟串口设备框图：</p>
+<pre><code class="hljs gherkin">+------------+             +------------+
+|<span class="hljs-string">   Virtual  </span>|<span class="hljs-string">             </span>|<span class="hljs-string">  Abstract  </span>|<span class="hljs-string">                 +-----+</span>
+|<span class="hljs-string">   Serial   </span>|<span class="hljs-string">  +-USB bus--</span>|<span class="hljs-string">  Control   </span>|<span class="hljs-string">---Serial line---</span>|<span class="hljs-string">     </span>|<span class="hljs-string">--Analog line-&gt;</span>
+|<span class="hljs-string">   Port     </span>|<span class="hljs-string">  </span>|<span class="hljs-string">          </span>|<span class="hljs-string">  Model     </span>|<span class="hljs-string">                 +-----+</span>
+<span class="hljs-string">+------------+  </span>|<span class="hljs-string">          +------------+                  Modem</span>
+|<span class="hljs-string">   VSerial  </span>|<span class="hljs-string">  </span>|<span class="hljs-string">            USB Device</span>
+|<span class="hljs-string">   Driver   </span>|<span class="hljs-string">--+</span>
+<span class="hljs-string">+------------+</span>
+<span class="hljs-string">      PC</span>
+
+<span class="hljs-string">+------------+</span>
+|<span class="hljs-string">   Real     </span>|<span class="hljs-string">                 +-----+</span>
+|<span class="hljs-string">   Serial   </span>|<span class="hljs-string">---Serial line---</span>|<span class="hljs-string">     </span>|<span class="hljs-string">---Analog line---&gt;</span>
+|<span class="hljs-string">   Port     </span>|<span class="hljs-string">                 +-----+</span>
+<span class="hljs-string">+------------+                  Modem</span>
+<span class="hljs-string">      PC</span></code></pre>
+
+<h5 id="Class请求"><a href="#Class请求" class="headerlink" title="Class请求"></a>Class请求</h5><p>USBPSTN1.2中定义了许多Class设备请求，此处仅列举和虚拟串口相关的部分。</p>
+<pre><code class="hljs txt">bmRequestType                   bRequest                        Reference         
+-------------                   --------                        ---------
+interface class host-to-device  SET_LINE_CODING（32）           USBPSTN120
+interface class device-to-host  GET_LINE_CODING（33）           USBPSTN120
+interface class host-to-device  SET_CONTROL_LINE_STATE（34）    USBPSTN120</code></pre>
+
+<h6 id="SET-LINE-CODING（32）"><a href="#SET-LINE-CODING（32）" class="headerlink" title="SET_LINE_CODING（32）"></a>SET_LINE_CODING（32）</h6><pre><code class="hljs txt">b7 6 5 4 3 2 1 0
++-+-+-+-+-+-+-+-+--------------+--------+-----------+------------+------------+
+| bmRequestType | bRequestCode | wValue | wIndex    | wLength    | Data       |
++-+-+-+-+-+-+-+-+--------------+--------+-----------+------------+------------+
+|               |              |        | interface | Size of    |            |
+|0|0|1|0|0|0|0|1| 32           | 0      | Number    | LineCoding | LineCoding |
+|               |              |        |           | Structure  |            |
++---------------+--------------+--------+-----------+------------+------------+
+ &lt;------------------------   Setup   ---------------------------&gt; &lt;-Data Out-&gt;</code></pre>
+
+<p>LineCoding结构见GET_LINE_CODING。</p>
+<h6 id="GET-LINE-CODING（33）"><a href="#GET-LINE-CODING（33）" class="headerlink" title="GET_LINE_CODING（33）"></a>GET_LINE_CODING（33）</h6><pre><code class="hljs txt">b7 6 5 4 3 2 1 0
++-+-+-+-+-+-+-+-+--------------+--------+-----------+------------+------------+
+| bmRequestType | bRequestCode | wValue | wIndex    | wLength    | Data       |
++-+-+-+-+-+-+-+-+--------------+--------+-----------+------------+------------+
+|               |              |        | interface | Size of    |            |
+|1|0|1|0|0|0|0|1| 33           | 0      | Number    | LineCoding | LineCoding |
+|               |              |        |           | Structure  |            |
++---------------+--------------+--------+-----------+------------+------------+
+ &lt;------------------------   Setup   ---------------------------&gt; &lt;-Data Out-&gt;</code></pre>
+
+<p>Line Coding结构：</p>
+<pre><code class="hljs txt"> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           dwDTERate                           | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bCharFormat   | bParityType   |  bDataBits    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+字段               大小    说明
+----               ----    ----
+dwDTERate          4B      通信速率，bit per second（bps）。
+bCharFormat        1B      停止位。
+                                0 = 1 Stop bit
+                                1 = 1.5 Stop bits
+                                2 = 2 Stop bits
+bParityType        1B      校验位。
+                                0 = None
+                                1 = Odd
+                                2 = Even
+                                3 = Mark
+                                4 = Space
+bDataBits          1B      数据位（可选&#123;5, 6, 7, 8, 16&#125;）。</code></pre>
+
+<h6 id="SET-CONTROL-LINE-STATE（34）"><a href="#SET-CONTROL-LINE-STATE（34）" class="headerlink" title="SET_CONTROL_LINE_STATE（34）"></a>SET_CONTROL_LINE_STATE（34）</h6><pre><code class="hljs txt">b7 6 5 4 3 2 1 0
++-+-+-+-+-+-+-+-+--------------+--------+-----------+------------+------------+
+| bmRequestType | bRequestCode | wValue | wIndex    | wLength    | Data       |
++-+-+-+-+-+-+-+-+--------------+--------+-----------+------------+------------+
+|               |              | Control| interface |            |            |
+|0|0|1|0|0|0|0|1| 34           | Signal | Number    | 0          | None       |
+|               |              | Bitmap |           |            |            |
++---------------+--------------+--------+-----------+------------+------------+
+ &lt;------------------------   Setup   ---------------------------&gt; &lt;-Data Out-&gt;
+
+字段    大小    说明
+----    ----    ----
+wValue  2B      控制信号。
+                    bit[2:15]：保留。
+                    bit[1]：RTS。
+                    bit[0]：DTS。</code></pre>
+
+<h5 id="Functional描述符-1"><a href="#Functional描述符-1" class="headerlink" title="Functional描述符"></a>Functional描述符</h5><p>USBPSTN120中定义了几个Functional描述符，在此，仅述Call Management描述符和Abstract Control Management描述符。</p>
+<h6 id="Call-Management描述符"><a href="#Call-Management描述符" class="headerlink" title="Call Management描述符"></a>Call Management描述符</h6><pre><code class="hljs txt"> 0                   1
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bLen          | bFunDescType  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|bFunDescSubType|bmCapabilities |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|bDataInterface |
++-+-+-+-+-+-+-+-+
+
+字段               大小    说明
+----               ----    ----
+bLen               1B      此Functional描述符长度（含bLen和bDescriptorType）。
+bFunDescType       1B      Functional描述符类型，CS_INTERFACE（=0x24）。
+bFunDescSubType    1B      Functional描述符sub类型。
+                               0x01: Call Management Functional Descriptor。
+bmCapabilities     1B      【TODO】
+bDataInterface     1B      【TODO】</code></pre>
+
+<h6 id="Abstract-Control-Management描述符"><a href="#Abstract-Control-Management描述符" class="headerlink" title="Abstract Control Management描述符"></a>Abstract Control Management描述符</h6><pre><code class="hljs txt"> 0                   1
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| bLen          | bFunDescType  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|bFunDescSubType|bmCapabilities |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+字段               大小    说明
+----               ----    ----
+bLen               1B      此Functional描述符长度（含bLen和bDescriptorType）。
+bFunDescType       1B      Functional描述符类型，CS_INTERFACE（=0x24）。
+bFunDescSubType    1B      Functional描述符sub类型。
+                               0x02: Abstract Control Management Functional 
+                                     Descriptor。
+bmCapabilities     1B      【TODO】</code></pre>
+
+<h3 id="8-USB设备驱动"><a href="#8-USB设备驱动" class="headerlink" title="8 USB设备驱动"></a>8 USB设备驱动</h3><h4 id="STM32F10X-USB驱动分析"><a href="#STM32F10X-USB驱动分析" class="headerlink" title="STM32F10X USB驱动分析"></a>STM32F10X USB驱动分析</h4><h5 id="Packet内存"><a href="#Packet内存" class="headerlink" title="Packet内存"></a>Packet内存</h5><p>STM32F10X的USB外设内部有一个512B的Packet Buffer Memory，该内存用于缓存Endpoint的输入输出数据。在该内存中存在一个USB Buffer Descriptor Table，Table的起始地址由USB_BTABLE寄存器控制。Table中有8个Item，分别保存了Endpoint0至Endpoint7的Buffer信息，每个Item中包含了输出地址、输出数据数量、输入地址、输入数据数量。其中，输入/输入地址本身又指向Packet Buffer Memory。</p>
+<pre><code class="hljs txt">                    Packet Buffer Memory
+            0x0000   +----------------+&lt;----+
+                     |    Endpoint7   |     |
+                     |    RX Buffer   |     |
+                     +----------------+     |
+                     |     ......     |     |
+USB_BTABLE +--------&gt;+----------------+     |
+               ^     |  EP0_TX_ADDR   +-----------+
+               |     +----------------+     |     |
+               |     |  EP0_TX_COUNT  |     |     |
+               |     +----------------+     |     |
+               |     |  EP0_RX_ADDR   +---+ |     |
+               |     +----------------+   | |     |
+       USB Buffer    |  EP0_RX_COUNT  |   | |     |
+       Descriptor    +----------------+   | |     |
+       Table         |     ......     |   | |     |
+               |     +----------------+   | |     |
+               |     |  EP7_TX_ADDR   +-----+     |
+               |     +----------------+   |       |
+               |     |  EP7_TX_COUNT  |   |       |
+               |     +----------------+   |       |
+               |     |  EP7_RX_ADDR   |   |       |
+               |     +----------------+   |       |
+               v     |  EP7_RX_COUNT  |   |       |
+            ---------+----------------+   |       |
+                     |     ......     |   |       |
+                     +--------------------+       |
+                     |    Endpoint0   |           |
+                     |    RX Buffer   |           |
+                     +----------------+           |
+                     |     ......     |           |
+                     +-----------------&lt;----------+
+                     |    Endpoint0   |
+                     |    TX Buffer   |
+                     +----------------+
+                     |     ......     |
+            0x0200   +----------------+
+</code></pre>
+
+<h5 id="处理In事务"><a href="#处理In事务" class="headerlink" title="处理In事务"></a>处理In事务</h5><p>【TODO】</p>
+<h5 id="处理Out-Setup事务"><a href="#处理Out-Setup事务" class="headerlink" title="处理Out/Setup事务"></a>处理Out/Setup事务</h5><p>当USB外设收到一个OUT或SETUP的PID时，其首先检查在OUT或SETUP中的地址信息，如果匹配到当前配置中的Endpoint，则USB外设访问对应Endpoint的USB_ADDRn_RX和USB_COUNTn_RX寄存器，将USB_ADDRn_RX的值存入一个内部寄存器ADDR，读取USB_COUNTn_RX的BL_SIZE与NUM_BLOCK，用于初始化内部寄存器BUF_COUNT，并重置USB_COUNTn_RX的COUNTn_RX。当收数据时，BUF_COUNT递减、内部寄存器COUNT递增。当正常收完数据后，USB外设将COUNT的值拷贝到COUNTn_RX，并更新USB_EPnR寄存器：将USB_EPnR.CTR_RX置1，USB_EPnR.STAT_RX设为10（NAK），并反转USB_EPnR.DTOG_RX。最后并向Host发送ACK包。</p>
+<p>上述过程可以下边的伪代码进行描述。</p>
+<pre><code class="hljs txt">received(usbpkg)
+&#123;
+    if (usbpkg.PID == OUT || usbpkg.PID == SETUP) &#123;
+        Ep = usbpkg.Endpoint;
+        if (usbpkg.Address == USB_DADDR &amp;&amp; Ep is a valid Endpoint) &#123;
+            ADDR = USB_ADDRn_RX[Ep];
+            BUF_COUNT = get_buffer_size(USB_COUNTn_RX[Ep].BL_SIZE, 
+                USB_COUNTn_RX[Ep].NUM_BLOCK);
+            COUNT = USB_COUNTn_RX[Ep].COUNTn_RX = 0;
+
+            rx_cnt = 1;
+            while (BUF_COUNT &gt; 0)
+                rx_cnt = recv_data(ADDR, 1);
+                if (rx_cnt == 1) &#123;
+                    ADDR++;
+                    BUF_COUNT--;
+                    COUNT++;
+                &#125;
+                else if (rx_cnt == 0) &#123;
+                    break; // all data has been handled.
+                &#125;
+                else &#123;
+                    // error
+                &#125;
+            &#125;
+
+            if (All done without error) &#123;
+                USB_COUNTn_RX[Ep].COUNTn_RX = COUNT;
+                USB_EPnR[Ep].CTR_RX = 1;
+                USB_EPnR[Ep].STAT_RX = 10; // NAK
+                USB_EPnR[Ep].DTOG_RX = ~USB_EPnR[Ep].DTOG_RX; // Toggle
+                send_ack();
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p>当Out/Setup事务正常结束后，USB外设向MCU发送CTR中断，收到中断信号后，驱动应按照下面的步骤进行处理：</p>
+<p>检查USB_ISTR的EP_ID和DIR，判断哪个Endpoint需要进行处理。检查USB_EPnR的CTR_RX及SETUP，判断是Out事务还是Setup事务。随后清除中断标志，从USB_COUNTn_RX.COUNTn_RX中读取收到的数据的数量，并从USB_COUNTn_RX.ADDRn_RX中读取收到的数据。最后将USB_EPnR.STAT_RX bits设置为11（Valid）以便处理后续Out/Setup事务。</p>
+<p>上述过程可以下边的伪代码进行描述。</p>
+<pre><code class="hljs txt">USB_ISR(irq)
+&#123;
+    if (irq == CTR) &#123;
+        Ep = get_endpoint(USB_ISTR.EP_ID, USB_ISTR.DIR);
+        if (Ep is valid) &#123;
+            if (USB_EPnR[Ep].CTR_RX) &#123;
+                if (USB_EPnR[Ep].SETUP) &#123; // Setup事务
+                    // do something unique to out transaction
+                &#125;
+                else &#123; // Out事务
+                    // do something unique to out transaction
+                &#125;
+                rx_cnt = USB_COUNTn_RX[Ep].COUNTn_RX;
+                // copy data from USB_COUNTn_RX[Ep].ADDRn_RX
+                // dispatch data to endpoint
+                USB_EPnR[Ep].STAT_RX = 11; // valid
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+
+<h4 id="USB设备软件模块设计"><a href="#USB设备软件模块设计" class="headerlink" title="USB设备软件模块设计"></a>USB设备软件模块设计</h4><h5 id="硬件接口"><a href="#硬件接口" class="headerlink" title="硬件接口"></a>硬件接口</h5><h5 id="USB设备事件"><a href="#USB设备事件" class="headerlink" title="USB设备事件"></a>USB设备事件</h5><h5 id="Control传输状态机"><a href="#Control传输状态机" class="headerlink" title="Control传输状态机"></a>Control传输状态机</h5><h3 id="9-USB设备应用"><a href="#9-USB设备应用" class="headerlink" title="9 USB设备应用"></a>9 USB设备应用</h3><p>本章以制作USB虚拟串口、USB存储设备、USB以太网网卡为例，说明了USB的具体应用细节。</p>
+<h4 id="制作USB虚拟串口"><a href="#制作USB虚拟串口" class="headerlink" title="制作USB虚拟串口"></a>制作USB虚拟串口</h4><p>设备配置：</p>
+<pre><code class="hljs txt">+---------------+---------------------------+----------------+
+| Configuration | Interface                 | Endpoint       |
+|               | (class.subclass.protocol) |                |
++---------------+---------------------------+----------------+
+|               |                           | Control (EP0)  |
+|               | CDC-Control (02.02.01h)   +----------------+
+|               |                           | Interrupt (IN) |
+| Legacy Modem  +---------------------------+----------------+
+|               |                           | Bulk (OUT)     |
+|               | CDC-Data    (0A.00.00h)   +----------------+
+|               |                           | Bulk (IN)      |
++---------------+---------------------------+----------------+</code></pre>
+
+<p>描述符角度：</p>
+<pre><code class="hljs txt">+------------------------------------------------------+
+| Configuration Desc                                   |
++   +--------------------------------------------------+
+|   | Interface Desc (CDC-Control)                     |
+|   |   +----------------------------------------------+
+|   |   | Funtional Desc (Header)                      |
+|   |   +----------------------------------------------+
+|   |   | Funtional Desc (Call Managemet)              |
+|   |   +----------------------------------------------+
+|   |   | Funtional Desc (Abstract Control Management) |
+|   |   +----------------------------------------------+
+|   |   | Funtional Desc (Union)                       |
+|   |   +----------------------------------------------+
+|   |   | Endpoint Desc (Interrupt IN)                 |
+|   +---+----------------------------------------------+
+|   | Interface Desc (CDC-Data)                        |
+|   +   +----------------------------------------------+
+|   |   | Endpoint Desc (bulk  OUT)                    |
+|   |   +----------------------------------------------+
+|   |   | Endpoint Desc (bulk  IN)                     |
++---+--------------------------------------------------+</code></pre>
+
+<p>控制：CDC-Control.Control</p>
+<pre><code class="hljs txt">SET_LINE_CODING：对串口进行配置（波特率、停止位、检验位、数据位）。
+GET_LINE_CODING：获取串口当前配置参数。
+SET_CONTROL_LINE_STATE：控制RTS、DTS信号。</code></pre>
+
+<p>数据传输：CDC-Data.Bulk OUT与CDC-Data.Bulk IN</p>
+<h4 id="制作USB存储设备"><a href="#制作USB存储设备" class="headerlink" title="制作USB存储设备"></a>制作USB存储设备</h4><p>【TODO】</p>
+<h4 id="制作USB以太网网卡"><a href="#制作USB以太网网卡" class="headerlink" title="制作USB以太网网卡"></a>制作USB以太网网卡</h4><p>【TODO】</p>
+<h3 id="A-附录"><a href="#A-附录" class="headerlink" title="A 附录"></a>A 附录</h3><h4 id="A-x-其他"><a href="#A-x-其他" class="headerlink" title="A.x 其他"></a>A.x 其他</h4><ul>
+<li>wireshark抓包时 != 报警：!= may have …，官方建议是 !(x == y) 替代 (x != y)</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><p>[1] <a target="_blank" rel="noopener" href="https://www.usb.org/defined-class-codes">Defined Class Codes</a></p>
+</li>
+<li><p>[2] Universal Serial Bus Class Definitions for Communications Devices Revision 1.2 (Errata 1)</p>
+</li>
+<li><p>[2] Universal Serial Bus Communications Class Subclass Specification for PSTN Devices 1.2</p>
+</li>
+<li><p>[3] <a target="_blank" rel="noopener" href="https://en.m.wikibooks.org/wiki/Serial_Programming">Serial Programming</a></p>
+</li>
+<li><p>[4] <a target="_blank" rel="noopener" href="https://en.m.wikipedia.org/wiki/Telephone_call">Telephone Call</a></p>
+</li>
+<li><p>[5] ST, RM0008 Reference manual</p>
+</li>
+<li><p>[6] <a target="_blank" rel="noopener" href="http://www.usbpacketviewer.com/">USB Packet Viewer, 抓包工具官网</a></p>
+</li>
+<li><p>[7] Universal Serial Bus Specification 2.0</p>
+</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/">通信协议</a>
+                    
+                      <a class="hover-with-bg" href="/tags/USB/">USB</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/29/STM32F10x-FreeRTOS-MDK%E7%A7%BB%E6%A4%8D/">
+                        <span class="hidden-mobile">STM32F10x-FreeRTOS-MDK移植</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "6q9eFigSE9Szj6EB2AYQbBEw-gzGzoHsz",
+          app_key: "hdofqAbDXsCzzLI6Tu0fNjyo",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    }
+    waitElementVisible('vcomments', loadValine);
+  </script>
+  <noscript>Please enable JavaScript to view the <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "USB协议&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d59b3d8dd18fa79fc7e9701ceaaf7f5c";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+</body>
+</html>

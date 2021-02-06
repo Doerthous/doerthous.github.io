@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      62
+      63
        分钟
     </span>
   
@@ -352,7 +352,7 @@ netif<span class="hljs-constructor">_set_up(&amp;<span class="hljs-params">netif
 <p>需要实现的接口：内存管理接口、时钟接口、硬件驱动接口（参考netif/ethernetif.c）</p>
 <p>需要注意的调用：LwIP初始化、netif注册、收到数据时调用netif-&gt;input通知LwIP、sys_check_timeouts</p>
 <h5 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h5><p>Q1: ISR中已经直接调用enc28j60_recv将数据传入LwIP了，那ethernetif.c中的low_level_input里调用enc28j60_recv有什么意义？</p>
-<h3 id="2-带OS移植"><a href="#2-带OS移植" class="headerlink" title="2 带OS移植"></a>2 带OS移植</h3><h4 id="2-1-配置文件"><a href="#2-1-配置文件" class="headerlink" title="2.1 配置文件"></a>2.1 配置文件</h4><h4 id="2-2-实现内存接口"><a href="#2-2-实现内存接口" class="headerlink" title="2.2 实现内存接口"></a>2.2 实现内存接口</h4><h4 id="2-3-实现OS抽象层"><a href="#2-3-实现OS抽象层" class="headerlink" title="2.3 实现OS抽象层"></a>2.3 实现OS抽象层</h4><p>“doc/sys_arch.txt”</p>
+<h3 id="2-带OS移植【TODO】"><a href="#2-带OS移植【TODO】" class="headerlink" title="2 带OS移植【TODO】"></a>2 带OS移植【TODO】</h3><h4 id="2-1-配置文件"><a href="#2-1-配置文件" class="headerlink" title="2.1 配置文件"></a>2.1 配置文件</h4><h4 id="2-2-实现内存接口"><a href="#2-2-实现内存接口" class="headerlink" title="2.2 实现内存接口"></a>2.2 实现内存接口</h4><h4 id="2-3-实现OS抽象层"><a href="#2-3-实现OS抽象层" class="headerlink" title="2.3 实现OS抽象层"></a>2.3 实现OS抽象层</h4><p>“doc/sys_arch.txt”</p>
 <p>“lwip/sys.h”</p>
 <blockquote>
 <p>注：<br>为什么不直接用posix接口呢？</p>
