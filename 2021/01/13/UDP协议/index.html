@@ -259,7 +259,6 @@ Destination Port 2B        目标端口。
 Length           2B        长度（从Source Port到Data结束）。
 Checksum         2B        校验和（包括伪头部及UDP完整报文）。
 Data             n         数据。</code></pre>
-
 <h3 id="2-伪头部"><a href="#2-伪头部" class="headerlink" title="2 伪头部"></a>2 伪头部</h3><p>在网络数据传递中，伪头部并不存在，其仅为了计算校验和而产生。</p>
 <pre><code class="hljs asciidoc"><span class="hljs-code"> 0      7 8     15 16    23 24    31</span>
 <span class="hljs-code">+--------+</span>--------<span class="hljs-code">+--------+</span>--------+
@@ -278,7 +277,6 @@ zero         1B        0。
 protocol     1B        IP报文头部的protocol字段。
 UDP length   n         UDP报文长度（从Source Port到Data结束，其值和UDP报文中的
 <span class="hljs-code">                       length相等）。</span></code></pre>
-
 <h3 id="3-实现考虑"><a href="#3-实现考虑" class="headerlink" title="3 实现考虑"></a>3 实现考虑</h3><h4 id="检验和计算"><a href="#检验和计算" class="headerlink" title="检验和计算"></a>检验和计算</h4><ul>
 <li>伪头部模块</li>
 </ul>
@@ -602,6 +600,45 @@ UDP length   n         UDP报文长度（从Source Port到Data结束，其值和
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

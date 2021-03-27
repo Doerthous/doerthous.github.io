@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      688 字
+      686 字
     </span>
   
 
@@ -271,7 +271,6 @@
       <span class="hljs-string">|  ├─diskio.c</span>
       <span class="hljs-string">|  └─ffconf.h</span>
       └─mdk</code></pre>
-
 <h3 id="FatFS源码导入"><a href="#FatFS源码导入" class="headerlink" title="FatFS源码导入"></a>FatFS源码导入</h3><p>需要的文件有：</p>
 <ul>
 <li>ff.c</li>
@@ -284,7 +283,6 @@
 <span class="hljs-function">DRESULT <span class="hljs-title">disk_read</span> <span class="hljs-params">(BYTE pdrv, BYTE* buff, LBA_t sector, UINT count)</span></span>;
 <span class="hljs-function">DRESULT <span class="hljs-title">disk_write</span> <span class="hljs-params">(BYTE pdrv, <span class="hljs-keyword">const</span> BYTE* buff, LBA_t sector, UINT count)</span></span>;
 <span class="hljs-function">DRESULT <span class="hljs-title">disk_ioctl</span> <span class="hljs-params">(BYTE pdrv, BYTE cmd, <span class="hljs-keyword">void</span>* buff)</span></span>;</code></pre>
-
 <p>针对W25Q128芯片，上述接口的简单实现如下：</p>
 <pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;w25qxx.h&quot;</span></span>
 <span class="hljs-keyword">extern</span> <span class="hljs-keyword">w25qxx_t</span> w25q128;
@@ -380,21 +378,17 @@
 	
 	<span class="hljs-keyword">return</span> RES_PARERR;
 &#125;</code></pre>
-
 <p>完整文件见<a href="">diskio.c</a></p>
 <h3 id="FatFS配置"><a href="#FatFS配置" class="headerlink" title="FatFS配置"></a>FatFS配置</h3><ul>
 <li>设置扇区大小</li>
 </ul>
-<p>#define FF_MIN_SS        4096<br>#define FF_MAX_SS        4096</p>
-<ul>
+<h1 id="define-FF-MIN-SS-4096"><a href="#define-FF-MIN-SS-4096" class="headerlink" title="define FF_MIN_SS        4096"></a>define FF_MIN_SS        4096</h1><h1 id="define-FF-MAX-SS-4096"><a href="#define-FF-MAX-SS-4096" class="headerlink" title="define FF_MAX_SS        4096"></a>define FF_MAX_SS        4096</h1><ul>
 <li>启用MKFS接口</li>
 </ul>
-<p>#define FF_USE_MKFS        1</p>
-<ul>
+<h1 id="define-FF-USE-MKFS-1"><a href="#define-FF-USE-MKFS-1" class="headerlink" title="define FF_USE_MKFS        1"></a>define FF_USE_MKFS        1</h1><ul>
 <li>不提供RTC</li>
 </ul>
-<p>#define FF_FS_NORTC        1</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><pre><code class="hljs C"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fs_test</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
+<h1 id="define-FF-FS-NORTC-1"><a href="#define-FF-FS-NORTC-1" class="headerlink" title="define FF_FS_NORTC        1"></a>define FF_FS_NORTC        1</h1><h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><pre><code class="hljs C"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fs_test</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
 <span class="hljs-function"></span>&#123;
 	<span class="hljs-keyword">static</span> FATFS fs; <span class="hljs-comment">/* Filesystem object */</span>
     <span class="hljs-keyword">static</span> FIL fil; <span class="hljs-comment">/* File object */</span>
@@ -444,7 +438,6 @@
 	
 	<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
 &#125;</code></pre>
-
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
 <li><a target="_blank" rel="noopener" href="http://elm-chan.org/fsw/ff/00index_e.html">FatFS</a></li>
 <li><a target="_blank" rel="noopener" href="http://elm-chan.org/fsw/ff/archives.html">FatFS往期版本</a></li>
@@ -745,6 +738,45 @@
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

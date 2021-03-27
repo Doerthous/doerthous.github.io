@@ -253,7 +253,6 @@
 <h4 id="1-1-配置文件"><a href="#1-1-配置文件" class="headerlink" title="1.1 配置文件"></a>1.1 配置文件</h4><p>针对平台、操作系统及LwIP进行配置，此处主要涉及cc.h、sys_arch.h、lwipopts.h三个文件。</p>
 <p>cc.h：平台及编译器相关的文件，例如控制大小端的宏定义：</p>
 <pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BYTE_ORDER  LITTLE_ENDIAN</span></code></pre>
-
 <p>sys_arch.h：RTOS接口（裸机仅需根据需要，定义一些多余的类型）。</p>
 <p>lwipopts.h：lwip配置（根据需要修改）。</p>
 <pre><code class="hljs C"><span class="hljs-comment">// 裸机环境</span>
@@ -274,14 +273,12 @@
     PACK_STRUCT_FLD_S(struct eth_addr src);
     PACK_STRUCT_FIELD(<span class="hljs-keyword">u16_t</span> type);
 &#125; PACK_STRUCT_STRUCT;</code></pre>
-
 <h4 id="1-2-实现内存管理接口"><a href="#1-2-实现内存管理接口" class="headerlink" title="1.2 实现内存管理接口"></a>1.2 实现内存管理接口</h4><p><code>lwip/mem.h</code>中定义了内存管理相关的接口，需要根据情况实现这些接口，或者使用lwip中已经存在的实现：<code>core/mem.c</code>。由于本文中使用了tlsf的内存管理接口，故本文中的移植不使用<code>core/mem.c</code>。</p>
 <p>在<code>lwipopts.h</code>中引入tlsf接口：</p>
 <pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_free                    tlsf_free</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_malloc                  tlsf_malloc</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_calloc                  tlsf_calloc</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_realloc                 tlsf_realloc</span></code></pre>
-
 <p>实现mem_init和mem_trim接口（lwipport.c）：</p>
 <pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/mem.h&quot;</span></span>
 
@@ -296,14 +293,12 @@
 <span class="hljs-function"></span>&#123;
     <span class="hljs-keyword">return</span> mem;
 &#125;</code></pre>
-
 <blockquote>
 <p>注：<br>按我的理解<code>core/mem.c</code>只是LwIP中提供的对<code>lwip/mem.h</code>的一种实现，如果本身已经有内存管理接口，可以不使用<code>core/mem.c</code>文件。</p>
 </blockquote>
 <h4 id="1-3-接入硬件驱动"><a href="#1-3-接入硬件驱动" class="headerlink" title="1.3 接入硬件驱动"></a>1.3 接入硬件驱动</h4><p>本例程中针对ENC28J60芯片已实现了如下的发送接收接口：</p>
 <pre><code class="hljs C"><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">enc28j60_send</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size)</span></span>;
 <span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">enc28j60_recv</span><span class="hljs-params">(<span class="hljs-keyword">enc28j60_t</span> *enc28j60, <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">size_t</span> size)</span></span>;</code></pre>
-
 <p>根据LwIP提供的<code>netif/ethernetif.c</code>，将上述驱动接口填入到<code>netif/ethernetif.c</code>中的指定部分即可，完整内容参考后边的源码部分。</p>
 <h4 id="1-4-实现sys-now接口"><a href="#1-4-实现sys-now接口" class="headerlink" title="1.4 实现sys_now接口"></a>1.4 实现sys_now接口</h4><pre><code class="hljs applescript">/**
  * @ingroup sys_time
@@ -311,7 +306,6 @@
  * may be <span class="hljs-keyword">the</span> same <span class="hljs-keyword">as</span> sys_jiffies <span class="hljs-keyword">or</span> <span class="hljs-keyword">at</span> least based <span class="hljs-keyword">on</span> <span class="hljs-keyword">it</span>.
  */
 u32_t sys_now(void);</code></pre>
-
 <p>随便返回一个时间给LwIP。</p>
 <h4 id="1-5-初始化"><a href="#1-5-初始化" class="headerlink" title="1.5 初始化"></a>1.5 初始化</h4><pre><code class="hljs reasonml"><span class="hljs-comment">// 设置地址</span>
 ip_addr_t ipaddr, netmask, gw;
@@ -326,26 +320,21 @@ lwip<span class="hljs-constructor">_init()</span>;
 netif<span class="hljs-constructor">_add(&amp;<span class="hljs-params">netif</span>, &amp;<span class="hljs-params">ipaddr</span>, &amp;<span class="hljs-params">netmask</span>, &amp;<span class="hljs-params">gw</span>, NULL, <span class="hljs-params">ethernetif_init</span>, <span class="hljs-params">ethernet_input</span>)</span>;
 netif<span class="hljs-constructor">_set_default(&amp;<span class="hljs-params">netif</span>)</span>;
 netif<span class="hljs-constructor">_set_up(&amp;<span class="hljs-params">netif</span>)</span>;</code></pre>
-
 <p>添加netif时涉及两个接口，一个是硬件及netif初始化接口（init），即上述代码中的ethernetif_init。另一个是硬件数据传入LwIP的接口（input），上述代码中的ethernet_input。</p>
 <p>当硬件收到数据时，调用input接口将输入传入LwIP，input接口在netif_add中会被赋值给netif-&gt;input。所以，硬件收到数据时调用netif-&gt;input即可。</p>
 <p>input接口在LwIP中已有实现，针对ethernet硬件使用ethernet_input（netif/ethernet.c），非ethernet硬件使用ip_input（core/ip.c）.而init接口需要用户实现，此处使用1.3中定义的接口ethernetif_init（netif/ethernetif.c）</p>
-<h4 id="1-6-查询及中断处理"><a href="#1-6-查询及中断处理" class="headerlink" title="1.6 查询及中断处理"></a>1.6 查询及中断处理</h4><p>在主循环（Loop）中查询各种状态：</p>
-<pre><code class="hljs gcode"><span class="hljs-keyword">while</span> <span class="hljs-comment">(1)</span> &#123;
+<h4 id="1-6-查询及中断处理"><a href="#1-6-查询及中断处理" class="headerlink" title="1.6 查询及中断处理"></a>1.6 查询及中断处理</h4><p>在主循环（Loop）中查询各种状态：<br><pre><code class="hljs gcode"><span class="hljs-keyword">while</span> <span class="hljs-comment">(1)</span> &#123;
     <span class="hljs-comment">// irq poll</span>
     sys_check_timeouts<span class="hljs-comment">()</span>;
-&#125;</code></pre>
-
-<p>中断时通知LwIP收到数据：</p>
-<pre><code class="hljs reasonml">void some<span class="hljs-constructor">_isr(<span class="hljs-params">void</span>)</span>
+&#125;</code></pre></p>
+<p>中断时通知LwIP收到数据：<br><pre><code class="hljs reasonml">void some<span class="hljs-constructor">_isr(<span class="hljs-params">void</span>)</span>
 &#123;
     <span class="hljs-keyword">struct</span> pbuf *buff = pbuf<span class="hljs-constructor">_alloc(PBUF_RAW, 2048, PBUF_RAM)</span>;
     buff-&gt;len = enc28j60<span class="hljs-constructor">_recv(&amp;<span class="hljs-params">enc28j60</span>, <span class="hljs-params">buff</span>-&gt;<span class="hljs-params">payload</span>, 2048)</span>;
     <span class="hljs-keyword">if</span> (buff-&gt;len) &#123;
         netif.input(buff, &amp;netif); <span class="hljs-comment">// 将输入传入LwIP</span>
     &#125;
-&#125;</code></pre>
-
+&#125;</code></pre></p>
 <h4 id="1-7-测试"><a href="#1-7-测试" class="headerlink" title="1.7 测试"></a>1.7 测试</h4><p>完成上述步骤后可通过ping进行测试。</p>
 <h4 id="总结及问题"><a href="#总结及问题" class="headerlink" title="总结及问题"></a>总结及问题</h4><h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>LwIP文件：core中大部分、core/ipv4中部分、netif中部分。需要指出，由于本文使用tlsf内存管理模块，所以并未使用<code>core/mem.c</code>。根据编译报错情况酌情修改【:-)】。</p>
 <p>新建文件：cc.h、sys_arch.h、lwipopts.h、lwipport.c</p>
@@ -366,7 +355,6 @@ tcpip_init();</code></pre>
 <span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">mem_malloc</span><span class="hljs-params">(<span class="hljs-keyword">mem_size_t</span> <span class="hljs-built_in">size</span>)</span></span>;
 <span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">mem_calloc</span><span class="hljs-params">(<span class="hljs-keyword">mem_size_t</span> count, <span class="hljs-keyword">mem_size_t</span> <span class="hljs-built_in">size</span>)</span></span>;
 <span class="hljs-function"><span class="hljs-keyword">void</span>  <span class="hljs-title">mem_free</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *mem)</span></span>;</code></pre>
-
 <p>LwIP提供了四种实现上述接口的方式：</p>
 <ol>
 <li>使用C标准库的内存管理模块</li>
@@ -387,13 +375,11 @@ tcpip_init();</code></pre>
 
 <span class="hljs-regexp">//</span> <span class="hljs-number">4</span> 要使用其他内存管理模块时，需要将MEM_LIBC_MALLOC置<span class="hljs-number">1</span>，并从项目中移除`core/mem.c`，
 <span class="hljs-regexp">//</span>   最后在`lwipopts.h`中用宏对内存管理接口进行替换。</code></pre>
-
 <h5 id="使用core-mem"><a href="#使用core-mem" class="headerlink" title="使用core/mem"></a>使用core/mem</h5><p>配置：设置MEM_LIBC_MALLOC为1，添加core/mem.c，通过MEM_SIZE配置能够分配的内存的总大小（在<code>lwipopts.h</code>中配置）。</p>
 <pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_LIBC_MALLOC             0 <span class="hljs-comment">// 是否使用libc的内存管理接口</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_ALIGNMENT               4</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_SIZE                    (10 * 1024) <span class="hljs-comment">// 动态分配内存堆大小</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEM_STATS                   0</span></code></pre>
-
 <h5 id="使用内存池"><a href="#使用内存池" class="headerlink" title="使用内存池"></a>使用内存池</h5><p>配置：设置MEM_LIBC_MALLOC为0，设置MEMP_MEM_MALLOC为1，添加core/mem.c、core/memp.c，通过<code>lwipopts.h</code>对内存池进行配置。</p>
 <pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_MEM_MALLOC             1</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_PBUF               1024</span>
@@ -403,14 +389,12 @@ tcpip_init();</code></pre>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_TCP_SEG            128</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_REASSDATA          32</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMP_NUM_ARP_QUEUE          10</span></code></pre>
-
 <h5 id="使用其他内存模块"><a href="#使用其他内存模块" class="headerlink" title="使用其他内存模块"></a>使用其他内存模块</h5><p>配置：设置MEM_LIBC_MALLOC为1，移除core/mem.c，在<code>lwipopts.h</code>中用宏对mem_xxx等接口进行替换。</p>
 <pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_free                    tlsf_free</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_malloc                  tlsf_malloc</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_calloc                  tlsf_calloc</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mem_realloc                 tlsf_realloc</span>
 <span class="hljs-comment">//...</span></code></pre>
-
 <h5 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h5><pre><code class="hljs 1c">                        LwIP
                          <span class="hljs-string">|</span>
                          <span class="hljs-string">| 依赖</span>
@@ -421,7 +405,6 @@ core/mem.c  ---实现---&gt; lwip/mem.h
  <span class="hljs-string">|           \</span>
  v            &gt; libc.malloc/free/...
 core/memp.c</code></pre>
-
 <h4 id="LwIP系统抽象层"><a href="#LwIP系统抽象层" class="headerlink" title="LwIP系统抽象层"></a>LwIP系统抽象层</h4><h5 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h5><p>邮箱</p>
 <h5 id="互斥锁（Mutex）"><a href="#互斥锁（Mutex）" class="headerlink" title="互斥锁（Mutex）"></a>互斥锁（Mutex）</h5><p>如果系统不支持互斥锁，可以通过二元信号量实现</p>
 <pre><code class="hljs reasonml">#<span class="hljs-keyword">if</span> LWIP_COMPAT_MUTEX
@@ -435,7 +418,6 @@ core/memp.c</code></pre>
 #define sys<span class="hljs-constructor">_mutex_set_invalid(<span class="hljs-params">mutex</span>)</span>  sys<span class="hljs-constructor">_sem_set_invalid(<span class="hljs-params">mutex</span>)</span>
 
 #<span class="hljs-keyword">else</span> <span class="hljs-comment">/* LWIP_COMPAT_MUTEX */</span></code></pre>
-
 <p>线程</p>
 <h4 id="裸机移植参考源码"><a href="#裸机移植参考源码" class="headerlink" title="裸机移植参考源码"></a>裸机移植参考源码</h4><h5 id="arch-cc-h"><a href="#arch-cc-h" class="headerlink" title="arch/cc.h"></a>arch/cc.h</h5><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> __ARCH_CC_H__</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __ARCH_CC_H__</span>
@@ -481,7 +463,6 @@ core/memp.c</code></pre>
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* __ARCH_CC_H__ */</span></span>
 </code></pre>
-
 <h5 id="arch-sys-arch-h"><a href="#arch-sys-arch-h" class="headerlink" title="arch/sys_arch.h"></a>arch/sys_arch.h</h5><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> __ARCH_SYS_ARCH_H__</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __ARCH_SYS_ARCH_H__</span>
 
@@ -492,7 +473,6 @@ core/memp.c</code></pre>
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* __ARCH_SYS_ARCH_H__ */</span></span>
 </code></pre>
-
 <h5 id="lwipopts-h"><a href="#lwipopts-h" class="headerlink" title="lwipopts.h"></a>lwipopts.h</h5><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> __LWIPOPTS_H__</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __LWIPOPTS_H__</span>
 
@@ -585,7 +565,6 @@ core/memp.c</code></pre>
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* __LWIPOPTS_H__ */</span></span>
 </code></pre>
-
 <h5 id="netif-ethernetif-c"><a href="#netif-ethernetif-c" class="headerlink" title="netif/ethernetif.c"></a>netif/ethernetif.c</h5><pre><code class="hljs C"><span class="hljs-comment">/**</span>
 <span class="hljs-comment"> * @file</span>
 <span class="hljs-comment"> * Ethernet Interface Skeleton</span>
@@ -927,7 +906,6 @@ ethernetif_init(struct netif *netif)
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">/* 0 */</span></span>
 </code></pre>
-
 <h5 id="lwipport-c"><a href="#lwipport-c" class="headerlink" title="lwipport.c"></a>lwipport.c</h5><pre><code class="hljs arduino"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;lwip/mem.h&quot;</span></span>
 
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">mem_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
@@ -941,7 +919,6 @@ ethernetif_init(struct netif *netif)
 <span class="hljs-function"></span>&#123;
   <span class="hljs-keyword">return</span> mem;
 &#125;</code></pre>
-
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
 <li><p>[1] <a target="_blank" rel="noopener" href="https://lwip.fandom.com/wiki/LwIP_Wiki">LwIP Wiki</a></p>
 </li>
@@ -1242,6 +1219,45 @@ ethernetif_init(struct netif *netif)
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

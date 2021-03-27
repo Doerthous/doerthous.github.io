@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>HEXO入门 - Doerthous</title>
+  <title>卷积 - Doerthous</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -177,8 +177,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-10-11 18:17" pubdate>
-        2020年10月11日 晚上
+      <time datetime="2021-03-27 10:37" pubdate>
+        2021年3月27日 上午
       </time>
     </span>
   
@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      549 字
+      2.7k 字
     </span>
   
 
@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      29
        分钟
     </span>
   
@@ -237,98 +237,113 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">HEXO入门</h1>
+            <h1 style="display: none">卷积</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="HEXO笔记"><a href="#HEXO笔记" class="headerlink" title="HEXO笔记"></a>HEXO笔记</h1><p><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">HEXO</a><br><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">HEXO docs</a></p>
-<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>部署文件会生成到public目录下，注释掉.gitignore中public/，使其一同被push到仓库中。</p>
-<h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>创建文章时，文章最上方最上方以<code>---</code>分隔的区域被称为Front-matter，Front-matter用来指定个别文件的变量。举例来说：</p>
-<pre><code class="hljs yaml"><span class="hljs-meta">---</span>
-<span class="hljs-attr">title:</span> <span class="hljs-string">Hello</span> <span class="hljs-string">World</span>
-<span class="hljs-attr">date:</span> <span class="hljs-number">2013</span><span class="hljs-string">/7/13</span> <span class="hljs-number">20</span><span class="hljs-string">:46:25</span>
-<span class="hljs-meta">---</span></code></pre>
-<h2 id="为文章添加标签"><a href="#为文章添加标签" class="headerlink" title="为文章添加标签"></a>为文章添加标签</h2><p>在Front-matter的tags下添加，样例：</p>
-<pre><code class="hljs subunit"><span class="hljs-keyword">tags:</span>
-- PS3
-- Games</code></pre>
-<h2 id="主题：hexo-theme-fluid"><a href="#主题：hexo-theme-fluid" class="headerlink" title="主题：hexo-theme-fluid"></a>主题：hexo-theme-fluid</h2><p><a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/">HEXO Theme Fluid</a><br><a target="_blank" rel="noopener" href="https://github.com/fluid-dev/hexo-theme-fluid">HEXO Theme Fluid Github</a></p>
-<h3 id="创建简历页"><a href="#创建简历页" class="headerlink" title="创建简历页"></a>创建简历页</h3><ol>
-<li><p>在<code>themes/hexo-theme-fluid/_config.yml</code>中</p>
-<ol>
-<li><p>搜索<code>nav</code>，在about上头添加一行</p>
- <pre><code class="hljs yaml"><span class="hljs-bullet">-</span> &#123; <span class="hljs-attr">key:</span> <span class="hljs-string">&#x27;resume&#x27;</span>, <span class="hljs-attr">link:</span> <span class="hljs-string">&#x27;/resume/&#x27;</span>, <span class="hljs-attr">icon:</span> <span class="hljs-string">&#x27;iconfont icon-user-fill&#x27;</span> &#125;</code></pre>
-</li>
-<li><p>添加如下内容</p>
-<pre><code class="hljs yaml"><span class="hljs-comment">#---------------------------</span>
-<span class="hljs-comment"># 简历页</span>
-<span class="hljs-comment"># Resume Page</span>
-<span class="hljs-comment">#---------------------------</span>
-<span class="hljs-attr">resume:</span>
-    <span class="hljs-attr">banner_img:</span> <span class="hljs-string">/img/default.png</span>
-    <span class="hljs-attr">banner_img_height:</span> <span class="hljs-number">80</span>  <span class="hljs-comment"># available: 0 - 100</span>
-    <span class="hljs-attr">banner_mask_alpha:</span> <span class="hljs-number">0.3</span>  <span class="hljs-comment"># available: 0 - 1.0</span>
-    <span class="hljs-attr">subtitle:</span>  <span class="hljs-comment"># 打字机内容</span></code></pre>
-</li>
-</ol>
-</li>
-<li><p>在<code>themes/hexo-theme-fluid/languages/zh-CN.yml</code>中搜索添加</p>
- <pre><code class="hljs yaml"><span class="hljs-attr">resume:</span>
-  <span class="hljs-attr">title:</span> <span class="hljs-string">简历</span>
-  <span class="hljs-attr">subtitle:</span> <span class="hljs-string">简历</span></code></pre>
-</li>
-<li><p>在<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/icon/#%E5%86%85%E7%BD%AE%E7%A4%BE%E4%BA%A4%E5%9B%BE%E6%A0%87">内置社交图标</a>中<br> 查找合适的图标，此处选<code>icon-addrcard</code></p>
-</li>
-<li><p>添加resume页</p>
-<ol>
-<li><p>执行<code>hexo new page resume</code>创建页</p>
-</li>
-<li><p>复制<code>themes/hexo-theme-fluid/layout/about.ejs</code>并改名为<code>resume.ejs</code>创建resume页的layout</p>
-</li>
-<li><p>修改<code>resume.ejs</code>为以下内容</p>
- <pre><code class="hljs ejs">&lt;%
-page.layout &#x3D; &quot;resume&quot;
-page.title &#x3D; theme.resume.title || __(&#39;resume.title&#39;)
-page.subtitle &#x3D; theme.resume.subtitle || __(&#39;resume.subtitle&#39;)
-page.banner_img &#x3D; theme.resume.banner_img
-page.banner_img_height &#x3D; theme.resume.banner_img_height
-page.banner_mask_alpha &#x3D; theme.resume.banner_mask_alpha
-%&gt;
-
-&lt;div class&#x3D;&quot;mt-5 markdown-body&quot;&gt;
-    &lt;%- page.content %&gt;
-&lt;&#x2F;div&gt;</code></pre>
-</li>
-<li><p>在<code>source/resume/index.md</code>中引用新添加的 <strong>resume</strong> layout</p>
- <pre><code class="hljs html">---
-title: resume
-date: 2020-10-12 10:06:24
-layout: resume
----</code></pre>
-</li>
-<li><p>在<code>source/resume/index.md</code>编辑简历，实验如下</p>
- <pre><code class="hljs vala"><span class="hljs-meta"># 简历</span></code></pre>
-</li>
-</ol>
-</li>
-</ol>
-<h3 id="网站统计"><a href="#网站统计" class="headerlink" title="网站统计"></a>网站统计</h3><p>以站长身份注册一个<a target="_blank" rel="noopener" href="https://tongji.baidu.com/">百度统计</a>账户，登陆后进入管理页面，新增站点。新增完毕后，在百度生成的安装代码中找到对应的key（hs?之后的字符串），将该key放到主题_config.yml中的<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/guide/#%E7%BD%91%E9%A1%B5%E7%BB%9F%E8%AE%A1">web_analytics</a>部分，在<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/guide/#%E5%B1%95%E7%A4%BA-pv-%E4%B8%8E-uv-%E7%BB%9F%E8%AE%A1">footer</a>中启用显示访问量的工具，在<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/guide/#%E6%97%A5%E6%9C%9F-%E5%AD%97%E6%95%B0-%E9%98%85%E8%AF%BB%E6%97%B6%E9%95%BF-%E9%98%85%E8%AF%BB%E6%95%B0">post</a>启用每篇文章的阅读量显示。</p>
-<h3 id="添加Valine评论"><a href="#添加Valine评论" class="headerlink" title="添加Valine评论"></a>添加Valine评论</h3><ol>
-<li><p><a target="_blank" rel="noopener" href="https://valine.js.org/quickstart.html">注册LeanCloud</a>。</p>
+              <h2 id="0-概述"><a href="#0-概述" class="headerlink" title="0 概述"></a>0 概述</h2><p>本文在参考了许多答案及个别文章的基础上，基于个人的理解，逐步深入对卷积、卷积的作用及其相关概念进行总结。本文结构大致如下：</p>
+<p>1 从几何角度理解卷积的过程。</p>
+<p>2~3 引入卷积的数学定义，并说明卷积如何计算。</p>
+<p>4~5 简要说明卷积在使用过程中会遇到的概念，及卷积在实际工程中的作用。</p>
+<h2 id="1-卷积如何理解"><a href="#1-卷积如何理解" class="headerlink" title="1 卷积如何理解"></a>1 卷积如何理解</h2><h3 id="反转"><a href="#反转" class="headerlink" title="反转"></a>反转</h3><p>设一个函数为f(x)，将f(x)<strong>反转</strong>在本文中定义为f(-x)</p>
+<h3 id="滑动"><a href="#滑动" class="headerlink" title="滑动"></a>滑动</h3><p>函数图像在某个轴上平移（向左、向右移动、向上或向下都可以），为方便描述，均以向右滑动为例。想象一个图像f(x)从时间轴t的负无穷时刻开始滑动到正无穷时刻，f(x)是一个形状不变的图像，随时间向右滑动，该过程中仅有时间t是变量，用s(t)=f(x-t)描述。滑动图像f(x)的自变量和滑动过程s(t)的自变量t没有关系，同理，卷积结果的自变量与参与卷积的两个函数中的自变量没有关系。</p>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/03/448454555d18443d.gif" srcset="/img/loading.gif" alt="move_sinx.gif"></p>
+<h3 id="重叠面积随时间的变化"><a href="#重叠面积随时间的变化" class="headerlink" title="重叠面积随时间的变化"></a>重叠面积随时间的变化</h3><p>两个函数图像，任选一个函数从负无穷滑动到正无穷，另一个不动，观察这个过程中两个函数重叠面积随时间变化的过程。</p>
 <blockquote>
-<p>需实名认证</p>
+<p>为方便理解，此处及下文假设t为时间，实际上未必是。</p>
 </blockquote>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/03/b0a4030684c7f579.gif" srcset="/img/loading.gif" alt="Convolution_of_box_signal_with_itself2.gif"></p>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/03/b2b6a2fea1008e32.gif" srcset="/img/loading.gif" alt="Convolution_of_spiky_function_with_box2.gif"></p>
+<blockquote>
+<p>图片来源：wiki</p>
+</blockquote>
+<p>思考1：两个函数中任选一个进行滑动，会有不同的结果吗？</p>
+<p>思考2：设滑动的图像为f(x)，f(x)滑动产生的结果，和镜像后的图像f(-x)滑动产生的结果相同吗？</p>
+<p>思考3：从刚开始重叠的时刻开始滑动，从已经重叠了一部分的时候开始滑动，从已经滑过固定图像的时候开始滑动，这三种情况下产生的结果有什么不同？</p>
+<p>思考4：卷积和图像重叠面积有什么关系，两者是否相等？</p>
+<blockquote>
+<p>另见：积分运算与函数图像面积的关系</p>
+</blockquote>
+<h3 id="为什么要反转"><a href="#为什么要反转" class="headerlink" title="为什么要反转"></a>为什么要反转</h3><p>下图包含了思考1和思考2的答案，从左至右分别两个函数为卷积、互相关、自相关的结果。</p>
+<p><img src="https://ftp.bmp.ovh/imgs/2021/03/d7e3eaf43f158070.png" srcset="/img/loading.gif" alt="Comparison_convolution_correlation.svg.png"></p>
+<p>从图可知，某个函数图像滑动过另一个函数图像的过程中，<strong>重叠面积随时间变化的结果和他们从哪里开始接触有关</strong>，进行卷积操作时先将滑动的图像反转，使得两个图像滑动过程中，最先重叠的部分总是相同（无论以哪个图像滑动），所以<strong>反转使得卷积满足交换律</strong>。</p>
+<blockquote>
+<p>图像滤波中卷积的反转：(<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/33194385">https://zhuanlan.zhihu.com/p/33194385</a>)</p>
+</blockquote>
+<h3 id="平移什么"><a href="#平移什么" class="headerlink" title="平移什么"></a>平移什么</h3><p>平移，在卷积中可能包含两种观念，一种是将反转的图像g(-x)平移一个固定值t，对应g(t-x)；另一种将反转的图像从负无穷平移到正无穷的过程。本节主要说的前者，后者在本文中用“滑动”描述，以避免平移的二义性。</p>
+<p>先来看一下卷积的数学定义：$s(t)=\int^{+\infty}_{-\infty}f(x)*g(t-x)dt$</p>
+<p>在不考虑t的时候，我们仅有两个函数图像f(x)、g(x)，以及f(x)、g(x)的反转图像f(-x)、g(-x)。在卷积的公式中，g(t-x)看起来是将g(-x)向右平移了t个单位，这是从g(-x)的角度考虑的。然而前面说过，两个函数图像f(x)、g(x)滑动过程中，重叠面积的变化与两个函数的自变量x无关，所以，<strong>从卷积定义的角度讲，实际上并不存在平移</strong>。卷积的操作仅仅从两个函数图像中任意选取一个反转，然后从无限远的过去滑向无限远的未来，得到这两个函数图像<strong>某种性质s</strong>随<strong>时间t</strong>变化的函数s(t)。<strong>对于g(-x)来说，t是一个固定偏移量，是平移，但是对于卷积来说，t是自变量</strong>。卷积关注的重点是从哪个t开始，到哪个t结束。</p>
+<h3 id="t-x-x-t"><a href="#t-x-x-t" class="headerlink" title="(t-x)+(x)=t"></a>(t-x)+(x)=t</h3><p><strong>事先声明：此节仅为个人观点，可略过</strong>。</p>
+<p>卷积的定义：$s(t)=\int^{+\infty}_{-\infty}f(x)*g(t-x)dt$</p>
+<p>很多涉及卷积的文章经常提到<code>(t-x)+(x)=t</code>，个人认为这个纯粹是巧合：仅仅因为反转了某个图像使得<code>(t-x)+(x)=t</code>成立。如果想要使式子不成立，可以上任意一个x加上某个常量或放大某个倍数。</p>
+<ul>
+<li><p>情况1：$(t-x)+(x+a)=t+a$</p>
+<p>  f(x)右移a，f(x)和g(x)相遇时刻延迟，等价于s(t)右移</p>
 </li>
-<li><p>创建应用并获取<code>App ID</code>和<code>App Key</code></p>
+<li><p>情况2：$(t-x+a)+(x)=t+a$</p>
+<p>  g(x)右移a，f(x)和g(x)相遇时刻提前，等价于s(t)左移</p>
 </li>
-<li><p>在主题_config.yml的<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/guide/#%E8%AF%84%E8%AE%BA">post comment</a>中启用评论，并设置<code>type</code>为<code>valine</code>，在<code>valine</code>项目中配置步骤3中获取的<code>App ID</code>和<code>App Key</code>。</p>
+<li><p>情况3：$(t-2x)+(x)=t-x$</p>
+<p>  不考虑，f(x)图像已经变形</p>
 </li>
-</ol>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
-<li><p><a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/guide/">配置指南</a></p>
+</ul>
+<p>排除情况3，情况2和情况1均可用原来的定义进行表述，所以个人认为<code>(t-x)+(x)=t</code>这个纯粹是人为选择的结果，没必要特别强调<code>(t-x)+(x)=t</code>，它仅仅是恰好成立的等式。</p>
+<p>当然，可以为了解释<code>(t-x)+(x)=t</code>设计出一些有意思的题目，但这就属于舍本逐末了，就像许多讲解卷积的文章总是试图通过各种故事解释”卷”字一样。</p>
+<h2 id="2-卷积的数学定义"><a href="#2-卷积的数学定义" class="headerlink" title="2 卷积的数学定义"></a>2 卷积的数学定义</h2><p>连续形式：$s(t)=\int^{+\infty}_{-\infty}f(x)*g(t-x)dt$</p>
+<p>离散形式：<script type="math/tex">s(t)=\sum^{+\infty}_{-\infty}f(x)*g(t-x)</script></p>
+<h3 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h3><ul>
+<li>交换律：<script type="math/tex">s(t)=\int^{+\infty}_{-\infty}f(x)*g(t-x)dt=\int^{+\infty}_{-\infty}g(x)*f(t-x)dt</script></li>
+</ul>
+<h2 id="3-卷积如何计算"><a href="#3-卷积如何计算" class="headerlink" title="3 卷积如何计算"></a>3 卷积如何计算</h2><p>反转、滑动、相乘、叠加（求和、积分）</p>
+<p>见：(<a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/1392460040">https://www.zhihu.com/answer/1392460040</a>)</p>
+<p><strong>反转</strong>是卷积中某个函数自变量由x变为-x带来的，<strong>滑动</strong>是为了考察卷积随自变量变化而导致的结果，<strong>相乘</strong>是卷积中的乘法运算，<strong>叠加</strong>是卷积中的求和或积分运算（对于离散信号来说是求和，对于连续信号来说是积分）。</p>
+<blockquote>
+<p>此处措辞与上述链接中有所不同，但对应的观念是相同的。这些词汇仅仅只是表面的概念，重要的是这些措辞背后的观念。</p>
+</blockquote>
+<h2 id="4-卷积中的概念"><a href="#4-卷积中的概念" class="headerlink" title="4 卷积中的概念"></a>4 卷积中的概念</h2><h3 id="延迟"><a href="#延迟" class="headerlink" title="延迟"></a>延迟</h3><p>s(t)是一个强度s随时间t变化的信号，s(t+5)意味着s(t)延迟了5个单位时间，直观上看，s(t)往后(t增大的方向)移动了5个单位时间。</p>
+<blockquote>
+<p>将图像右移的观念与延迟的概念建立联系</p>
+</blockquote>
+<h3 id="加权叠加"><a href="#加权叠加" class="headerlink" title="加权叠加"></a>加权叠加</h3><p>有两个类似的对卷积解释的答案<a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/34267457">A1</a>、<a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/1544028976">A2</a>，个人觉得对理解卷积的物理意义很有帮助，然而，越是贴近现实的概念就越容易产生分歧。个人认为两个答案没有完全描述卷积的性质。</p>
+<p>将A1中的<strong>X[n]</strong>和A2中的<strong>钢琴波形</strong>类比，设其为f(x)，两个答案中的另一个信号设为g(x)。两个答案的计算过程为：f(x)滑到0处时，有<code>f(x)*g(0)</code>。滑到1处时，有<code>f(x)*g(1)</code>，其他情况同理，最后将所有结果叠加得到卷积结果：$\sum_{i=0}{f(x)*g(i)}$。</p>
+<p>两个答案中f(x)作为滑动的图像，滑过g(x)，显然已经预设了卷积的反转性质。如果要将g(x)作为滑动的图像，显然要把原先的<strong>X[n]</strong>或<strong>钢琴波形</strong>反转，再把g(x)反转，然后按照上述答案中提到的<strong>加权叠加</strong>算法，才能得到和原来一样的结果。</p>
+<p>实际上，两个答案中的<strong>加权</strong>概念对应<strong>卷积公式的乘法运算</strong>，<strong>叠加</strong>概念对应<strong>卷积公式的求和或积分运算</strong>，<strong>依次计算的过程</strong>则体现了<strong>滑动</strong>。</p>
+<p>在深剖两个答案中的加权概念，里边的加权是把<strong>固定的函数</strong>作为权重，加权到了<strong>滑动的函数</strong>（如X[n]和钢琴波形）上。而在图像处理中，往往是<strong>滑动的3x3模板</strong>作为权重，加权到原图像的像素上。这两种理解是对立的，因为加权的概念里有谁是权、谁要被加权的观念，显然两种观念是不同的，不满足交换律，而卷积的乘法是满足交换性律的（即卷积的两个函数中的任意一个既可以是固定的、也可以是滑动的）。所以用加权描述卷积的相乘操作可能产生歧义。</p>
+<h2 id="5-卷积的作用"><a href="#5-卷积的作用" class="headerlink" title="5 卷积的作用"></a>5 卷积的作用</h2><p>信号的叠加[4]、[5]，提取复杂信号中的分量[6]，图像滤波及加权叠加[7]、[9]</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li>互相关[10]</li>
+</ul>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><ul>
+<li><p>思考1：两个函数中任选一个进行滑动，会有不同的结果吗？</p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/example/">操作示例</a></p>
+<li><p>思考2：设滑动的图像为f(x)，f(x)滑动产生的结果，和镜像后的图像f(-x)滑动产生的结果相同吗？</p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/icon/">图标用法</a></p>
+<li><p>思考3：从刚开始重叠的时刻开始滑动，从已经重叠了一部分的时候开始滑动，从已经滑过固定图像的时候开始滑动，这三种情况下产生的结果有什么不同？</p>
+</li>
+<li><p>思考4：卷积和图像重叠面积有什么关系，两者是否相等？</p>
+</li>
+<li><p>思考5：滤波器滑动的顺序（从左上往右下、从右下往左上）是否会影响输出结果，如何从数学角度解释。</p>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p>[1] <a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/225986429">如何通俗易懂地解释卷积, michael-kuang, 知乎</a></p>
+</li>
+<li><p>[2] <a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/1205380116">如何通俗易懂地解释卷积, chang-yi-61, 知乎</a></p>
+</li>
+<li><p>[3] <a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/1392460040">如何通俗易懂地解释卷积, arkham, 知乎</a></p>
+</li>
+<li><p>[4] <a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/34267457">如何通俗易懂地解释卷积, jimbozhang, 知乎</a></p>
+</li>
+<li><p>[5] <a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/1544028976">如何通俗易懂地解释卷积, cg-wang-1, 知乎</a></p>
+</li>
+<li><p>[6] <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/22298352/answer/216754608">如何通俗易懂地解释卷积, gates-bill-2-84, 知乎</a></p>
+</li>
+<li><p>[7] <a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/1744295305">如何通俗易懂地解释卷积, huo-hua-12-55, 知乎</a></p>
+</li>
+<li><p>[8] <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Convolution">Convolution, Wiki</a></p>
+</li>
+<li><p>[9] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/33194385">卷积（convolution）与互相关(cross-correlation)的一点探讨, zzh-32-70, 知乎</a></p>
+</li>
+<li><p>[10] <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/29186714/answer/822469294">对两个信号做互相关的目的和结果是什么, tu-ji-ji-68, 知乎</a></p>
 </li>
 </ul>
 
@@ -341,9 +356,11 @@ layout: resume
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/HEXO/">HEXO</a>
+                      <a class="hover-with-bg" href="/tags/%E5%8D%B7%E7%A7%AF/">卷积</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E5%8D%9A%E5%AE%A2/">博客</a>
+                      <a class="hover-with-bg" href="/tags/%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/">信号处理</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2/">图像滤波</a>
                     
                   </div>
                 
@@ -356,15 +373,15 @@ layout: resume
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/10/12/CMake%E7%AC%94%E8%AE%B0/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CMake笔记</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2021/01/30/USB%E5%8D%8F%E8%AE%AE/">
+                        <span class="hidden-mobile">USB协议</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
@@ -557,7 +574,7 @@ layout: resume
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "HEXO入门&nbsp;",
+        "卷积&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

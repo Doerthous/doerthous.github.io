@@ -261,7 +261,6 @@
       ├─bsp
       ├─<span class="hljs-built_in">os</span>
       └─mdk</code></pre>
-
 <h3 id="1-获取源码"><a href="#1-获取源码" class="headerlink" title="1. 获取源码"></a>1. 获取源码</h3><h4 id="获取BSP源码"><a href="#获取BSP源码" class="headerlink" title="获取BSP源码"></a>获取BSP源码</h4><p>下载STM32F10x对应的<a target="_blank" rel="noopener" href="https://www.st.com/content/st_com/en/products/embedded-software/mcu-mpu-embedded-software/stm32-embedded-software/stm32-standard-peripheral-libraries/stsw-stm32054.html">bsp源码</a>，拷贝到<code>embedded/bsp</code>目录中。</p>
 <pre><code class="hljs erlang">embedded
 ├─bsp
@@ -271,7 +270,6 @@
 |  ...
 └─project
    ...</code></pre>
-
 <h4 id="获取OS源码"><a href="#获取OS源码" class="headerlink" title="获取OS源码"></a>获取OS源码</h4><p>获取RTThread源码可通过下面两种方式进行，本教程使用第二种方式。</p>
 <ul>
 <li><p>直接下载某个版本的源码</p>
@@ -287,7 +285,6 @@
 <span class="hljs-string">|  └─rt-thread</span>
 └─project
    ...</code></pre>
-
 <p>进入<code>rt-thread</code>目录，执行<code>git checkout v4.0.0</code>切换到4.0.0版本的RTThread。</p>
 <h3 id="2-拷贝项目相关源码"><a href="#2-拷贝项目相关源码" class="headerlink" title="2. 拷贝项目相关源码"></a>2. 拷贝项目相关源码</h3><ul>
 <li>将和本项目直接相关的源码拷贝到<code>embedded/project/stm32f10x-mdk-rtthread_empty</code>（本节及其小节内简记为<code>stm32f10x-mdk-rtthread_empty</code>）及其子目录下。</li>
@@ -313,7 +310,7 @@
 <p><code>embedded/os/rt-thread/libcpu/arm/cortex-m3/cpuport.c</code><br><code>embedded/os/rt-thread/libcpu/arm/cortex-m3/context_rvds.S</code><br><code>embedded/os/rt-thread/src</code>下所有.c文件</p>
 <h4 id="导入启动代码"><a href="#导入启动代码" class="headerlink" title="导入启动代码"></a>导入启动代码</h4><p>将下述文件导入到项目的app目录中，</p>
 <p><code>embedded/project/stm32f10x-mdk-rtthread_empty/bsp/startup.c</code></p>
-<h4 id=""><a href="#" class="headerlink" title=""></a></h4><p>最终结果如下图，</p>
+<h4 id=""><a href="#" class="headerlink" title=" "></a> </h4><p>最终结果如下图，</p>
 <p><img src="https://ftp.bmp.ovh/imgs/2021/01/93e69f86f18025a3.png" srcset="/img/loading.gif" alt="p1"></p>
 <h3 id="5-配置"><a href="#5-配置" class="headerlink" title="5. 配置"></a>5. 配置</h3><h4 id="配置项目include路径"><a href="#配置项目include路径" class="headerlink" title="配置项目include路径"></a>配置项目include路径</h4><p>将以下目录设置为include目录，</p>
 <p><code>embedded/bsp/CMSIS/CM3/CoreSupport</code><br><code>embedded/bsp/CMSIS/CM3/DeviceSupport/ST/STM32F10x</code></p>
@@ -344,7 +341,6 @@
 <span class="hljs-comment">//#include &quot;stm32f10x_usart.h&quot;</span>
 <span class="hljs-comment">//#include &quot;stm32f10x_wwdg.h&quot;</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;misc.h&quot;</span> <span class="hljs-comment">/* High level functions for NVIC and SysTick (add-on to CMSIS functions) */</span></span></code></pre>
-
 <h4 id="配置OS"><a href="#配置OS" class="headerlink" title="配置OS"></a>配置OS</h4><p>修改<code>stm32f10x-mdk-rtthread_empty/os/rtconfig.h</code>配置。</p>
 <pre><code class="hljs C">...
 <span class="hljs-comment">// 注释掉暂不使用的功能</span>
@@ -356,7 +352,6 @@
 <span class="hljs-comment">// 每秒1000次tick</span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> RT_TICK_PER_SECOND 1000</span>
 ...</code></pre>
-
 <p><code>startup.c</code>:</p>
 <pre><code class="hljs C">...
 <span class="hljs-comment">// 添加测试程序</span>
@@ -381,7 +376,6 @@
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 &#125;
 ...</code></pre>
-
 <p><code>board.c</code>:</p>
 <pre><code class="hljs C">...
 <span class="hljs-comment">// 注释掉无效内容</span>
@@ -390,7 +384,6 @@
 <span class="hljs-comment">//rt_hw_usart_init();</span>
 <span class="hljs-comment">//rt_console_set_device(RT_CONSOLE_DEVICE_NAME);</span>
 ...</code></pre>
-
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
 <li><p><a target="_blank" rel="noopener" href="https://www.st.com/content/st_com/en/products/embedded-software/mcu-mpu-embedded-software/stm32-embedded-software/stm32-standard-peripheral-libraries/stsw-stm32054.html">STM32F10x StdPeriph Lib 3.5.0</a></p>
 </li>
@@ -694,6 +687,45 @@
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

@@ -259,7 +259,6 @@ struct &#123; u8 *rx_mem; u32 ack; <span class="hljs-number">.</span><span class
 <span class="hljs-keyword">local</span><span class="hljs-number">.</span>seq=remote<span class="hljs-number">.</span>ack
                        <span class="hljs-keyword">data</span>(<span class="hljs-keyword">local</span><span class="hljs-number">.</span>seq, <span class="hljs-built_in">size</span>)-&gt;
                                 <span class="hljs-number">.</span><span class="hljs-number">.</span><span class="hljs-number">.</span></code></pre>
-
 <blockquote>
 <p>注：<br>data(local.seq,size)-&gt;表示把<br>[local.tx_mem+local.seq, local.tx_mem+local.seq+local.size)<br>这段内存数据发送给远端。</p>
 </blockquote>
@@ -277,33 +276,28 @@ struct &#123; u8 *rx_mem; u32 ack; <span class="hljs-number">.</span><span class
 <span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+
 |                             Data                              |
 <span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-<span class="hljs-code">+-+</span>-+</code></pre>
-
 <h3 id="2-序列重叠问题"><a href="#2-序列重叠问题" class="headerlink" title="2 序列重叠问题"></a>2 序列重叠问题</h3><p>按照正常思路，每次启动传输时，序列号应该总是从0开始，一直到size-1结束（假设要传输的数据大小为size）。然而，如果一端的TCP频繁打开、发送、关闭，又打开、发送、关闭。那么可以想象，<strong>网络中</strong>可能会存在序列号重叠但数据不同的TCP段：</p>
 <pre><code class="hljs gherkin">0            size1
 |<span class="hljs-string">------------</span>|
 
 |<span class="hljs-string">------</span>|
 0      size2</code></pre>
-
 <p>为了避免这个问题，TCP每次传输时不再从序列号0开始，而是将选择和一个32bit的时钟绑定，TCP假设该时钟每4us自增1，所以序列号大约需要4.55个小时才会回到原点（重复）。由于TCP假定所有TCP段在网络中存在的时长最多不过MSL（Max Segment Lifetime），而MSL小于4.55小时，所以上述措施保证了序列号在网络中不会重复。换言之就是，TCP并非从0开始传输，而是从某个序列号开始，而这个序列号的选择和一个32bit的时钟相关，这个序列号又被称为初始序列号（ISN, Initial Sequence Number）。</p>
 <p>然而这样一来，每次TCP传输数据前，就需要事先交换彼此当前的序列号（同步信息）：</p>
 <pre><code class="hljs ada"><span class="hljs-number">1</span>) A <span class="hljs-comment">--&gt; B  我的序列号是 X</span>
 <span class="hljs-number">2</span>) A &lt;<span class="hljs-comment">-- B  你的序列号是 X</span>
 <span class="hljs-number">3</span>) A &lt;<span class="hljs-comment">-- B  我的序列号是 Y</span>
 <span class="hljs-number">4</span>) A <span class="hljs-comment">--&gt; B  你的序列号是 Y</span></code></pre>
-
 <p>其中2)和3)可以合并进行，合并后便成了TCP中著名的“三次握手”。</p>
 <p>此时，TCP段格式中的Sequence Number有了两层含义，一是最开始提到的指示<strong>数据的传输状态</strong>的序列号，另一个是此处提到的，在传输数据之前，作为彼此交换信息的初始序列号。TCP在其段中设计了一个SYN标志，以便区分Sequence Number的两种状态。当SYN为1时，Sequence Number字段表示ISN，否则则表示传输过程中使用的序列号。同理，由于Acknowledgment Number和Sequence Number是一对对应的参数，第一个发送ISN的TCP，其报文中的Acknowledgment Number是一个无效值，为此，TCP引入ACK标志表明Acknowledgment Number的有效无效状态。</p>
 <pre><code class="hljs tp"><span class="hljs-number">1</span>) A --&gt; B  SYN      我的序列号是 <span class="hljs-keyword">X</span>
 <span class="hljs-number">2</span>) A &lt;-- B  SYN,ACK  你的序列号是 <span class="hljs-keyword">X</span>，我的序列号是 <span class="hljs-keyword">Y</span>
 <span class="hljs-number">4</span>) A --&gt; B  ACK      你的序列号是 <span class="hljs-keyword">Y</span></code></pre>
-
 <p>通过上述描述可知，每个TCP都有两个序列号需要维护，一个是初始发送序列号（ISS, Initial Send Sequence），此序列号由本地TCP从上述提到的32bit时钟中产生，另一个是初始接收序列号（IRS, Initial Receive Sequence），此序列号在三次握手后从远端TCP得到，是远端的ISS。</p>
 <pre><code class="hljs applescript"><span class="hljs-keyword">local</span>   remote
 
 ISS  <span class="hljs-comment">---  IRS</span>
 IRS  <span class="hljs-comment">---  ISS</span></code></pre>
-
 <p>TCP传输数据的过程，逻辑上就是交换彼此序列空间的过程。</p>
 <h4 id="连接的概念"><a href="#连接的概念" class="headerlink" title="连接的概念"></a>连接的概念</h4><p>至此，在开始实际的数据传输之前，一对TCP必须交换（同步）彼此的状态，除了需要同步的状态外，TCP内部本身也有一些状态需要在数据传输前初始化，然后才能进行传输。在数据传输过程中，这些状态也需要维护。数据传输结束后还需释放这些状态占用的资源。TCP将这些状态（信息）定义为连接，在实际数据传输之前需要先建立连接，在传输结束后需要关闭连接。建立连接前与关闭连接后，TCP处于一个虚拟的CLOSED状态，因为此时TCP并不存在。</p>
 <p>TCP的状态信息被存放在一个传输控制块（TCB, Transmission Control Block）中。TCB中可能包含：本地和远程socket信息，当前连接的安全及优先权，指向用户发送及接收缓冲区的指针，指向重传队列以及当前TCP段的指针。此外一些涉及发送和接收序列的变量也在TCB中。</p>
@@ -326,7 +320,6 @@ IRS  <span class="hljs-comment">---  ISS</span></code></pre>
 <span class="hljs-number">2</span> - 没有被ACK的序列号
 <span class="hljs-number">3</span> - 允许传输的序列号
 <span class="hljs-number">4</span> - 禁止传输的序列号</code></pre>
-
 <p><strong>接收序列变量</strong></p>
 <ul>
 <li>RCV.NXT：下一个要接受的序列号</li>
@@ -342,7 +335,6 @@ IRS  <span class="hljs-comment">---  ISS</span></code></pre>
 <span class="hljs-number">1</span> - 已经被ACK的序列号
 <span class="hljs-number">2</span> - 允许接收的序列号
 <span class="hljs-number">3</span> - 尚未允许接收的序列号</code></pre>
-
 <p><strong>TCP段变量</strong></p>
 <ul>
 <li>SEG.SEQ：段的序列号</li>
@@ -354,12 +346,10 @@ IRS  <span class="hljs-comment">---  ISS</span></code></pre>
 <span class="hljs-attr">SND.UNA</span> = ISS
 <span class="hljs-attr">SND.NXT</span> = ISS+<span class="hljs-number">1</span>
 <span class="hljs-attr">RCV.WND</span> = ? // 根据本地tcp配置设置</code></pre>
-
 <p>在同步过程中，初始化以下变量（从对方状态信息中提取初始化数据）：</p>
 <pre><code class="hljs ini"><span class="hljs-attr">SND.WND</span> = SYN.RCV.WND
 <span class="hljs-attr">IRS</span> = SYN.SEQ
 <span class="hljs-attr">RCV.NXT</span> = SYN.SEQ+<span class="hljs-number">1</span></code></pre>
-
 <p>传输数据的过程中（基本上只要维护好SND.UNA和RCV.NXT）：</p>
 <pre><code class="hljs x86asm">    A              B
 <span class="hljs-number">1</span>) A<span class="hljs-number">.</span>snd<span class="hljs-number">.</span>una &lt;--- B<span class="hljs-number">.</span><span class="hljs-built_in">seg</span><span class="hljs-number">.</span>ack <span class="hljs-number">4</span>)
@@ -375,7 +365,6 @@ SND<span class="hljs-number">.</span>NXT += <span class="hljs-built_in">SEG</spa
 接收时：
 SND<span class="hljs-number">.</span>UNA = <span class="hljs-built_in">SEG</span><span class="hljs-number">.</span>ACK（如果该<span class="hljs-built_in">SEG</span>中的ACK合法）
 RCV<span class="hljs-number">.</span>NXT = <span class="hljs-built_in">SEG</span><span class="hljs-number">.</span>SEQ（如果该<span class="hljs-built_in">SEG</span>中的数据合法）</code></pre>
-
 <h3 id="3-TCP的编号规则"><a href="#3-TCP的编号规则" class="headerlink" title="3 TCP的编号规则"></a>3 TCP的编号规则</h3><p>根据前边的描述，TCP处理的对象是一段由序列号构成的序列，所有序列号构成整个序列空间。TCP将序列分段成TCP段进行传输，因此TCP段占了序列空间的一部分，TCP段长度就是这一部分序列空间的大小，或者说段长度就是这个段传了多少个序列号。</p>
 <p><strong>注意！本文中的段长度并不是指TCP段的头部加data部分的总长度</strong>。TCP段头部加data部分的总长度可以根据IP报文计算得出。</p>
 <pre><code class="hljs brainfuck"><span class="hljs-comment">一段序列A（大小为n）：</span>
@@ -388,17 +377,14 @@ RCV<span class="hljs-number">.</span>NXT = <span class="hljs-built_in">SEG</span
 <span class="hljs-comment"></span>            --<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span>   --<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span>   --<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span>
             <span class="hljs-comment">S0</span>       <span class="hljs-comment">Sq</span>  <span class="hljs-comment">Sq</span><span class="hljs-literal">+</span><span class="hljs-comment">1</span>      <span class="hljs-comment">Sp</span>  <span class="hljs-comment">Sp</span><span class="hljs-literal">+</span><span class="hljs-comment">1</span>     <span class="hljs-comment">Sn</span><span class="hljs-literal">-</span><span class="hljs-comment">1</span>
 <span class="hljs-comment"></span>            <span class="hljs-comment">TCP</span> <span class="hljs-comment">seg0</span>     <span class="hljs-comment">TCP</span> <span class="hljs-comment">seg1</span>      <span class="hljs-comment">TCP</span> <span class="hljs-comment">seg2</span></code></pre>
-
 <p>如上图所示，TCP将序列A分成三个segment进行传输，其中seg0的段长度为q+1。</p>
 <p>TCP将序列号分配给TCP段的data域中的每个otect，以及SYN、FIN。举例来说，一个不包含data的SYN段其段长度为1（因为data占用了0个序列号，而SYN占用了1个序列号），一个不包含data的FIN段长度也是1。</p>
 <p>一个包含data（data大小为4）的SYN段其段长度为5，此时编号规则如下：</p>
 <pre><code class="hljs apache"><span class="hljs-attribute">s0</span>     s<span class="hljs-number">0</span>+<span class="hljs-number">1</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">2</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">3</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">4</span>   |序   号 
 <span class="hljs-attribute">SYN</span>    D<span class="hljs-number">0</span>     D<span class="hljs-number">1</span>     D<span class="hljs-number">2</span>     D<span class="hljs-number">3</span>     |数据控制</code></pre>
-
 <p>一个包含data（data大小为5）的FIN段其长度为6，此时编号规则如下：</p>
 <pre><code class="hljs apache"><span class="hljs-attribute">s0</span>     s<span class="hljs-number">0</span>+<span class="hljs-number">1</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">2</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">3</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">4</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">5</span>   |序   号 
 <span class="hljs-attribute">D0</span>     D<span class="hljs-number">1</span>     D<span class="hljs-number">2</span>     D<span class="hljs-number">3</span>     D<span class="hljs-number">4</span>     FIN    |数据控制</code></pre>
-
 <p>假设一个更具体的例子，如果需要通过TCP将<code>&quot;Hello!&quot;</code>传输给远端，并且传输结束后就关闭连接，那么，我们将发送8个序列号给远端。假设初始发送序列号为x，则序列号及其对应的数据（或控制信息）关系如下：</p>
 <pre><code class="hljs gml">S[<span class="hljs-symbol">x</span>  ] = SYN
 S[<span class="hljs-symbol">x</span>+<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;H&#x27;</span>
@@ -408,11 +394,9 @@ S[<span class="hljs-symbol">x</span>+<span class="hljs-number">4</span>] = <span
 S[<span class="hljs-symbol">x</span>+<span class="hljs-number">5</span>] = <span class="hljs-string">&#x27;o&#x27;</span>
 S[<span class="hljs-symbol">x</span>+<span class="hljs-number">6</span>] = <span class="hljs-string">&#x27;!&#x27;</span>
 S[<span class="hljs-symbol">x</span>+<span class="hljs-number">7</span>] = FIN</code></pre>
-
 <h3 id="4-传输前的状态"><a href="#4-传输前的状态" class="headerlink" title="4 传输前的状态"></a>4 传输前的状态</h3><p>根据2中的描述，在此仔细考察一下TCP交换信息的过程。两种情况：1)一端先发起SYN，2)两端同时发起SYN。</p>
 <h4 id="情况一"><a href="#情况一" class="headerlink" title="情况一"></a>情况一</h4><pre><code class="hljs clean">B     A       B        B            A           A        B
 监听-&gt;发送SYN-&gt;收到SYN-&gt;发送SYN,ACK-&gt;收到SYN,ACK-&gt;发送ACK-&gt;收到ACK</code></pre>
-
 <p>起初，在没有人尝试连接的时候，B一直处于监听状态（B处于LISTEN状态），随后A向B发送一个<code>&lt;SYN&gt;</code>，然后等待B的<code>&lt;ACK&gt;</code>（A处于SYN-SENT状态），B收到A的<code>&lt;SYN&gt;</code>后向A发出<code>&lt;SYN,ACK&gt;</code>然后等待A的<code>&lt;ACK&gt;</code>（B处于SYN-RECEIVED状态）</p>
 <blockquote>
 <p>注：为什么B发SYN却不是SYN-SENT状态？怎么理解状态？</p>
@@ -426,7 +410,6 @@ S[<span class="hljs-symbol">x</span>+<span class="hljs-number">7</span>] = FIN</
 <span class="xml">3.  ESTABLISHED <span class="hljs-tag">&lt;<span class="hljs-name">--</span> &lt;<span class="hljs-attr">SEQ</span>=<span class="hljs-string">300</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ACK=101</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">CTL=SYN,ACK</span>&gt;</span>  <span class="hljs-tag">&lt;<span class="hljs-name">--</span> <span class="hljs-attr">SYN-RECEIVED</span></span></span>
 <span class="xml">4.  ESTABLISHED --&gt; <span class="hljs-tag">&lt;<span class="hljs-name">SEQ=101</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ACK=301</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">CTL=ACK</span>&gt;</span>       --&gt; ESTABLISHED</span>
 <span class="xml">5.  ESTABLISHED --&gt; <span class="hljs-tag">&lt;<span class="hljs-name">SEQ=101</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ACK=301</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">CTL=ACK</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">DATA</span>&gt;</span> --&gt; ESTABLISHED</span></code></pre>
-
 <p>这个过程中，两端的TCP至少有四种状态：</p>
 <ol>
 <li><p>LISTEN：等待其他TCP的<code>&lt;SYN&gt;</code>。</p>
@@ -457,11 +440,9 @@ S[<span class="hljs-symbol">x</span>+<span class="hljs-number">7</span>] = FIN</
 <span class="hljs-string">                             +---------+</span>
 <span class="hljs-string">                             </span>|<span class="hljs-string">  ESTAB  </span>|
                              +---------+</code></pre>
-
 <h4 id="情况二"><a href="#情况二" class="headerlink" title="情况二"></a>情况二</h4><p>【TODO】</p>
 <h3 id="5-传输过程及机制"><a href="#5-传输过程及机制" class="headerlink" title="5 传输过程及机制"></a>5 传输过程及机制</h3><h4 id="有效响应及数据"><a href="#有效响应及数据" class="headerlink" title="有效响应及数据"></a>有效响应及数据</h4><p>当收到一个ACK段时，一个有效响应指该ACK段中的ACK号满足：</p>
 <pre><code class="hljs stylus">SND<span class="hljs-selector-class">.UNA</span> &lt; SEG<span class="hljs-selector-class">.ACK</span> =&lt; SND.NXT。</code></pre>
-
 <p>当收到一个数据段时，需要根据以下四种情况判别收到的段是否有效。</p>
 <pre><code class="hljs stylus">段长度   接收窗口  判别条件
 ------- --------  -------------------------------------------
@@ -474,7 +455,6 @@ S[<span class="hljs-symbol">x</span>+<span class="hljs-number">7</span>] = FIN</
 
 &gt;<span class="hljs-number">0</span>      &gt;<span class="hljs-number">0</span>        RCV<span class="hljs-selector-class">.NXT</span> =&lt; SEG<span class="hljs-selector-class">.SEQ</span> &lt; RCV.NXT+RCV.WND
                or RCV<span class="hljs-selector-class">.NXT</span> =&lt; SEG.SEQ+SEG<span class="hljs-selector-class">.LEN-1</span> &lt; RCV.NXT+RCV.WND</code></pre>
-
 <p>当接收窗口为0时，所有除ACK、RST、URG段外的段都是无效段。因此，对于一个只发送数据的TCP来说，可以用0接收窗口传输数据，并仅接收ACK段。</p>
 <h4 id="数据处理及TCB维护"><a href="#数据处理及TCB维护" class="headerlink" title="数据处理及TCB维护"></a>数据处理及TCB维护</h4><p>用户调用SEND接口时，TCP首先把数据缓存到内部的发送缓冲区（如果缓冲区还有剩余空间的话），然后在合适的时机从发送缓冲区中提取数据并构造TCP段发送给远端。收到数据时，TCP需要验证数据的有效性，然后按序将其推入接收缓冲区，用户调用RECEIVE接口时，便从接收缓冲区中提取数据。发送和接收过程可能都涉及到对TCP段进行拆分的操作。</p>
 <p>在传输数据的过程中对TCB进行维护（基本上只要维护好SND.UNA和RCV.NXT）：</p>
@@ -492,7 +472,6 @@ SND<span class="hljs-number">.</span>NXT += <span class="hljs-built_in">SEG</spa
 接收时（需要更新TCB中的变量，这些变量更新的值从<span class="hljs-built_in">SEG</span>中提取）：
 SND<span class="hljs-number">.</span>UNA = <span class="hljs-built_in">SEG</span><span class="hljs-number">.</span>ACK（如果该<span class="hljs-built_in">SEG</span>中的ACK合法）
 RCV<span class="hljs-number">.</span>NXT = <span class="hljs-built_in">SEG</span><span class="hljs-number">.</span>SEQ（如果该<span class="hljs-built_in">SEG</span>中的数据合法）</code></pre>
-
 <h4 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h4><p>TCP发送一个段后会等待ACK，如果超时没有收到ACK，则进行重传，超时时间是根据网络情况动态计算得到的，该算法在RFC793中有定义，详细见<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc793#section-3.7">RFC793 3.7 Data Communication</a></p>
 <h4 id="Urgent机制"><a href="#Urgent机制" class="headerlink" title="Urgent机制"></a>Urgent机制</h4><p>TCP的Urgent机制使得发送数据的用户可以通知接收数据的用户去处理（接收）一些紧急的数据，并允许接收端的TCP在当前紧急数据接收完毕后，告知接收用户数据已全部接收。</p>
 <p>当收到一个URG标志为1的TCP段时，Urgent Pointer字段生效，TCP模块必须提取段中的Sequence Number（SN）和Urgent Pointer（UP），此时的SN+UP可以得到一个序列号，该序列号指向Urgent数据的末尾，即：在SN+UP前的所有序列号（数据）都是紧急数据。</p>
@@ -502,20 +481,17 @@ RCV<span class="hljs-number">.</span>NXT = <span class="hljs-built_in">SEG</span
 <span class="hljs-number">1</span>：可能是Urgent数据，也可能不是Urgent数据。
 <span class="hljs-number">2</span>：Urgent数据。
 <span class="hljs-number">3</span>：非Urgent数据。</code></pre>
-
 <p>Urgent数据没有接收完毕之前，接收端的TCP需告知用户当前处于Urgent模式，当接收完Urgent数据后，TCP需告知用户当前处于正常模式。</p>
 <h4 id="Push机制"><a href="#Push机制" class="headerlink" title="Push机制"></a>Push机制</h4><pre><code class="hljs asciidoc">-------------------------
 用户     data     data
 ----------v---------^----
 TCP    tx-seq     rx-seq
 -------------------------</code></pre>
-
 <p>TCP会缓存外部数据到内部的逻辑意义上的环型缓冲区中，也就是说，用户如果调用了多次TCP.Send，TCP仅仅只是把数据拷贝到缓冲区中，并在其合适的时候将数据发送出去，并非调用一次Send就发送一个TCP段。接收过程类似。</p>
 <p>为了能够让用户立即发送数据，TCP提供了一个PUSH标志。用户发送数据并告知TCP需要PUSH时，TCP会立即将所有未发送的数据发送。接收到带有PUSH标志的TCP段时，TCP会将所有缓存在接收缓冲区中的数据交给用户。</p>
 <h4 id="窗口控制"><a href="#窗口控制" class="headerlink" title="窗口控制"></a>窗口控制</h4><p>TCP在段中设计了一个window字段，用于表明发送该段的TCP能接收多少数据，用于流控。接收窗口取决于TCP所在主机的硬件资源及系统资源。</p>
 <pre><code class="hljs angelscript">L &lt;-- &lt;WND:<span class="hljs-number">500</span>&gt; &lt;-- R 我的（R的）窗口大小是<span class="hljs-number">500</span> 
 L --&gt; &lt;WND:<span class="hljs-number">300</span>&gt; --&gt; R 我的（L的）窗口大小是<span class="hljs-number">300</span></code></pre>
-
 <p>当TCP知道了另一端的接收窗口大小后，其发送窗口也就被限制到最大不超过另一端的接收窗口下，因为发多了对面也收不完，所以发送窗口取决于对面的接收窗口。</p>
 <pre><code class="hljs lasso">struct &#123; u8 *tx_mem; u32 seq; u32 swnd; <span class="hljs-params">...</span> &#125; <span class="hljs-built_in">local</span>;
 struct &#123; u8 *rx_mem; u32 ack; u32 rwnd; <span class="hljs-params">...</span> &#125; remote;
@@ -529,7 +505,6 @@ struct &#123; u8 *rx_mem; u32 ack; u32 rwnd; <span class="hljs-params">...</span
 <span class="hljs-built_in">local</span>.swnd=remote.rwnd 
                          <span class="hljs-built_in">data</span>(<span class="hljs-built_in">local</span>.seq, <span class="hljs-built_in">local</span>.swnd)-&gt;
                                       <span class="hljs-params">...</span></code></pre>
-
 <p>对于窗口的管理，TCP规范中提到了以下内容。</p>
 <ol>
 <li><p>发送TCP必须准备好接受用户的请求，并发送至少一个字节的新数据，即使发送窗口为零。发送TCP必须定期向接收TCP重传，即使窗口为零。当窗口为0时，建议重传间隔为2分钟。这种重传对于保证当任何一个TCP有一个零窗口时，窗口的重新打开将可靠地报告给另一个是至关重要的。</p>
@@ -573,7 +548,6 @@ struct &#123; u8 *rx_mem; u32 ack; u32 rwnd; <span class="hljs-params">...</span
 
 <span class="hljs-number">6.</span>  (<span class="hljs-number">2</span> MSL)
     CLOSED</code></pre>
-
 <p>两端同时关闭的情况：</p>
 <pre><code class="hljs django"><span class="xml">  TCP A                                                TCP B</span>
 
@@ -591,7 +565,6 @@ struct &#123; u8 *rx_mem; u32 ack; u32 rwnd; <span class="hljs-params">...</span
 <span class="xml">4.  TIME-WAIT                                            TIME-WAIT</span>
 <span class="xml">    (2 MSL)                                              (2 MSL)</span>
 <span class="xml">    CLOSED                                               CLOSED</span></code></pre>
-
 <p>状态迁移：</p>
 <pre><code class="hljs gherkin">                             +---------+
                              |<span class="hljs-string">  ESTAB  </span>|
@@ -614,7 +587,6 @@ struct &#123; u8 *rx_mem; u32 ack; u32 rwnd; <span class="hljs-params">...</span
 <span class="hljs-string">   \ snd ACK                 +---------+delete TCB         +---------+</span>
 <span class="hljs-string">    ------------------------&gt;</span>|<span class="hljs-string">TIME WAIT</span>|<span class="hljs-string">------------------&gt;</span>|<span class="hljs-string"> CLOSED  </span>|
                              +---------+                   +---------+</code></pre>
-
 <h3 id="7-异常情况处理"><a href="#7-异常情况处理" class="headerlink" title="7 异常情况处理"></a>7 异常情况处理</h3><h4 id="半开连接"><a href="#半开连接" class="headerlink" title="半开连接"></a>半开连接</h4><p>如果已经建立连接的双方，1)一方在另一方不知情的情况下关闭或中断连接，或者2)同步失效，则此种连接被称为半开连接（Half Open Connectino）。当一方尝试发送数据到另一方时，连接可能会被重置（Reset）。</p>
 <p>针对情况1)，异常的一端可能是因为连接已关闭或系统异常。针对连接关闭的情况，假设有如下连接：</p>
 <pre><code class="hljs haskell"><span class="hljs-type">A</span>      &lt;-<span class="hljs-comment">----&gt;      B</span>
@@ -623,7 +595,6 @@ struct &#123; u8 *rx_mem; u32 ack; u32 rwnd; <span class="hljs-params">...</span
          ...
        &lt;--<span class="hljs-class"><span class="hljs-keyword">data</span>      <span class="hljs-type">B</span></span>
 <span class="hljs-type">O</span>      <span class="hljs-type">RST</span><span class="hljs-comment">---&gt;      B</span></code></pre>
-
 <p>起初，A与B之间已经建立连接，一段时间后，A因为某种原因中断或关闭了连接，并且B不知情。当B向A发送数据时，由于A不存在，所以TCP模块或系统内核O代替A向B发送了一个RST段。</p>
 <p>如果系统异常（O也无法发送任何消息），B将无法收到任何回应。【不知道是否如此？】</p>
 <p>针对情况2)，即任意一端处于LISTEN、SYN-SENT、SYN-RECEIVED状态下，如果一方收到的段中包含了<strong>不可接受的ACK</strong>，或者安全等级不匹配，则向对方发送RST段。</p>
@@ -709,7 +680,6 @@ Urgent Pointer   2B        禁止数据指针
 Options          n         TCP选项
 Padding          m         填充字段
 Data             x         用户数据</code></pre>
-
 <h4 id="A-2-TCP状态汇总"><a href="#A-2-TCP状态汇总" class="headerlink" title="A.2 TCP状态汇总"></a>A.2 TCP状态汇总</h4><p>连接终止请求（Connection Termination Request，CTR），可理解为向对端发送FIN段。由用户调用CLOSE接口触发发送FIN段的动作。</p>
 <ul>
 <li><p>LISTEN：表示正在等待远端任意的TCP连接。</p>
@@ -788,7 +758,6 @@ Data             x         用户数据</code></pre>
 <span class="hljs-string">   \ snd ACK                 +---------+delete TCB         +---------+</span>
 <span class="hljs-string">    ------------------------&gt;</span>|<span class="hljs-string">TIME WAIT</span>|<span class="hljs-string">------------------&gt;</span>|<span class="hljs-string"> CLOSED  </span>|
                              +---------+                   +---------+</code></pre>
-
 <h4 id="A-3-TCP事件处理备注"><a href="#A-3-TCP事件处理备注" class="headerlink" title="A.3 TCP事件处理备注"></a>A.3 TCP事件处理备注</h4><h5 id="CLOSE事件"><a href="#CLOSE事件" class="headerlink" title="CLOSE事件"></a>CLOSE事件</h5><ul>
 <li>CLOSE<ul>
 <li>CLOSE-WAIT STATE<br>  Queue this request until all preceding SENDs have been<br>  segmentized; then send a FIN segment, enter CLOSING state.<br>  【这里是不是应该enter LAST-ACK state？】</li>
@@ -821,7 +790,6 @@ Data             x         用户数据</code></pre>
 <span class="xml">3.  ESTABLISHED <span class="hljs-tag">&lt;<span class="hljs-name">--</span> &lt;<span class="hljs-attr">SEQ</span>=<span class="hljs-string">300</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ACK=101</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">CTL=SYN,ACK</span>&gt;</span>  <span class="hljs-tag">&lt;<span class="hljs-name">--</span> <span class="hljs-attr">SYN-RECEIVED</span></span></span>
 <span class="xml">4.  ESTABLISHED --&gt; <span class="hljs-tag">&lt;<span class="hljs-name">SEQ=101</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ACK=301</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">CTL=ACK</span>&gt;</span>       x  ESTABLISHED</span>
 <span class="xml">5.  ESTABLISHED --&gt; <span class="hljs-tag">&lt;<span class="hljs-name">SEQ=101</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ACK=301</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">CTL=ACK</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">DATA</span>&gt;</span> --&gt; ESTABLISHED</span></code></pre>
-
 <p>  如果4的<code>&lt;ACK&gt;</code>没被B收到，可能会有几种情况发生：</p>
 <ol>
 <li><p>发完<code>&lt;ACK&gt;</code>后，A便开始向B传输数据，由于数据中带<code>&lt;ACK&gt;</code>，所以B会根据数据段中的<code>&lt;ACK&gt;</code>值判断连接是否建立。</p>
@@ -851,12 +819,10 @@ Data             x         用户数据</code></pre>
 <p>  一个包含data（data大小为4）的SYN段其段长度为5，此时编号规则如下：</p>
   <pre><code class="hljs apache"><span class="hljs-attribute">s0</span>     s<span class="hljs-number">0</span>+<span class="hljs-number">1</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">2</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">3</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">4</span>   |序   号 
 <span class="hljs-attribute">SYN</span>    D<span class="hljs-number">0</span>     D<span class="hljs-number">1</span>     D<span class="hljs-number">2</span>     D<span class="hljs-number">3</span>     |数据控制</code></pre>
-
 <p>  一个包含data（data大小为5）的FIN段其长度为6，此时编号规则如下：</p>
   <pre><code class="hljs apache"><span class="hljs-attribute">s0</span>     s<span class="hljs-number">0</span>+<span class="hljs-number">1</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">2</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">3</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">4</span>   s<span class="hljs-number">0</span>+<span class="hljs-number">5</span>   |序   号 
 <span class="hljs-attribute">D0</span>     D<span class="hljs-number">1</span>     D<span class="hljs-number">2</span>     D<span class="hljs-number">3</span>     D<span class="hljs-number">4</span>     FIN    |数据控制</code></pre>
-
-<p>  <strong>RFC793中关于segment length的表述</strong></p>
+<p>  <strong>RFC793中关于segment length的表述</strong><br>  &gt;</p>
 <blockquote>
 <p>SEG.LEN = the number of octets occupied by the data in the segment (counting SYN and FIN).</p>
 <p>segment length = The amount of sequence number space occupied by a segment, including any controls which occupy sequence space.</p>
@@ -1176,6 +1142,45 @@ Data             x         用户数据</code></pre>
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

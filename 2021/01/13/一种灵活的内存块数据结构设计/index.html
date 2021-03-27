@@ -258,7 +258,6 @@
     ip_header-&gt;next = udp;
     <span class="hljs-keyword">return</span> ip_header; 
 &#125;</code></pre>
-
 <h3 id="2-链表数据管理"><a href="#2-链表数据管理" class="headerlink" title="2 链表数据管理"></a>2 链表数据管理</h3><p>按照1中的分析，假设当前有一个三层网络，每层都会添加头部，那么，加上原始载荷，有：</p>
 <p>C-&gt;B-&gt;A-&gt;P。</p>
 <p>其中P表示原始载荷，A表示最高层协议，B表示中间层协议，C表示最底层协议。随着层次逐渐降低，链表中的节点逐渐增加。</p>
@@ -266,7 +265,6 @@
 A层          A-&gt;P
 B层          B-&gt;A-&gt;P
 C层          C-&gt;B-&gt;A-&gt;P</code></pre>
-
 <p>如此，可遍历C、B、A、P节点中的数据完成一个完整协议栈数据的发送或解析操作。</p>
 <pre><code class="hljs arduino"><span class="hljs-comment">// 将dblk数据拷贝到指定内存</span>
 <span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">dblk_copy_to</span><span class="hljs-params">(<span class="hljs-keyword">dblk_t</span> *dblk, <span class="hljs-keyword">void</span> *mem, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span> </span>&#123;
@@ -290,11 +288,9 @@ send(dblk) &#123;
     <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span> = dblk_copy_to(dblk, buff, SOME_SIZE);
     low_level_send(buff, <span class="hljs-built_in">size</span>);
 &#125;</code></pre>
-
 <h3 id="3-2-中存在的问题"><a href="#3-2-中存在的问题" class="headerlink" title="3 [2]中存在的问题"></a>3 [2]中存在的问题</h3><p>考虑到底层可能由于硬件原因，无法及时发送数据，导致多个完整协议栈数据被缓存。为管理这些数据，可添加用于表示后续节点是否属于当前<strong>逻辑数据块</strong>的more标志，区分不同的逻辑数据块，具体解释如下图：</p>
 <pre><code class="hljs apache"><span class="hljs-attribute">C1</span> -&gt; B<span class="hljs-number">1</span> -&gt; A<span class="hljs-number">1</span> -&gt; P<span class="hljs-number">1</span> -&gt; C<span class="hljs-number">2</span> -&gt; B<span class="hljs-number">2</span> -&gt; A<span class="hljs-number">2</span> -&gt; P<span class="hljs-number">2</span> -&gt; ...
 <span class="hljs-attribute">m</span>:<span class="hljs-number">1</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">0</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">1</span>   m:<span class="hljs-number">0</span>   ...</code></pre>
-
 <p>上述链表虽有8个节点（C1 ~ P2），但是只有两个逻辑数据块，其中（C1 ~ P1）是一个，（C2 ~ P2）是另一个（m：more）。在处理一个节点的数据时，需要判断more标志，如果more标志为1则表示后续节点仍属于当前逻辑数据块，否者则表示当前节点为当前逻辑数据块的最后一个节点。类似IP报文中的More Fragment标志。</p>
 <p>如此，在处理时可按照逻辑数据块进行区分：</p>
 <pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">dblk_copy_to</span><span class="hljs-params">(<span class="hljs-keyword">dblk_t</span> *dblk, <span class="hljs-keyword">void</span> *mem, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span> </span>&#123;
@@ -312,25 +308,21 @@ send(dblk) &#123;
     &#125;
     <span class="hljs-keyword">return</span> done_size;
 &#125;</code></pre>
-
 <p>除上述方法外，也可引入另一个指针来连接不同的逻辑数据块。</p>
 <pre><code class="hljs coq">C1 -&gt; B1 -&gt; A1 -&gt; P1
  |<span class="hljs-type"></span>
 <span class="hljs-type"> v</span>
 C2 -&gt; B2 -&gt; A2 -&gt; P2</code></pre>
-
 <h3 id="4-分片及内存对齐问题"><a href="#4-分片及内存对齐问题" class="headerlink" title="4 分片及内存对齐问题"></a>4 分片及内存对齐问题</h3><p>假设某个双层应用层协议需通过UDP传输，最终形成如下内存：</p>
 <pre><code class="hljs brainfuck"><span class="hljs-comment">U</span>  <span class="hljs-literal">-</span>&gt;  <span class="hljs-comment">L1</span>    <span class="hljs-literal">-</span>&gt;    <span class="hljs-comment">L2</span>
 <span class="hljs-comment">\</span>       <span class="hljs-comment">\</span>           <span class="hljs-comment">\</span>
 <span class="hljs-comment"></span><span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>   <span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>   <span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>
 <span class="hljs-comment">|</span>  <span class="hljs-comment">U</span>  <span class="hljs-comment">|</span>   <span class="hljs-comment">|</span>  <span class="hljs-comment">L1</span>  <span class="hljs-comment">|</span>   <span class="hljs-comment">|</span>  <span class="hljs-comment">L2</span>  <span class="hljs-comment">|</span>
 <span class="hljs-comment"></span><span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>   <span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span>   <span class="hljs-literal">+</span>--<span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-literal">+</span></code></pre>
-
 <p>在逻辑上，我们可以将上述内存想象成一大块连续分配的虚拟内存：</p>
 <pre><code class="hljs asciidoc"><span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span>
 |  U  |  L1  |  L2  |
 <span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span></code></pre>
-
 <p>到IP层时，由于逻辑数据块长度太大，IP模块需要进行分片，为了最大化节省空间，我们可让IP层节点指向上述虚拟内存。例如，假设经计算上述内存需被分为4个IP分片报文：</p>
 <pre><code class="hljs asciidoc">F1   F2   F3   F4
 |    |    |    |
@@ -342,21 +334,18 @@ IP1 -&gt; F1
 IP2 -&gt; F2
 IP3 -&gt; F3
 IP4 -&gt; F4</code></pre>
-
 <p>每个IPx节点的内存中包含了IP Header的数据，而Fx节点包含了传给IP层的上层数据分片。按照上述虚拟的连续内存思路，我们可以实现利用<strong>原数据</strong>而<strong>无需重新拷贝</strong>而得到分片的操作。然而，由于IP层在分片时对载荷有对齐要求（8B对齐），如果U、L1、L2内存本身没有满足8B对齐，那么就会出现上图中类似F2与F3的情况：一个dblk节点的所代表的内存块在实际物理内存上并不连续！</p>
 <p>为此，我们引入一个vsize和类型为dblk_t *的vmem指针，用vsize表示当前节点虚拟内存的大小，当当前节点的data的大小无法满足vsize时，我们继续从vmem中取内存，直到其大小为vsize为止。</p>
 <p>在保持原有链表不动的情况下，假设U、L1、L2的data指针分别为u、l1、l2，大小分别为us、l1s、l2s，如下所示，</p>
 <pre><code class="hljs apache"><span class="hljs-attribute">U</span>  -&gt;  L<span class="hljs-number">1</span>  -&gt;  L<span class="hljs-number">2</span>
 <span class="hljs-attribute">d</span>:u    d:l<span class="hljs-number">1</span>    d:l<span class="hljs-number">2</span>
 <span class="hljs-attribute">s</span>:us   s:l<span class="hljs-number">1</span>s   s:l<span class="hljs-number">2</span>s</code></pre>
-
 <p>再设分片后，每个分片报文大小为x，则，F1 ~ F4的data指针及其内容如下：</p>
 <pre><code class="hljs sas">F1   -&gt;   F2   -&gt;   F3  -&gt;                 F4
 d:u       d:u+<span class="hljs-meta">x</span>     d:l1+(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))        d:l2+(<span class="hljs-meta">x</span>-(l1s-(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))))
 s:us      s:us-<span class="hljs-meta">x</span>    s:l1s-(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))       s:l2s-(<span class="hljs-meta">x</span>-(l1s-(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))))
 vs:<span class="hljs-meta">x</span>      vs:<span class="hljs-meta">x</span>      vs:<span class="hljs-meta">x</span>                   vs:l2s-(<span class="hljs-meta">x</span>-(l1s-(<span class="hljs-meta">x</span>-(us-<span class="hljs-meta">x</span>))))
 vm:<span class="hljs-meta">NULL</span>   vm:L1     vm:L2                  vm:<span class="hljs-meta">NULL</span></code></pre>
-
 <p>推导：</p>
 <ol>
 <li><p>F1节点，d指向u；s为d的大小us；vs=x；由于us&gt;x，故F1无需再取内存，故vm为NULL。</p>
@@ -372,7 +361,6 @@ vm:<span class="hljs-meta">NULL</span>   vm:L1     vm:L2                  vm:<sp
 <span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span>
 |  U  |  L1  |  L2  |
 <span class="hljs-code">+-----+</span>------<span class="hljs-code">+------+</span></code></pre>
-
 <p>在此过程中，size字段的含义不变，仍旧表示data的大小。只是当未启用vmem时，节点的内存大小正好等于data的大小。而vmem启用时，节点的内存大小未必等于data的大小。按照上述思路，可以设计一个如下接口，实现将dblk内存分割成按任意字节对齐的片段。需要注意，此处的dblk参数必须是未启用vmem模式的节点。</p>
 <p><code>dblk_t *dblk_fragments(dblk_t *dblk, size_t frag_size);</code></p>
 <p>至此，当上层数据超长需要分片时，仅需调用<code>dblk_fragments</code>进行处理即可。可以引入一个将vmem节点还原回正常节点的操作，如此便可无限制地使用分片接口。</p>
@@ -406,7 +394,6 @@ vm:<span class="hljs-meta">NULL</span>   vm:L1     vm:L2                  vm:<sp
     <span class="hljs-keyword">uint16_t</span> vsize;
     <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dblk</span> *<span class="hljs-title">vmem</span>;</span>
 &#125; <span class="hljs-keyword">dblk_t</span>;</code></pre>
-
 <pre><code class="hljs reasonml"><span class="hljs-comment">// 将两个Node按序纳入同一个Block</span>
 void dblk<span class="hljs-constructor">_node_concat(<span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk1</span>, <span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk2</span>)</span>;
 
@@ -423,12 +410,10 @@ void dblk<span class="hljs-constructor">_node_new_from_stack(<span class="hljs-o
 dblk_t *dblk<span class="hljs-constructor">_node_new_with_buff(<span class="hljs-params">size_t</span> <span class="hljs-params">size</span>)</span>;
 
 ...</code></pre>
-
 <h4 id="List接口"><a href="#List接口" class="headerlink" title="List接口"></a>List接口</h4><pre><code class="hljs cpp"><span class="hljs-comment">// 释放所有Node</span>
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dblk_list_delete</span><span class="hljs-params">(<span class="hljs-keyword">dblk_t</span> * dblk)</span></span>;
 
 ...</code></pre>
-
 <h4 id="Block接口"><a href="#Block接口" class="headerlink" title="Block接口"></a>Block接口</h4><pre><code class="hljs reasonml"><span class="hljs-comment">// 删除第一个Block，并返回后一个块</span>
 dblk_t *dblk<span class="hljs-constructor">_delete(<span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span> <span class="hljs-params">dblk</span>)</span>;
 
@@ -450,7 +435,6 @@ size_t dblk<span class="hljs-constructor">_copy_from(<span class="hljs-params">d
 dblk_t *dblk<span class="hljs-constructor">_fragment(<span class="hljs-params">const</span> <span class="hljs-params">dblk_t</span> <span class="hljs-operator">*</span><span class="hljs-params">dblk</span>, <span class="hljs-params">size_t</span> <span class="hljs-params">fsize</span>)</span>;
 
 ...</code></pre>
-
 <h3 id="6-测试"><a href="#6-测试" class="headerlink" title="6 测试"></a>6 测试</h3><pre><code class="hljs C"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
 <span class="hljs-function"></span>&#123;
     <span class="hljs-keyword">dblk_t</span> *b1 = dblk_node_new_with_buff(<span class="hljs-number">12</span>);
@@ -851,6 +835,45 @@ vn: <span class="hljs-number">36</span></code></pre>
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

@@ -246,7 +246,6 @@
 <h3 id="前中后序遍历的基本概念"><a href="#前中后序遍历的基本概念" class="headerlink" title="前中后序遍历的基本概念"></a>前中后序遍历的基本概念</h3><pre><code class="hljs C">  P
  / \
 L   R</code></pre>
-
 <p>前序（pre-order）: PLR<br>中序（in-order）: LPR<br>后序（post-order）: LRP</p>
 <p>序指的是根节点在左右子树中的位置：根左右、左根右、左右根。</p>
 <h3 id="前中后序列遍历的规律"><a href="#前中后序列遍历的规律" class="headerlink" title="前中后序列遍历的规律"></a>前中后序列遍历的规律</h3><ul>
@@ -261,26 +260,18 @@ L   R</code></pre>
 </ol>
 <p>总结：找根节点、划分左右子树。</p>
 <h4 id="人型电脑实验"><a href="#人型电脑实验" class="headerlink" title="人型电脑实验"></a>人型电脑实验</h4><p>已知二叉树中序遍历为ADEFGHMZ，后序遍历为AEFDHZMG，求前序遍历。</p>
-<h5 id="解"><a href="#解" class="headerlink" title="解"></a>解</h5><p>1th，看后序得知根节点为G，看中序划分左子树ADEF和右子树HMZ</p>
-<pre><code class="hljs latex">    G
+<h5 id="解"><a href="#解" class="headerlink" title="解"></a>解</h5><p>1th，看后序得知根节点为G，看中序划分左子树ADEF和右子树HMZ<br><pre><code class="hljs latex">    G
   /   <span class="hljs-tag">\</span>
-ADEF  HMZ</code></pre>
-
-<p>2th</p>
-<pre><code class="hljs dns">  D
+ADEF  HMZ</code></pre></p>
+<p>2th<br><pre><code class="hljs dns">  D
  / \
-<span class="hljs-keyword">A</span>  EF</code></pre>
-
-<p>3th</p>
-<pre><code class="hljs mathematica">  F
+<span class="hljs-keyword">A</span>  EF</code></pre></p>
+<p>3th<br><pre><code class="hljs mathematica">  F
  /
-<span class="hljs-keyword">E</span></code></pre>
-
-<p>4th</p>
-<pre><code class="hljs latex">  M
+<span class="hljs-keyword">E</span></code></pre></p>
+<p>4th<br><pre><code class="hljs latex">  M
  / <span class="hljs-tag">\</span>
-H   Z</code></pre>
-
+H   Z</code></pre></p>
 <p>tree</p>
 <pre><code class="hljs latex">     G
    /   <span class="hljs-tag">\</span>
@@ -289,7 +280,6 @@ H   Z</code></pre>
 A   F H   Z
    /
   E</code></pre>
-
 <p>故前序遍历为：GDAFEMHZ</p>
 <h2 id="解-1"><a href="#解-1" class="headerlink" title="解"></a>解</h2><h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><pre><code class="hljs matlab">v bt_preorder(t, op)
 v bt_inorder(t, op)
@@ -312,7 +302,6 @@ t bt_solve_from_inpreorder(in, in_len pre, pre_len)
         pre+<span class="hljs-number">1</span>+<span class="hljs-built_in">i</span>, pre_len-<span class="hljs-built_in">i</span><span class="hljs-number">-1</span>)
     <span class="hljs-keyword">return</span> r;
 &#125;</code></pre>
-
 <h3 id="C"><a href="#C" class="headerlink" title="C"></a>C</h3><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;assert.h&gt;</span></span>
@@ -710,6 +699,45 @@ bt_solve_from_inpreorder(
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

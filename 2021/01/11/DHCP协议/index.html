@@ -291,7 +291,6 @@ chaddr    16        客户端硬件地址（客户端填充）。
 sname     64        服务端主机名，可选，null-结尾字符串。
 file      128       BOOT文件名（null串，通用名，全路径）。
 options   n         DHCP选项。</code></pre>
-
 <p><strong>关于siaddr与server identifier</strong></p>
 <p>按照BOOTP协议的描述，无盘系统自举有两个阶段，一个是获取地址，另一个是获取BOOT文件。一个无盘系统可能从一个服务器获取到其自身的IP地址，然后从另一个服务器获取BOOT文件。在DHCP协议中，siaddr指存放了BOOT文件的服务器地址，这个服务器不一定是DHCP服务器。所以DHCP服务端可能会将自己的地址写入siaddr，如果该DHCP服务端能够提供BOOTP协议中定义的文件传输功能。而DHCP中定义的server identifier选项中指示的地址总是DHCP服务端的地址。</p>
 <p>因此，如在不使用BOOTP的BOOT文件的情况下，尽量使用<code>server identifier</code>。</p>
@@ -299,7 +298,6 @@ options   n         DHCP选项。</code></pre>
 <p>DHCP的Option为变长字段，以magic cookie：99, 130, 83, 99（十进制）开头，以255结尾。Option格式有定长及变长两种（括号中的数字标识Otect的个数）：</p>
 <pre><code class="hljs isbl">定长：<span class="hljs-function"><span class="hljs-title">CODE</span>(<span class="hljs-number">1</span>)</span>
 变长：<span class="hljs-function"><span class="hljs-title">CODE</span>(<span class="hljs-number">1</span>) <span class="hljs-title">LEN</span>(<span class="hljs-number">1</span>) <span class="hljs-title">DATA</span>(<span class="hljs-variable">LEN</span>)</span></code></pre>
-
 <p>其中，变长格式中的LEN字段不包含CODE和LEN本身。</p>
 <p>DHCP的定长Option仅有两个，一个是用于填充的PAD选项，其CODE值为0，另一个用于标识Option结尾的END选项，其CODE值为255。</p>
 <p>举例：一个空的Option</p>
@@ -309,7 +307,6 @@ Value:    | 99 |130 | 83 | 99 |255 |
           +<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+
 Meaning:  |    Magic cookie   |END |
           +<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">----</span>+</code></pre>
-
 <p>动态网络地址分配中涉及到的常见Option主要有：</p>
 <ol>
 <li>DHCP Message Type</li>
@@ -334,7 +331,6 @@ Meaning:  |    Magic cookie   |END |
 <pre><code class="hljs routeros">DHCP<span class="hljs-built_in"> client </span>    DHCP server
      | ---udp(67)--&gt; | BOOTREQUEST
      | &lt;--udp(68)--- | BOOTREPLY</code></pre>
-
 <h4 id="动态地址分配"><a href="#动态地址分配" class="headerlink" title="动态地址分配"></a>动态地址分配</h4><ol>
 <li><p>客户端广播discover，并等待offer，期间可能有多个server提供offer，客户端根据offer中的网络参数自行选择一个server。</p>
 </li>
@@ -390,7 +386,6 @@ Meaning:  |    Magic cookie   |END |
         |<span class="hljs-string">               </span>|<span class="hljs-string">            取消租用</span>
 <span class="hljs-string">        </span>|<span class="hljs-string">               </span>|<span class="hljs-string">               </span>|
         v               v               v</code></pre>
-
 <h3 id="3-DHCP客户端状态"><a href="#3-DHCP客户端状态" class="headerlink" title="3 DHCP客户端状态"></a>3 DHCP客户端状态</h3><pre><code class="hljs gherkin"> --------                               -------
 |<span class="hljs-string">        </span>|<span class="hljs-string"> +--------------------------&gt;</span>|<span class="hljs-string">       </span>|<span class="hljs-string">&lt;-------------------+</span>
 |<span class="hljs-string"> INIT-  </span>|<span class="hljs-string"> </span>|<span class="hljs-string">     +--------------------&gt;</span>|<span class="hljs-string"> INIT  </span>|<span class="hljs-string">                    </span>|
@@ -434,7 +429,6 @@ timers T1, T2   ------------  send DHCPREQUEST      |<span class="hljs-string"> 
                          +-&gt;|<span class="hljs-string"> RENEWING </span>|<span class="hljs-string">                            </span>|
                             |<span class="hljs-string">          </span>|<span class="hljs-string">----------------------------+</span>
 <span class="hljs-string">                             ----------</span></code></pre>
-
 <h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>DHCP客户端维护有两个定时器T1、T2。进入BOUND状态后，客户端启动定时器。T1、T2超时时间可由服务器通过DHCP的Option配置，T1默认值为<code>0.5*lease</code>，T2默认为<code>0.875*lease</code>（T1 &lt; T2 &lt; Lease）。T1超时后，客户端进入RENEWING状态，T2超时后客户端进入REBINDING状态，租期到期后，客户端进入INIT状态。</p>
 <h3 id="4-其他"><a href="#4-其他" class="headerlink" title="4 其他"></a>4 其他</h3><p>一个Window上的DHCP服务器：<a target="_blank" rel="noopener" href="http://www.dhcpserver.de/cms/download/">http://www.dhcpserver.de/cms/download/</a></p>
 <h3 id="A-附录"><a href="#A-附录" class="headerlink" title="A 附录"></a>A 附录</h3><h4 id="部分Option定义"><a href="#部分Option定义" class="headerlink" title="部分Option定义"></a>部分Option定义</h4><p>本节列举DHCP动态网络地址分配中涉及到的常见的Option，完整Option定义参考[2]。</p>
@@ -442,19 +436,16 @@ timers T1, T2   ------------  send DHCPREQUEST      |<span class="hljs-string"> 
 <span class="hljs-code">+-----+</span>
 |  0  |
 <span class="hljs-code">+-----+</span></code></pre>
-
 <p>填充Option。</p>
 <h5 id="End"><a href="#End" class="headerlink" title="End"></a>End</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code</span>
 <span class="hljs-code">+-----+</span>
 | 255 |
 <span class="hljs-code">+-----+</span></code></pre>
-
 <p>标识Option字段结尾的End选项。</p>
 <h5 id="DHCP-Message-Type"><a href="#DHCP-Message-Type" class="headerlink" title="DHCP Message Type"></a>DHCP Message Type</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code   Len  Type</span>
 <span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>
 |  53 |  1  | 1-7 |
 <span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span></code></pre>
-
 <p>此Option用于标识DHCP消息的类型，合法的值及其含义如下：</p>
 <pre><code class="hljs routeros">Value   Message Type
 -----   ------------
@@ -465,25 +456,21 @@ timers T1, T2   ------------  send DHCPREQUEST      |<span class="hljs-string"> 
 5       DHCPACK
 6       DHCPNAK
 7       DHCPRELEASE</code></pre>
-
 <h5 id="Server-Identifier"><a href="#Server-Identifier" class="headerlink" title="Server Identifier"></a>Server Identifier</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code   Len            Address</span>
 <span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+
 |  54 |  4  |  a1 |  a2 |  a3 |  a4 |
 <span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+</code></pre>
-
 <p>此Option用在DHCPOFFER和DHCPREQUEST消息中，DHCPACK及DHCPNAK可选携带。DHCP服务端通过在DHCPOFFER中携带该Option表明自己的IP地址，DHCP客户端通过在DHCPREQUEST中携带该Option表明自己选择哪一个DHCP服务端（由于DISCOVER是广播，所有客户端可能收到多个OFFER）。</p>
 <p>该Option的Address总是DHCP服务端的IP地址。</p>
 <h5 id="Requested-IP-Address"><a href="#Requested-IP-Address" class="headerlink" title="Requested IP Address"></a>Requested IP Address</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code   Len          Address</span>
 <span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+
 |  50 |  4  |  a1 |  a2 |  a3 |  a4 |
 <span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+</code></pre>
-
 <p>此Option用在DISCOVER及REQUEST中，表示客户端要申请的IP。</p>
 <h5 id="IP-Address-Lease-Time"><a href="#IP-Address-Lease-Time" class="headerlink" title="IP Address Lease Time"></a>IP Address Lease Time</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> Code   Len         Lease Time</span>
 <span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+
 |  51 |  4  |  t1 |  t2 |  t3 |  t4 |
 <span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----<span class="hljs-code">+-----+</span>-----+</code></pre>
-
 <p>此选项用在DHCPDISCOVER或DHCPREQUEST中，表示客户端想申请的租期时长。在OFFER中表示服务端给出的租期时长。单位秒，0xFFFFFFFF表示永久租期。</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
 <li><p>[1] <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc2131">Dynamic Host Configuration Protocol, RFC2131</a></p>
@@ -793,6 +780,45 @@ timers T1, T2   ------------  send DHCPREQUEST      |<span class="hljs-string"> 
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

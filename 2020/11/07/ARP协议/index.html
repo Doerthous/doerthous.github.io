@@ -275,7 +275,6 @@ sha       n         源硬件地址，长度由hln指定。
 spa       m         源网络地址，长度由pln指定。
 tha       n         目标硬件地址，长度由hln指定。
 tpa       m         目标网络地址，长度由pln指定。</code></pre>
-
 <h3 id="4-实现考虑"><a href="#4-实现考虑" class="headerlink" title="4 实现考虑"></a>4 实现考虑</h3><ul>
 <li><p>ARP表</p>
 <p>  以网络地址为key，硬件地址为value的数据库</p>
@@ -594,6 +593,45 @@ tpa       m         目标网络地址，长度由pln指定。</code></pre>
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

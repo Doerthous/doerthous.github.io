@@ -249,7 +249,6 @@ parser_a = subparsers.add_parser(<span class="hljs-string">&#x27;cmd1&#x27;</spa
 <span class="hljs-comment"># parser_a.add_argument ...</span>
 parser_b = subparsers.add_parser(<span class="hljs-string">&#x27;cmd2&#x27;</span>)
 <span class="hljs-comment"># parser_b.add_argument ...</span></code></pre>
-
 <p>用法上，除了在调用时需指定子命令外（如<code>python p.py cmd1 ...</code>），其余基本相同。</p>
 <h2 id="一些需求"><a href="#一些需求" class="headerlink" title="一些需求"></a>一些需求</h2><h3 id="两种执行模式"><a href="#两种执行模式" class="headerlink" title="两种执行模式"></a>两种执行模式</h3><ol>
 <li><code>python p.py</code>执行一种操作</li>
@@ -266,7 +265,6 @@ args = parser.parse_args()
     print(<span class="hljs-string">&#x27;python p.py -s&#x27;</span>)
 <span class="hljs-keyword">else</span>:
     print(<span class="hljs-string">&#x27;python p.py&#x27;</span>)</code></pre>
-
 <h3 id="互斥的多模式"><a href="#互斥的多模式" class="headerlink" title="互斥的多模式"></a>互斥的多模式</h3><ol>
 <li><code>python p.py</code>执行一种操作</li>
 <li><code>python p.py s</code>执行另一种操作</li>
@@ -302,7 +300,6 @@ args = parser.parse_args()
     args.func = func
 
 args.func(args)</code></pre>
-
 <h3 id="带参命令"><a href="#带参命令" class="headerlink" title="带参命令"></a>带参命令</h3><ol>
 <li><code>python p.py</code>执行一种操作</li>
 <li><code>python p.py s</code>执行另一种操作</li>
@@ -630,6 +627,45 @@ args.func(args)</code></pre>
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 

@@ -291,7 +291,6 @@ chaddr    16        客户端硬件地址（客户端填充）。
 sname     64        服务端主机名，可选，null-结尾字符串。
 file      128       BOOT文件名（null串，通用名，全路径）。
 vend      64        可选。</code></pre>
-
 <h3 id="4-“鸡生蛋，蛋生鸡”问题"><a href="#4-“鸡生蛋，蛋生鸡”问题" class="headerlink" title="4 “鸡生蛋，蛋生鸡”问题"></a>4 “鸡生蛋，蛋生鸡”问题</h3><p>问题：客户端没有IP地址，其请求IP地址时，服务端如何回复到客户端？</p>
 <p>思路：如果客户端知道自己的IP地址（ciaddr不为零），则按该地址回复给客户端。如果客户端不知道自己的IP地址，且服务器可以通过某种方式修改ARP表，则将yiaddr与chaddr写入ARP表，然后正常发送。如果都不行，则采用广播。</p>
 <h3 id="5-实现考虑"><a href="#5-实现考虑" class="headerlink" title="5 实现考虑"></a>5 实现考虑</h3><h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><ul>
@@ -630,6 +629,45 @@ vend      64        可选。</code></pre>
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
 
 
 
