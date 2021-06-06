@@ -189,7 +189,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7.8k 字
+      8.1k 字
     </span>
   
 
@@ -199,7 +199,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      109
+      113
        分钟
     </span>
   
@@ -337,7 +337,7 @@ PID        <span class="hljs-number">4</span>b      Packet类型标识（PID）
 (~PID)     <span class="hljs-number">4</span>b      PID取反</code></pre>
 <h5 id="Address"><a href="#Address" class="headerlink" title="Address"></a>Address</h5><pre><code class="hljs asciidoc"><span class="hljs-code"> b0  b1  b2  b3  b4  b5  b6  </span>
 <span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>
-|          Adress           |
+|          Address          |
 <span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>---<span class="hljs-code">+---+</span>
 
 字段       大小    说明
@@ -1162,7 +1162,47 @@ USB_BTABLE +--------&gt;+----------------+     |
                      |     ......     |
             0x0200   +----------------+
 </code></pre>
-<h5 id="处理In事务"><a href="#处理In事务" class="headerlink" title="处理In事务"></a>处理In事务</h5><p>【TODO】</p>
+<h5 id="处理In事务"><a href="#处理In事务" class="headerlink" title="处理In事务"></a>处理In事务</h5><p>当USB外设收到IN PID时，其首先检查Endpoint的有效性（配置、地址），如果匹配到当前配置中的Endpoint，则USB外设访问对应Endpoint的USB_ADDRn_TX和USB_COUNTn_TX寄存器，将USB_ADDRn_TX及USB_COUNTn_TX的值分别存入内部寄存器ADDR及COUNT，随后开始发送数据，并等待Host的ACK。如果Endpoint无效，则发送NACK或STALL。</p>
+<p>当收ACK后，反转USB_EPnR.DTOG_RX，USB_EPnR.STAT_RX设为10（NAK），USB_EPnR.CTR_RX置1。</p>
+<pre><code class="hljs txt">transmit(usbpkg)
+&#123;
+    if (usbpkg.PID == IN) &#123;
+        if (usbpkg.Address == USB_DADDR &amp;&amp; Ep is a valid Endpoint) &#123;
+            ADDR = USB_ADDRn_TX[Ep];
+            COUNT = USB_COUNTn_TX[Ep].COUNTn_RX;
+
+            while (COUNT &gt; 0) &#123;
+                send_data(ADDR, 1);
+                ADDR++;
+                COUNT--;
+            &#125;
+
+            // wait host ack
+
+            if (host ack) &#123;
+                USB_EPnR[Ep].CTR_RX = 1;
+                USB_EPnR[Ep].STAT_RX = 10; // NAK
+                USB_EPnR[Ep].DTOG_RX = ~USB_EPnR[Ep].DTOG_RX; // Toggle
+            &#125;
+        &#125;
+        else &#123;
+            // send nack or stall to host
+        &#125;
+    &#125;
+&#125;</code></pre>
+<p>当In事务正常结束后，USB外设向MCU发送CTR中断，收到中断信号后，驱动应按照下面的步骤进行处理：</p>
+<pre><code class="hljs txt">USB_ISR(irq)
+&#123;
+    if (irq == CTR) &#123;
+        Ep = get_endpoint(USB_ISTR.EP_ID, USB_ISTR.DIR);
+        if (Ep is valid) &#123;
+            if (USB_EPnR[Ep].CTR_TX) &#123;
+                // send other packages
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+<p>检查USB_ISTR的EP_ID和DIR，判断哪个Endpoint需要进行处理。检查USB_EPnR的CTR_TX，随后清除中断标志，随后处理下一个需要发送的Package。</p>
 <h5 id="处理Out-Setup事务"><a href="#处理Out-Setup事务" class="headerlink" title="处理Out/Setup事务"></a>处理Out/Setup事务</h5><p>当USB外设收到一个OUT或SETUP的PID时，其首先检查在OUT或SETUP中的地址信息，如果匹配到当前配置中的Endpoint，则USB外设访问对应Endpoint的USB_ADDRn_RX和USB_COUNTn_RX寄存器，将USB_ADDRn_RX的值存入一个内部寄存器ADDR，读取USB_COUNTn_RX的BL_SIZE与NUM_BLOCK，用于初始化内部寄存器BUF_COUNT，并重置USB_COUNTn_RX的COUNTn_RX。当收数据时，BUF_COUNT递减、内部寄存器COUNT递增。当正常收完数据后，USB外设将COUNT的值拷贝到COUNTn_RX，并更新USB_EPnR寄存器：将USB_EPnR.CTR_RX置1，USB_EPnR.STAT_RX设为10（NAK），并反转USB_EPnR.DTOG_RX。最后并向Host发送ACK包。</p>
 <p>上述过程可以下边的伪代码进行描述。</p>
 <pre><code class="hljs txt">received(usbpkg)
@@ -1202,7 +1242,7 @@ USB_BTABLE +--------&gt;+----------------+     |
     &#125;
 &#125;</code></pre>
 <p>当Out/Setup事务正常结束后，USB外设向MCU发送CTR中断，收到中断信号后，驱动应按照下面的步骤进行处理：</p>
-<p>检查USB_ISTR的EP_ID和DIR，判断哪个Endpoint需要进行处理。检查USB_EPnR的CTR_RX及SETUP，判断是Out事务还是Setup事务。随后清除中断标志，从USB_COUNTn_RX.COUNTn_RX中读取收到的数据的数量，并从USB_COUNTn_RX.ADDRn_RX中读取收到的数据。最后将USB_EPnR.STAT_RX bits设置为11（Valid）以便处理后续Out/Setup事务。</p>
+<p>检查USB_ISTR的EP_ID和DIR，判断哪个Endpoint需要进行处理。检查USB_EPnR的CTR_RX及SETUP，判断是Out事务还是Setup事务，随后清除中断标志。从USB_COUNTn_RX.COUNTn_RX中读取收到的数据的数量，并从USB_COUNTn_RX.ADDRn_RX中读取收到的数据。最后将USB_EPnR.STAT_RX bits设置为11（Valid）以便处理后续Out/Setup事务。</p>
 <p>上述过程可以下边的伪代码进行描述。</p>
 <pre><code class="hljs txt">USB_ISR(irq)
 &#123;
@@ -1211,7 +1251,7 @@ USB_BTABLE +--------&gt;+----------------+     |
         if (Ep is valid) &#123;
             if (USB_EPnR[Ep].CTR_RX) &#123;
                 if (USB_EPnR[Ep].SETUP) &#123; // Setup事务
-                    // do something unique to out transaction
+                    // do something unique to setup transaction
                 &#125;
                 else &#123; // Out事务
                     // do something unique to out transaction
